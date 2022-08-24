@@ -1,7 +1,11 @@
+import Chat from "./components/Chat";
+import Sidebar from "./components/Sidebar";
+
 function App() {
   return (
-    <div className="font-bold text-3xl">
-      Hello World!s
+    <div className="grid grid-cols-9 h-screen overflow-hidden">
+      <Sidebar />
+      <Chat />
     </div>
   );
 }

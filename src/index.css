@@ -1,3 +1,37 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    background-color: #edf2fb;
+}
+
+.flex-center {
+    @apply flex justify-center items-center
+}
+
+.rounded-corners {
+    border-radius: 25px;
+}
+
+.styled-scrollbar::-webkit-scrollbar {
+    width: 10px;
+}
+
+.styled-scrollbar::-webkit-scrollbar-track {
+    background-color: #e7ecef;
+    border-radius: 25px;
+}
+
+
+.styled-scrollbar::-webkit-scrollbar-thumb {
+    padding: 2px;
+    background: #abc4ff;
+    border-radius: 25px;
+  }
+
+.btn-hover:hover {
+    transition: all;
+    transition-duration: 300ms;
+    box-shadow: 0 0 0px 7px #abc4ff;
+}
