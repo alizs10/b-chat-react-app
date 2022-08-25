@@ -11,7 +11,6 @@ function SignupForm({setLoginFormVisibility, setSignupFormVisibility}) {
 
         <>
             <form className='mx-auto p-3 flex flex-col gap-y-2'>
-                <span className='block text-center text-xl'>Sign Up</span>
                 <div className='flex flex-col gap-y-2 mt-2'>
                     <label className="ml-3 text-sm text-gray-600">Username</label>
                     <input type="text" className='w-full border border-gray-200 p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800' />

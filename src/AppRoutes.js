@@ -8,7 +8,7 @@ function AppRoutes() {
         <BrowserRouter>
             <Routes>
                 <Route path='/' element={<App />} />
-                <Route path='/login' element={<Auth />} />
+                <Route path='/auth' element={<Auth />} />
             </Routes>
         </BrowserRouter>
     )
