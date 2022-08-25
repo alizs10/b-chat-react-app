@@ -6,9 +6,11 @@ import Head from './Chat/Head'
 function Chat() {
   return (
     <div className="relative col-span-6 h-screen grid grid-rows-6">
-      <Head/>
-      <Bubbles/>
-      <ChatInput/>
+      <div className='row-span-5'>
+        <Head />
+        <Bubbles />
+      </div>
+      <ChatInput />
     </div>
   )
 }
