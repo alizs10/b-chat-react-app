@@ -4,9 +4,9 @@ import Conversation from './Conversation'
 function Conversations() {
     return (
 
-        <div className='mt-12 row-span-5 relative flex flex-col gap-y-2 pl-3 styled-scrollbar overflow-y-scroll'>
+        <div className='relative flex flex-col gap-y-2 pl-3 styled-scrollbar overflow-y-scroll'>
 
-            <span className="bg-white/80 sticky top-0 block text-sm text-gray-600 pb-1 border-b border-gray-200">Conversations (8)</span>
+            <span className="bg-white/80 z-20 sticky top-0 block text-sm text-gray-600 pb-1 border-b border-gray-200">Conversations (8)</span>
             <ul className='mt-2 flex flex-col gap-y-2 pb-3 mr-3'>
                 <Conversation status={false} last_message="LEGEND!" username="Mehran Modiri" date="2022/08/16" avatar="assets/images/user-profile-5.webp" />
                 <Conversation status={true} last_message="How u doing?? Miss u man..." username="Matt LeBlanc" date="2:04 PM" avatar="assets/images/user-profile-1.webp" />
