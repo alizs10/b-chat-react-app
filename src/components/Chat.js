@@ -5,7 +5,7 @@ import Head from './Chat/Head'
 
 function Chat() {
   return (
-    <div className="col-span-6 h-screen grid grid-rows-6">
+    <div className="relative col-span-6 h-screen grid grid-rows-6">
       <Head/>
       <Bubbles/>
       <ChatInput/>
