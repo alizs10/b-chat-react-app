@@ -3,7 +3,7 @@ import SearchInChat from './SearchInChat'
 
 function Head() {
     return (
-        <div className="z-20 h-[6.5rem] shadow-sm bg-white grid grid-cols-8">
+        <div className="z-20 h-[6.5rem] border-b border-gray-200 bg-white grid grid-cols-8">
             <SearchInChat />
             <div className="col-span-1 flex gap-x-4 items-center">
                 <span className='cursor-pointer text-gray-600 text-2xl relative'>
