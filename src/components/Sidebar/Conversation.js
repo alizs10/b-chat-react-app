@@ -1,8 +1,8 @@
 import React from 'react'
 
-function Conversation({ username, last_message, date, avatar, status }) {
+function Conversation({ username, last_message, date, avatar, status, active = false }) {
     return (
-        <li className='cursor-pointer transition-all duration-300 hover:bg-gray-100 border-b border-gray-100 flex gap-2 w-full p-3 rounded-corners text-gray-700'>
+        <li className={`cursor-pointer transition-all duration-300 ${active ? 'bg-[#abc4ff] ' : 'hover:bg-gray-100 text-gray-700'} border-b border-gray-100 flex gap-2 w-full p-3 rounded-corners `}>
             <div className='relative cursor-pointer w-16'>
                 <img className='rounded-corners w-full' src={avatar} />
                 <span className='absolute -bottom-1 -right-0 bg-white p-[3px] flex-center rounded-full'>

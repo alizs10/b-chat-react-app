@@ -40,7 +40,7 @@ function Bubble() {
             </div>
             <div className='flex items-end gap-x-2 mb-3'>
                 <span className="text-xs flex gap-x-4">
-                    <span className="text-[#1C42EA]">2:43 PM</span>
+                    <span className="text-[#4361ee]">2:43 PM</span>
                 </span>
             </div>
         </div>

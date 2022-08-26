@@ -27,7 +27,7 @@ function BubbleWithReplay() {
                 <span className="text-gray-600 ml-2">Matt LeBlanc</span>
 
                 <div onMouseOver={() => handleMouseOver()} onMouseLeave={() => handleMouseLeave()} className="flex flex-col bg-white border-b-2 border-gray-200 rounded-corners w-full text-gray-800 text-base">
-                    <div className="flex flex-col gap-y-2 border-l-4 rounded-t-[25px] border-l-[#1C42EA] pl-3 pt-3 px-3 pb-2 border-b text-xs">
+                    <div className="flex flex-col gap-y-2 border-l-4 rounded-t-[25px] border-l-[#4361ee] pl-3 pt-3 px-3 pb-2 border-b text-xs">
                     <span>You</span>
                     <span>lorem ipsum dolor sit amet, consectetur adip</span>
                     </div>
@@ -39,7 +39,7 @@ function BubbleWithReplay() {
             </div>
             <div className='flex items-end gap-x-2 mb-3'>
                 <span className="text-xs flex gap-x-4">
-                    <span className="text-[#1C42EA]">2:43 PM</span>
+                    <span className="text-[#4361ee]">2:43 PM</span>
                 </span>
             </div>
         </div>
