@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import Bubble from './Bubble'
 import BubbleWithReplay from './BubbleWithReplay'
 import MyBubble from './MyBubble'
@@ -7,8 +7,16 @@ import ReplayTo from './ReplayTo'
 
 function Bubbles() {
 
+
+  const bubblesRef = useRef(null)
+  useEffect(() => {
+    console.log(bubblesRef.current.scrollHeight);
+    bubblesRef.current.style.scrollBehavior = "smooth" 
+    bubblesRef.current.scrollTop = bubblesRef.current.scrollHeight
+  }, [])
+
   return (
-    <div className='relative h-[calc(100%_-_6.5rem)] pt-12 pb-0 overflow-y-scroll flex flex-col styled-scrollbar gap-y-14'>
+    <div ref={bubblesRef} className='relative h-[calc(100%_-_6.5rem)] pt-12 pb-0 overflow-y-scroll flex flex-col styled-scrollbar gap-y-14'>
       <MyBubbleWithReplay />
       <BubbleWithReplay />
       <MyBubble />
