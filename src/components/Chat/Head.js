@@ -1,4 +1,5 @@
 import React from 'react'
+import UserPopup from './Head/UserPopup'
 import SearchInChat from './SearchInChat'
 
 function Head() {
@@ -15,6 +16,7 @@ function Head() {
                     <span className='absolute -bottom-1 -right-0 bg-white p-[3px] flex-center rounded-full'>
                         <span className='w-3 h-3 rounded-full bg-emerald-500'></span>
                     </span>
+                    <UserPopup/>
                 </div>
             </div>
         </div>
