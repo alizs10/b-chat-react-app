@@ -3,10 +3,12 @@ import Bubble from './Bubble'
 import BubbleWithReplay from './BubbleWithReplay'
 import MyBubble from './MyBubble'
 import MyBubbleWithReplay from './MyBubbleWithReplay'
+import ReplayTo from './ReplayTo'
 
 function Bubbles() {
+
   return (
-    <div className='h-[calc(100%_-_6.5rem)] py-12 overflow-y-scroll flex flex-col-reverse styled-scrollbar gap-y-14'>
+    <div className='relative h-[calc(100%_-_6.5rem)] pt-12 pb-0 overflow-y-scroll flex flex-col styled-scrollbar gap-y-14'>
       <MyBubbleWithReplay />
       <BubbleWithReplay />
       <MyBubble />
@@ -16,8 +18,8 @@ function Bubbles() {
       <Bubble />
       <Bubble />
       <MyBubble />
-
       <Bubble />
+      <ReplayTo/>
     </div>
   )
 }
