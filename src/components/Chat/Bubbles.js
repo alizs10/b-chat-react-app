@@ -17,16 +17,16 @@ function Bubbles() {
 
   return (
     <div ref={bubblesRef} className='relative h-[calc(100%_-_6.5rem)] pt-12 pb-0 overflow-y-scroll flex flex-col styled-scrollbar gap-y-14'>
+      <MyBubble />
+      <MyBubble />
+      <Bubble />
+      <MyBubble />
+      <Bubble />
+      <Bubble />
+      <MyBubble />
+      <Bubble />
       <MyBubbleWithReplay />
       <BubbleWithReplay />
-      <MyBubble />
-      <MyBubble />
-      <Bubble />
-      <MyBubble />
-      <Bubble />
-      <Bubble />
-      <MyBubble />
-      <Bubble />
       <ReplayTo/>
     </div>
   )

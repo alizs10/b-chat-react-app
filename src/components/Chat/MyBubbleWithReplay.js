@@ -22,7 +22,7 @@ function MyBubbleWithReplay() {
 
 
     return (
-        <div className="self-end mr-2 flex gap-x-4 items-end">
+        <div className="self-end mr-2 flex justify-end gap-x-4 items-end ">
             <div className='flex items-end gap-x-2 mb-3'>
                 <span className="text-xs flex gap-x-4">
                     <span className="text-[#1C42EA]">2:43 PM</span>
