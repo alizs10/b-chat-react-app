@@ -10,7 +10,7 @@ function Head() {
     const [alertsPopupVisibility, setAlertsPopupVisibility] = useState(false)
 
     return (
-        <div className="z-20 h-[6.5rem] border-b border-gray-200 bg-white grid grid-cols-8">
+        <div className="z-20 row-span-1 border-b border-gray-200 bg-white grid grid-cols-8">
             <SearchInChat />
             <div className="col-span-2 flex justify-end gap-x-6 mr-4 items-center">
                 <span onClick={() => setAlertsPopupVisibility(true)} className={`cursor-pointer text-gray-600 text-2xl relative p-2 rounded-corners transition-all duration-300 ${alertsPopupVisibility && "bg-gray-100"}`}>

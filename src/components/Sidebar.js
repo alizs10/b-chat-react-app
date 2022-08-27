@@ -4,7 +4,7 @@ import Conversations from './Sidebar/Conversations'
 function Sidebar() {
 
     return (
-        <div className="relative grid grid-rows-6 gap-y-2 h-screen bg-white col-span-3">
+        <div className="fixed top-0 right-0 bottom-0 left-0 z-30 lg:relative grid grid-rows-6 gap-y-2 lg:h-screen bg-white col-span-3">
 
             <div className='row-span-5 flex flex-col gap-y-2'>
 

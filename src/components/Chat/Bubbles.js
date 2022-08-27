@@ -16,7 +16,7 @@ function Bubbles() {
   }, [])
 
   return (
-    <div ref={bubblesRef} className='relative h-[calc(100%_-_6.5rem)] pt-12 pb-0 overflow-y-scroll flex flex-col styled-scrollbar gap-y-14'>
+    <div ref={bubblesRef} className='relative row-span-5 pt-12 pb-0 overflow-y-scroll flex flex-col styled-scrollbar gap-y-14'>
       <MyBubble />
       <MyBubble />
       <Bubble />
