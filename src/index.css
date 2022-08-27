@@ -41,3 +41,9 @@ body {
     transition-duration: 300ms;
     box-shadow: 0 0 0px 7px #abc4ff;
 }
+
+.shadow-style{
+    transition: all;
+    transition-duration: 300ms;
+    box-shadow: 0 0 0px 7px #abc4ff;
+}
