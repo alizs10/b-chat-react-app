@@ -15,7 +15,7 @@ function Sidebar() {
                 <Conversations />
             </div>
 
-            <div className='row-span-1 m-4'>
+            <div className='row-span-1 flex-center p-3'>
 
                 <button className="flex w-full items-center p-2 rounded-corners bg-[#5F7AF0] btn-hover text-white transition-all duration-300">
                     <span className='p-3 w-fit rounded-corners bg-[#4361EE] px-4 flex-center'>
