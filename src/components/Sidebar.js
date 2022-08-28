@@ -9,7 +9,14 @@ function Sidebar({ setSidebarVisibility }) {
             <div className='row-span-5 flex flex-col gap-y-2'>
 
                 <div className="flex flex-col gap-y-2 p-3">
-                    <span className='font-bold text-2xl py-2 block'><span className="text-[#4361ee]">B</span>CHAT</span>
+                    <span className='flex justify-between items-center'>
+                        <span className='font-bold text-2xl py-2 block'><span className="text-[#4361ee]">B</span>CHAT</span>
+                        <div className="lg:hidden flex-center">
+                            <span onClick={() => setSidebarVisibility(false)} className="text-2xl text-gray-800 p-3 h-fit rounded-corners hover:bg-gray-100 transition-all duration-300">
+                                <i className="fa-regular fa-angle-left"></i>
+                            </span>
+                        </div>
+                    </span>
                 </div>
 
                 <Conversations setSidebarVisibility={setSidebarVisibility} />

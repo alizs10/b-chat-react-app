@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Chat from "./components/Chat";
 import Sidebar from "./components/Sidebar";
+import SidebarContext from "./Context/SidebarContext";
 
 function App() {
 
@@ -21,10 +22,16 @@ function App() {
   }, [])
 
   return (
-    <div className="grid grid-cols-9 h-screen overflow-hidden">
-      {sidebarVisibility && (<Sidebar setSidebarVisibility={setSidebarVisibility}/>)}
-      <Chat setSidebarVisibility={setSidebarVisibility}/>
-    </div>
+    <SidebarContext.Provider value={{
+      sidebarVisibility, setSidebarVisibility
+    }}>
+
+      <div className="grid grid-cols-9 h-screen overflow-hidden">
+        {sidebarVisibility && (<Sidebar setSidebarVisibility={setSidebarVisibility} />)}
+        <Chat setSidebarVisibility={setSidebarVisibility} />
+      </div>
+
+    </SidebarContext.Provider>
   );
 }
 

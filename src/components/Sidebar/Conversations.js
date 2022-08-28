@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Conversation from './Conversation'
 
 function Conversations({setSidebarVisibility}) {
@@ -46,6 +46,7 @@ function Conversations({setSidebarVisibility}) {
         },
     ])
     const [activeConversation, setActiveConversation] = useState(2)
+
 
     return (
 
