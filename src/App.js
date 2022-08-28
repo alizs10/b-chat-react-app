@@ -9,7 +9,7 @@ function App() {
   return (
     <div className="grid grid-cols-9 h-screen overflow-hidden">
       {sidebarVisibility && (<Sidebar setSidebarVisibility={setSidebarVisibility}/>)}
-      <Chat />
+      <Chat setSidebarVisibility={setSidebarVisibility}/>
     </div>
   );
 }
