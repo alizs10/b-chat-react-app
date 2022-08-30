@@ -1,13 +1,15 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { checkAuthentication } from '../../api/auth';
 
 function AuthCheck({ children }) {
 
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+    const location = useLocation();
 
     useEffect(() => {
         async function check() {
@@ -37,9 +39,14 @@ function AuthCheck({ children }) {
 
     return !loading ? (
         isAuthenticated ? (
-            <>
+            location.pathname !== "/auth" ? (
+
+                <>
                 {children}
             </>
+                ) : (
+                    <Navigate to="/" />        
+                )
 
         ) : <Navigate to="/auth" />
     ) : null;

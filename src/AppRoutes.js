@@ -15,9 +15,11 @@ function AppRoutes() {
                     </AuthCheck>
                 } />
                 <Route path='/auth' element={
-                    <AuthContextContainer>
-                        <Auth />
-                    </AuthContextContainer>
+                    <AuthCheck>
+                        <AuthContextContainer>
+                            <Auth />
+                        </AuthContextContainer>
+                    </AuthCheck>
                 } />
             </Routes>
         </BrowserRouter>
