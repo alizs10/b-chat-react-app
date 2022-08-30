@@ -5,6 +5,8 @@ import AuthContext from '../../Context/AuthContext'
 
 function AuthContextContainer({ children }) {
 
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
   const [errors, setErrors] = useState({})
   const [user, setUser] = useState({})
   const [username, setUsername] = useState("")
@@ -37,6 +39,7 @@ function AuthContextContainer({ children }) {
 
   return (
     <AuthContext.Provider value={{
+      isAuthenticated, setIsAuthenticated,
       user, setUser,
       username, setUsername,
       email, setEmail,

@@ -39,6 +39,9 @@ function LoginForm({setSignupFormVisibility, setLoginFormVisibility}) {
                     onChange={e => setPassword(e.target.value)}
                      />
                 </div>
+                {errors.password && (
+                    <span className='text-xs text-red-500'>{errors.password[0]}</span>
+                )}
                 <button type='submit' className='mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners bg-[#4361EE] btn-hover text-white transition-all duration-300'>
                     <span className='text-lg'>Login</span>
                     <i className="fa-regular fa-arrow-right-to-arc text-base"></i>

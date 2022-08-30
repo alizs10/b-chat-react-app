@@ -39,10 +39,23 @@ export const login = async (credentials) => {
                 return { status: false, errors: errData }
 
             } else if (err.response.status == 401) {
-                return { status: false, errors: {message: [err.response.data.message]} }
+                return { status: false, errors: { message: [err.response.data.message] } }
             }
 
             return err.response.data;
         });
+    });
+}
+
+
+export const logout = async (token) => {
+    let url = process.env.REACT_APP_API_URL + '/api/auth/logout';
+
+    return await axios.get(url, null, {
+        Headers: { 'Authorization': 'Bearer ' + token }
+    }).then(res => {
+        return res.data
+    }).catch(err => {
+        console.log(err);
     });
 }
