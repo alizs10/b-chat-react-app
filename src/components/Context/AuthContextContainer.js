@@ -3,36 +3,36 @@ import { useNavigate } from 'react-router-dom'
 import { login } from '../../api/auth'
 import AuthContext from '../../Context/AuthContext'
 
-function AuthContextContainer({children}) {
+function AuthContextContainer({ children }) {
 
-    const [errors, setErrors] = useState({})
-    const [user, setUser] = useState({})
-    const [username, setUsername] = useState("")
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [passwordConfirmation, setPasswordConfirmation] = useState("")
+  const [errors, setErrors] = useState({})
+  const [user, setUser] = useState({})
+  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [passwordConfirmation, setPasswordConfirmation] = useState("")
 
-    const navigate = useNavigate()
+  const navigate = useNavigate()
 
-    const handleLogin = async () => {
-      let credentials = {username, password}
+  const handleLogin = async () => {
+    
+    let credentials = { username, password }
 
-      let res = await login(credentials)
-      
-      if(!res.status)
-      {
-        setErrors(res.errors)
-      }
-      else {
-        localStorage.setItem('token', res.token)
-        setUser(res.user)
-        navigate('/')
-      }
+    let res = await login(credentials)
+
+    if (!res.status) {
+      setErrors(res.errors)
+    } else {
+      localStorage.setItem('token', res.token)
+      setUser(res.user)
+      navigate('/')
     }
 
-    const handleRegister = (data) => {
-      console.log(data);
-    }
+  }
+
+  const handleRegister = (data) => {
+    console.log(data);
+  }
 
 
   return (
@@ -43,9 +43,9 @@ function AuthContextContainer({children}) {
       password, setPassword,
       passwordConfirmation, setPasswordConfirmation,
       handleLogin, handleRegister,
-      errors,setErrors
+      errors, setErrors
     }}>
-        {children}
+      {children}
     </AuthContext.Provider>
   )
 }
