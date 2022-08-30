@@ -1,14 +1,14 @@
+import { isEmpty, isNull } from 'lodash'
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { login } from '../../api/auth'
 import AuthContext from '../../Context/AuthContext'
+import { deleteUser, setUser } from '../../redux/slices/userSlice'
 
 function AuthContextContainer({ children }) {
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-
   const [errors, setErrors] = useState({})
-  const [user, setUser] = useState({})
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -16,18 +16,41 @@ function AuthContextContainer({ children }) {
 
   const navigate = useNavigate()
 
+  const dispatch = useDispatch()
+
   const handleLogin = async () => {
-    
+
     let credentials = { username, password }
 
-    let res = await login(credentials)
+    let validation = {
+      success: true,
+      errors: {}
+    };
+    if (isEmpty(username)) {
+      validation.success = false;
+      validation.errors.username = ['username is required']
+    }
 
-    if (!res.status) {
-      setErrors(res.errors)
+    if (isEmpty(password)) {
+      validation.success = false;
+      validation.errors.password = ['password is required']
+    }
+
+    if (!validation.success) {
+      setErrors(validation.errors)
+
     } else {
-      localStorage.setItem('token', res.token)
-      setUser(res.user)
-      navigate('/')
+      
+      let res = await login(credentials)
+
+      if (!res.status) {
+        setErrors(res.errors)
+        dispatch(deleteUser())
+      } else {
+        localStorage.setItem('token', res.token)
+        dispatch(setUser(res.user))
+        navigate('/')
+      }
     }
 
   }
@@ -39,8 +62,6 @@ function AuthContextContainer({ children }) {
 
   return (
     <AuthContext.Provider value={{
-      isAuthenticated, setIsAuthenticated,
-      user, setUser,
       username, setUsername,
       email, setEmail,
       password, setPassword,

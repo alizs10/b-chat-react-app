@@ -13,6 +13,7 @@ function LoginForm({setSignupFormVisibility, setLoginFormVisibility}) {
     const handleLoginForm = (e) => {
         e.preventDefault()
 
+
         handleLogin()
     }
 

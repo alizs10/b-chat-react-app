@@ -1,9 +1,12 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { logout } from '../../../api/auth'
+import { deleteUser } from '../../../redux/slices/userSlice'
 
 function UserPopup() {
 
+    const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const handleLogout = async () => {
@@ -14,13 +17,14 @@ function UserPopup() {
 
             if (res) {
                 localStorage.removeItem('token')
-                console.log("token removed");
+                dispatch(deleteUser())
                 navigate('/auth')
             }
             else {
                 console.log(res);
             }
         } else {
+            dispatch(deleteUser())
             navigate('/auth')
         }
     }
