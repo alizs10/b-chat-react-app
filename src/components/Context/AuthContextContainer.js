@@ -2,7 +2,7 @@ import { isEmpty, isNull } from 'lodash'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { login } from '../../api/auth'
+import { checkUsername, login } from '../../api/auth'
 import AuthContext from '../../Context/AuthContext'
 import { deleteUser, setUser } from '../../redux/slices/userSlice'
 
@@ -40,7 +40,7 @@ function AuthContextContainer({ children }) {
       setErrors(validation.errors)
 
     } else {
-      
+
       let res = await login(credentials)
 
       if (!res.status) {
@@ -50,6 +50,25 @@ function AuthContextContainer({ children }) {
         localStorage.setItem('token', res.token)
         dispatch(setUser(res.user))
         navigate('/')
+      }
+    }
+
+  }
+
+  const handleCheckUsername = async (value) => {
+
+    
+    if (value.length >= 6) {
+      let res = await checkUsername({ username: value })
+
+      console.log(res);
+
+      if (res.available) {
+        setErrors({ ...errors,username: [] })
+      } else {
+        setErrors({
+          username: [`@${res.username} in  taken`]
+        })
       }
     }
 
@@ -67,7 +86,8 @@ function AuthContextContainer({ children }) {
       password, setPassword,
       passwordConfirmation, setPasswordConfirmation,
       handleLogin, handleRegister,
-      errors, setErrors
+      errors, setErrors,
+      handleCheckUsername
     }}>
       {children}
     </AuthContext.Provider>
