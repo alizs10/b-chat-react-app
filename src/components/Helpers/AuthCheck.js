@@ -22,24 +22,41 @@ function AuthCheck({ children }) {
 
             //check for authentication
             let token = localStorage.getItem('token');
-            
+
             if (token) {
-                
+
                 const res = await checkAuthentication(token);
-                
+
                 if (res) {
                     dispatch(setUser(res))
                     navigate('/')
                 } else {
-                    console.log("here");
                     dispatch(deleteUser())
-                    navigate('/auth')
+
+                    if (location.pathname === "/auth") {
+                        navigate('/auth')
+                    } else if (location.pathname === "/auth/login") {
+                        navigate('/auth/login')
+                    }
+                    else if (location.pathname === "/auth/register") {
+                        navigate('/auth/register')
+                    } else if (location.pathname === "/auth/verify") {
+                        navigate('/auth/verify')
+                    } else {
+                        navigate('/auth')
+                    }
                 }
+
             } else {
                 dispatch(deleteUser())
-                navigate('/auth')
+                if (location.pathname.includes('/auth')) {
+                    navigate(location.pathname)
+                } else {
+                    navigate('/auth')
+
+                }
             }
-            
+
             setLoading(false)
         }
 

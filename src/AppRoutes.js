@@ -4,6 +4,7 @@ import App from './App'
 import Auth from './components/Auth/Auth'
 import LoginForm from './components/Auth/LoginForm'
 import SignupForm from './components/Auth/SignupForm'
+import VerificationCodeForm from './components/Auth/VerificationCodeForm'
 import AuthContextContainer from './components/Context/AuthContextContainer'
 import AuthCheck from './components/Helpers/AuthCheck'
 
@@ -25,6 +26,7 @@ function AppRoutes() {
                 }>
                     <Route path='login' element={<LoginForm/>}/>
                     <Route path='register' element={<SignupForm/>}/>
+                    <Route path='verify' element={<VerificationCodeForm/>}/>
                 </Route>
             </Routes>
         </BrowserRouter>
