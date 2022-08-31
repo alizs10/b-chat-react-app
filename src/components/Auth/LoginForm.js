@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import { Link } from 'react-router-dom'
 import AuthContext from '../../Context/AuthContext'
 
 function LoginForm({setSignupFormVisibility, setLoginFormVisibility}) {
@@ -50,7 +51,9 @@ function LoginForm({setSignupFormVisibility, setLoginFormVisibility}) {
             </form>
             <div className='flex gap-x-2 items-end text-sm mx-auto'>
                 <span className="text-gray-600">Not a memeber?</span>
-                <button onClick={() => handleSwitchToSignup()} className='text-[#1C42EA]'>Sign up!</button>
+                <Link to="/auth/register">
+                <button className='text-[#1C42EA]'>Sign up!</button>
+                </Link>
             </div>
         </>
     )

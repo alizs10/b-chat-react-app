@@ -5,6 +5,7 @@ import AuthContext from '../../Context/AuthContext'
 import * as Yup from 'yup';
 import YupPassword from 'yup-password';
 import { checkUsername } from '../../api/auth';
+import { Link } from 'react-router-dom';
 YupPassword(Yup);
 
 function SignupForm({ setLoginFormVisibility, setSignupFormVisibility }) {
@@ -134,7 +135,9 @@ function SignupForm({ setLoginFormVisibility, setSignupFormVisibility }) {
             </Formik>
             <div className='flex gap-x-2 items-end text-sm mx-auto'>
                 <span className="text-gray-600">Already a memeber?</span>
-                <button onClick={() => handleSwitchToLogin()} className='text-[#1C42EA]'>Login!</button>
+                <Link to="/auth/login">
+                    <button className='text-[#1C42EA]'>Login!</button>
+                </Link>
             </div>
         </>
 
