@@ -1,27 +1,26 @@
 import { Formik } from 'formik'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import AuthContext from '../../Context/AuthContext'
 
 import * as Yup from 'yup';
 import YupPassword from 'yup-password';
+import { checkUsername } from '../../api/auth';
 YupPassword(Yup);
 
 function SignupForm({ setLoginFormVisibility, setSignupFormVisibility }) {
 
-    // const { username, password, setUsername, setPassword, handleRegister, email, setEmail, passwordConfirmation, setPasswordConfirmation, handleCheckUsername } = useContext(AuthContext)
+    const { handleRegister } = useContext(AuthContext)
+
+    const [usernameAvailability, setUsernameAvailability] = useState(null)
+    const [checking, setChecking] = useState(false)
 
     const handleSwitchToLogin = () => {
         setLoginFormVisibility(true)
         setSignupFormVisibility(false)
     }
 
-    // const handleUsername = value => {
-    //     setUsername(value)
-    //     handleCheckUsername(value)
-    // }
-
     const validationSchema = Yup.object({
-        username: Yup.string().required().min(6).max(25),
+        username: Yup.string().matches(/^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/, "allowed chars: . _ a-z A-Z 0-9").required().min(6).max(25),
         email: Yup.string().required().email(),
         password: Yup.string().required().password(),
         passwordConfirmation: Yup.string().required().oneOf([Yup.ref('password'), null], "must match your password")
@@ -32,6 +31,20 @@ function SignupForm({ setLoginFormVisibility, setSignupFormVisibility }) {
         <>
             <Formik
                 initialValues={{ email: "", username: "", password: "", passwordConfirmation: "" }}
+                validate={(values) => {
+                    if (values.username.length >= 6) {
+                        setTimeout(async () => {
+                            setChecking(true)
+                            let availability = await checkUsername({ username: values.username })
+                            console.log(availability);
+                            availability.available ? setUsernameAvailability(true) : setUsernameAvailability(false)
+                            setChecking(false)
+                        }, 1000)
+                    } else {
+                        setChecking(false)
+                        setUsernameAvailability(null)
+                    }
+                }}
                 validationSchema={() => validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
                     // on submit
@@ -55,7 +68,17 @@ function SignupForm({ setLoginFormVisibility, setSignupFormVisibility }) {
                             <span className='text-center text-xs text-red-500'>{errors.message}</span>
                         )}
                         <div className='flex flex-col gap-y-2 mt-2'>
-                            <label className="ml-3 text-sm text-gray-600">Username</label>
+                            <div className='flex justify-between'>
+                                <label className="ml-3 text-sm text-gray-600">Username</label>
+                                {usernameAvailability != null && (
+
+                                    <span className='text-xs'>
+                                        {checking ? "checking" : (
+                                            usernameAvailability ? "available" : "taken"
+                                        )}
+                                    </span>
+                                )}
+                            </div>
                             <input type="text" className='w-full border border-gray-200 p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800'
                                 name='username'
                                 value={values.username}

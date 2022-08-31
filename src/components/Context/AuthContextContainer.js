@@ -55,24 +55,6 @@ function AuthContextContainer({ children }) {
 
   }
 
-  const handleCheckUsername = async (value) => {
-
-    
-    if (value.length >= 6) {
-      let res = await checkUsername({ username: value })
-
-      console.log(res);
-
-      if (res.available) {
-        setErrors({ ...errors,username: [] })
-      } else {
-        setErrors({
-          username: [`@${res.username} in  taken`]
-        })
-      }
-    }
-
-  }
 
   const handleRegister = (data) => {
     console.log(data);
@@ -86,8 +68,7 @@ function AuthContextContainer({ children }) {
       password, setPassword,
       passwordConfirmation, setPasswordConfirmation,
       handleLogin, handleRegister,
-      errors, setErrors,
-      handleCheckUsername
+      errors, setErrors
     }}>
       {children}
     </AuthContext.Provider>
