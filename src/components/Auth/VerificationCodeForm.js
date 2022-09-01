@@ -3,7 +3,8 @@ import AuthContext from '../../Context/AuthContext'
 
 function VerificationCodeForm() {
 
-    const { email } = useContext(AuthContext)
+
+    const { email, message } = useContext(AuthContext)
 
     const [vCodeArr, setVCodeArr] = useState(["", "", "", "", "", ""])
     const [update, setUpdate] = useState(false)
@@ -90,7 +91,8 @@ function VerificationCodeForm() {
         <form className='flex-center flex-col gap-y-2'>
 
             <div className='w-4/5 md:w-3/5 lg:w-2/5'>
-                <span className='text-xs text-gray-600'>{`verification code is sent to your email "${email}"`}, not receiving? <span className='text-blue-600'>click here</span></span>
+                {/* <span className='text-xs text-gray-600'>{`verification code is sent to your email "${email}"`}, not receiving? <span className='text-blue-600'>click here</span></span> */}
+                <span className='text-xs text-gray-600'>{message}, not receiving? <span className='text-blue-600'>click here</span></span>
                 <span className="mt-4 ml-3 text-left block text-sm text-gray-600">Verification Code</span>
             </div>
             <div className='w-4/5 md:w-3/5 lg:w-2/5 grid grid-cols-6 gap-x-2'>

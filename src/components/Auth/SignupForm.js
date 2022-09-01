@@ -1,57 +1,89 @@
 import { Formik } from 'formik'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import AuthContext from '../../Context/AuthContext'
 
 import * as Yup from 'yup';
 import YupPassword from 'yup-password';
-import { checkUsername } from '../../api/auth';
-import { Link } from 'react-router-dom';
+import { checkUsername, register } from '../../api/auth';
+import { Link, useNavigate } from 'react-router-dom';
+import { set } from 'lodash';
 
 YupPassword(Yup);
 
-function SignupForm({ setLoginFormVisibility, setSignupFormVisibility }) {
+function SignupForm() {
 
-    const { handleRegister } = useContext(AuthContext)
+
+    const {setMessage, username, setUsername, setEmail} = useContext(AuthContext)
+
+    const navigate = useNavigate()
+
+    const [usernameErr, setUsernameErr] = useState("")
 
     const [usernameAvailability, setUsernameAvailability] = useState(null)
     const [checking, setChecking] = useState(false)
 
-    const handleSwitchToLogin = () => {
-        setLoginFormVisibility(true)
-        setSignupFormVisibility(false)
-    }
-
     const validationSchema = Yup.object({
-        username: Yup.string().matches(/^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/, "allowed chars: . _ a-z A-Z 0-9").required().min(6).max(25),
         email: Yup.string().required().email(),
         password: Yup.string().required().password(),
-        passwordConfirmation: Yup.string().required().oneOf([Yup.ref('password'), null], "must match your password")
+        password_confirmation: Yup.string().required().oneOf([Yup.ref('password'), null], "must match your password")
     })
+
+    const handleUsername = value => {
+
+        //validation
+        if (value.match(/^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/)) {
+
+            setUsernameErr("")
+        } else if (value === "") {
+
+            setUsernameErr("username is required")
+        }
+        else {
+            setUsernameErr("allowed chars: . _ a-z A-Z 0-9")
+        }
+        setUsername(value)
+    }
+
+    useEffect(() => {
+
+        if (username.length >= 6) {
+            setTimeout(async () => {
+                setChecking(true)
+                let availability = await checkUsername({ username })
+                console.log(availability);
+                availability.available ? setUsernameAvailability(true) : setUsernameAvailability(false)
+                setChecking(false)
+            }, 1000)
+        } else {
+            setChecking(false)
+            setUsernameAvailability(null)
+        }
+
+    }, [username])
 
     return (
 
         <>
             <Formik
-                initialValues={{ email: "", username: "", password: "", passwordConfirmation: "" }}
-                validate={(values) => {
-                    if (values.username.length >= 6) {
-                        setTimeout(async () => {
-                            setChecking(true)
-                            let availability = await checkUsername({ username: values.username })
-                            console.log(availability);
-                            availability.available ? setUsernameAvailability(true) : setUsernameAvailability(false)
-                            setChecking(false)
-                        }, 1000)
-                    } else {
-                        setChecking(false)
-                        setUsernameAvailability(null)
-                    }
-                }}
+                initialValues={{ email: "", password: "", password_confirmation: "" }}
                 validationSchema={() => validationSchema}
-                onSubmit={(values, { setSubmitting }) => {
-                    // on submit
+                onSubmit={async (values, { setErrors, setSubmitting }) => {
+                    values.username = username
+                    setSubmitting(true)
+                    let res = await register(values)
 
-                    console.log(values);
+                    if (res.status) {
+                        let data = res.data;
+                        
+                        setMessage(data.message)
+                        setEmail(data.user.email)
+                        navigate('/auth/verify')
+                    } else {
+                        console.log(res.errors);
+                        setErrors(res.errors)
+                        setSubmitting(false)
+                    }
+
                 }}
             >
                 {({
@@ -83,13 +115,12 @@ function SignupForm({ setLoginFormVisibility, setSignupFormVisibility }) {
                             </div>
                             <input type="text" className='w-full border border-gray-200 p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800'
                                 name='username'
-                                value={values.username}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
+                                value={username}
+                                onChange={e => handleUsername(e.target.value)}
                             />
                         </div>
-                        {errors.username && touched.username && (
-                            <span className='ml-3 text-xs text-red-500'>{errors.username}</span>
+                        {usernameErr !== "" && (
+                            <span className='ml-3 text-xs text-red-500'>{usernameErr}</span>
                         )}
                         <div className='flex flex-col gap-y-2 mt-2'>
                             <label className="ml-3 text-sm text-gray-600">Email</label>
@@ -118,16 +149,16 @@ function SignupForm({ setLoginFormVisibility, setSignupFormVisibility }) {
                         <div className='flex flex-col gap-y-2 mt-2'>
                             <label className="ml-3 text-sm text-gray-600">Confirm Password</label>
                             <input type="password" className='w-full border border-gray-200 p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800'
-                                name='passwordConfirmation'
-                                value={values.passwordConfirmation}
+                                name='password_confirmation'
+                                value={values.password_confirmation}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                             />
                         </div>
-                        {errors.passwordConfirmation && touched.passwordConfirmation && (
-                            <span className='ml-3 text-xs text-red-500'>{errors.passwordConfirmation}</span>
+                        {errors.password_confirmation && touched.password_confirmation && (
+                            <span className='ml-3 text-xs text-red-500'>{errors.password_confirmation}</span>
                         )}
-                        <button type='submit' className='mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners bg-[#4361EE] btn-hover text-white transition-all duration-300'>
+                        <button className={`mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners ${isSubmitting ? 'bg-gray-200' : 'bg-[#4361EE]'} btn-hover text-white transition-all duration-300`}>
                             <span className='text-lg'>Sign up</span>
                             <i className="fa-regular fa-user-plus text-base"></i>
                         </button>

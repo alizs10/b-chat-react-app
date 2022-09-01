@@ -8,6 +8,7 @@ import { deleteUser, setUser } from '../../redux/slices/userSlice'
 
 function AuthContextContainer({ children }) {
 
+  const [message, setMessage] = useState("")
   const [errors, setErrors] = useState({})
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
@@ -55,24 +56,15 @@ function AuthContextContainer({ children }) {
 
   }
 
-
-  const handleRegister = (data) => {
-    console.log(data);
-  }
-
-  const handleVerify = (data) => {  
-    console.log(data);
-  }
-
-
   return (
     <AuthContext.Provider value={{
       username, setUsername,
       email, setEmail,
       password, setPassword,
       passwordConfirmation, setPasswordConfirmation,
-      handleLogin, handleRegister,
-      errors, setErrors
+      handleLogin,
+      errors, setErrors,
+      message, setMessage
     }}>
       {children}
     </AuthContext.Provider>

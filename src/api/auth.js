@@ -108,7 +108,7 @@ export const register = async data => {
             }
         }).then(response => {
 
-            return response.data;
+            return { status: true, data: response.data }
 
         }).catch(err => {
 
