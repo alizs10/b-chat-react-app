@@ -60,6 +60,10 @@ function AuthContextContainer({ children }) {
     console.log(data);
   }
 
+  const handleVerify = (data) => {  
+    console.log(data);
+  }
+
 
   return (
     <AuthContext.Provider value={{
