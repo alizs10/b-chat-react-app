@@ -1,13 +1,16 @@
 import React, { useContext, useRef, useState } from 'react'
+import { object, string, ValidationError } from 'yup'
+import { verifyEmail } from '../../api/auth'
 import AuthContext from '../../Context/AuthContext'
 
 function VerificationCodeForm() {
 
 
-    const { email, message } = useContext(AuthContext)
+    const { email, message, setMessage } = useContext(AuthContext)
 
     const [vCodeArr, setVCodeArr] = useState(["", "", "", "", "", ""])
     const [update, setUpdate] = useState(false)
+    const [errors, setErrors] = useState({})
 
     const handleVerificationCode = (e, position) => {
 
@@ -21,8 +24,7 @@ function VerificationCodeForm() {
                     if (index < 6) {
                         arr[index] = number
                         let next = index + 1;
-                        if(next < 6)
-                        {
+                        if (next < 6) {
                             handleFocusOnInput(next)
                         }
                     }
@@ -30,7 +32,7 @@ function VerificationCodeForm() {
                 setVCodeArr(arr)
                 setUpdate(!update)
             } else {
-                if(value.length > 1) return
+                if (value.length > 1) return
 
                 let arr = vCodeArr;
                 arr[position] = value;
@@ -87,12 +89,71 @@ function VerificationCodeForm() {
     const vcodeRef4 = useRef(null)
     const vcodeRef5 = useRef(null)
 
+    const validationSchema = object({
+        email: string().required().email().label('email'),
+        verification_code: string().required().length(6).matches(/[0-9]/, 'verification code must be a number').label('verification_code'),
+    })
+
+
+    const handleVerify = async e => {
+        e.preventDefault()
+
+        let data = {
+            verification_code: vCodeArr.join(""),
+            email,
+        }
+
+        try {
+            let validatedData = await validationSchema.validate(data, { abortEarly: false })
+            
+            if (validatedData) {
+                setErrors({})
+
+                let res = await verifyEmail(validatedData)
+                console.log(res);
+                if(res.status)
+                {
+                    let data = res.data;
+
+                    setMessage(data.message)
+                    
+                    
+
+                } else {
+                    console.log(res.errors);
+                    setErrors(res.errors)
+                }
+            }
+
+        } catch (err) {
+
+            if(err instanceof ValidationError)
+            {
+                let validationErrors = {}
+                err.inner.forEach((error) => {
+                    validationErrors[error.path] = error.message;
+                });
+                
+                setErrors(validationErrors)
+            }
+        }
+
+
+    }
+
     return (
-        <form className='flex-center flex-col gap-y-2'>
+        <form className='flex-center flex-col gap-y-2' onSubmit={handleVerify}>
 
             <div className='w-4/5 md:w-3/5 lg:w-2/5'>
-                {/* <span className='text-xs text-gray-600'>{`verification code is sent to your email "${email}"`}, not receiving? <span className='text-blue-600'>click here</span></span> */}
-                <span className='text-xs text-gray-600'>{message}, not receiving? <span className='text-blue-600'>click here</span></span>
+                {message && (
+                    <span className='text-xs text-gray-600'>{message}, not receiving? <span className='text-blue-600'>click here</span></span>
+                )}
+                {errors && errors.email && (
+                    <span className='text-center block text-xs text-red-500'>{errors.email}</span>
+                )}
+                {errors && errors.message && (
+                    <span className='text-center block text-xs text-red-500'>{errors.message}</span>
+                )}
                 <span className="mt-4 ml-3 text-left block text-sm text-gray-600">Verification Code</span>
             </div>
             <div className='w-4/5 md:w-3/5 lg:w-2/5 grid grid-cols-6 gap-x-2'>
@@ -134,13 +195,10 @@ function VerificationCodeForm() {
                     value={vCodeArr[5]}
                     ref={vcodeRef5}
                 />
-                <input type="hidden" maxLength={6}
-                    name="verification_code"
-                    value=""
-                />
-
-            </div>
-
+            {errors && errors.verification_code && (
+                <span className='mt-2 ml-3 col-span-6 text-xs text-red-500'>{errors.verification_code}</span>
+                )}
+                </div>
             <button type='submit' className='mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners bg-[#4361EE] btn-hover text-white transition-all duration-300'>
                 <span className='text-lg'>Verify</span>
                 <i className="fa-regular fa-badge-check text-base"></i>
