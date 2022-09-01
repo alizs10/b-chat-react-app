@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import YupPassword from 'yup-password';
 import { checkUsername } from '../../api/auth';
 import { Link } from 'react-router-dom';
+
 YupPassword(Yup);
 
 function SignupForm({ setLoginFormVisibility, setSignupFormVisibility }) {
