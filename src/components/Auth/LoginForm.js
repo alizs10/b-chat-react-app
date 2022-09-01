@@ -1,18 +1,16 @@
 import { Formik } from 'formik'
 import React, { useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 import { object, string } from 'yup'
+import { login } from '../../api/auth'
 import AuthContext from '../../Context/AuthContext'
+import { deleteUser, setUser } from '../../redux/slices/userSlice'
 
 function LoginForm() {
 
-    const { handleLogin } = useContext(AuthContext)
-
-
-    const handleLoginForm = (e) => {
-        e.preventDefault()
-        handleLogin()
-    }
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const initialValues = {
         username: "",
@@ -29,10 +27,25 @@ function LoginForm() {
             <Formik
                 initialValues={initialValues}
                 validationSchema={() => validationSchema}
-                onSubmit={(values, { setSubmitting }) => {
+                onSubmit={async (values, { setSubmitting, setErrors }) => {
 
-                    //login here
+                    setSubmitting(true)
 
+                    let credentials = {
+                        username: values.username,
+                        password: values.password
+                    }
+
+                    let res = await login(credentials)
+
+                    if (res.status) {
+                        localStorage.setItem('token', res.token)
+                        dispatch(setUser(res.user))
+                        navigate('/')
+                    } else {
+                        dispatch(deleteUser())
+                        setErrors(res.errors)
+                    }
                 }}
             >
                 {({
@@ -63,16 +76,16 @@ function LoginForm() {
                         <div className='flex flex-col gap-y-2 mt-2'>
                             <label className="ml-3 text-sm text-gray-600">Password</label>
                             <input type="password" className='w-full border border-gray-200 p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800'
-                                 name='password'
-                                 value={values.password}
-                                 onChange={handleChange}
-                                 onBlur={handleBlur}
+                                name='password'
+                                value={values.password}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
                             />
                         </div>
                         {errors.password && touched.password && (
                             <span className='text-xs text-red-500'>{errors.password}</span>
                         )}
-                        <button type='submit' className='mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners bg-[#4361EE] btn-hover text-white transition-all duration-300'>
+                        <button type='submit' disabled={isSubmitting ? true : false} className={`mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners ${isSubmitting ? "bg-gray-200" : "bg-[#4361EE]"} btn-hover text-white transition-all duration-300`}>
                             <span className='text-lg'>Login</span>
                             <i className="fa-regular fa-arrow-right-to-arc text-base"></i>
                         </button>

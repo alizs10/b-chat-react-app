@@ -15,46 +15,6 @@ function AuthContextContainer({ children }) {
   const [password, setPassword] = useState("")
   const [passwordConfirmation, setPasswordConfirmation] = useState("")
 
-  const navigate = useNavigate()
-
-  const dispatch = useDispatch()
-
-  const handleLogin = async () => {
-
-    let credentials = { username, password }
-
-    let validation = {
-      success: true,
-      errors: {}
-    };
-    if (isEmpty(username)) {
-      validation.success = false;
-      validation.errors.username = ['username is required']
-    }
-
-    if (isEmpty(password)) {
-      validation.success = false;
-      validation.errors.password = ['password is required']
-    }
-
-    if (!validation.success) {
-      setErrors(validation.errors)
-
-    } else {
-
-      let res = await login(credentials)
-
-      if (!res.status) {
-        setErrors(res.errors)
-        dispatch(deleteUser())
-      } else {
-        localStorage.setItem('token', res.token)
-        dispatch(setUser(res.user))
-        navigate('/')
-      }
-    }
-
-  }
 
   return (
     <AuthContext.Provider value={{
@@ -62,7 +22,6 @@ function AuthContextContainer({ children }) {
       email, setEmail,
       password, setPassword,
       passwordConfirmation, setPasswordConfirmation,
-      handleLogin,
       errors, setErrors,
       message, setMessage
     }}>

@@ -11,6 +11,7 @@ function VerificationCodeForm() {
     const [vCodeArr, setVCodeArr] = useState(["", "", "", "", "", ""])
     const [update, setUpdate] = useState(false)
     const [errors, setErrors] = useState({})
+    const [formSubmitting, setFormSubmitting] = useState(false)
 
     const handleVerificationCode = (e, position) => {
 
@@ -96,8 +97,9 @@ function VerificationCodeForm() {
 
 
     const handleVerify = async e => {
+        console.log("clicked");
         e.preventDefault()
-
+        setFormSubmitting(true)
         let data = {
             verification_code: vCodeArr.join(""),
             email,
@@ -105,19 +107,18 @@ function VerificationCodeForm() {
 
         try {
             let validatedData = await validationSchema.validate(data, { abortEarly: false })
-            
+
             if (validatedData) {
                 setErrors({})
 
                 let res = await verifyEmail(validatedData)
                 console.log(res);
-                if(res.status)
-                {
+                if (res.status) {
                     let data = res.data;
 
                     setMessage(data.message)
-                    
-                    
+                    setTimeout()
+
 
                 } else {
                     console.log(res.errors);
@@ -127,15 +128,15 @@ function VerificationCodeForm() {
 
         } catch (err) {
 
-            if(err instanceof ValidationError)
-            {
+            if (err instanceof ValidationError) {
                 let validationErrors = {}
                 err.inner.forEach((error) => {
                     validationErrors[error.path] = error.message;
                 });
-                
+
                 setErrors(validationErrors)
             }
+            setFormSubmitting(false)
         }
 
 
@@ -195,11 +196,11 @@ function VerificationCodeForm() {
                     value={vCodeArr[5]}
                     ref={vcodeRef5}
                 />
-            {errors && errors.verification_code && (
-                <span className='mt-2 ml-3 col-span-6 text-xs text-red-500'>{errors.verification_code}</span>
+                {errors && errors.verification_code && (
+                    <span className='mt-2 ml-3 col-span-6 text-xs text-red-500'>{errors.verification_code}</span>
                 )}
-                </div>
-            <button type='submit' className='mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners bg-[#4361EE] btn-hover text-white transition-all duration-300'>
+            </div>
+            <button type='submit' disabled={formSubmitting ? true : false} className={`mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners ${formSubmitting ? 'bg-gray-200' : 'bg-[#4361EE]'} btn-hover text-white transition-all duration-300`}>
                 <span className='text-lg'>Verify</span>
                 <i className="fa-regular fa-badge-check text-base"></i>
             </button>
