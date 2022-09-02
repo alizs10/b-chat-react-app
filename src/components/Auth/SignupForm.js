@@ -1,23 +1,22 @@
 import { Formik } from 'formik'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import AuthContext from '../../Context/AuthContext'
 
 import * as Yup from 'yup';
 import YupPassword from 'yup-password';
 import { checkUsername, register } from '../../api/auth';
 import { Link, useNavigate } from 'react-router-dom';
-import { set } from 'lodash';
+
 
 YupPassword(Yup);
 
 function SignupForm() {
 
 
-    const {setMessage, username, setUsername, setEmail} = useContext(AuthContext)
+    const { setMessage, username, setUsername, setEmail } = useContext(AuthContext)
 
     const navigate = useNavigate()
 
-    const [usernameErr, setUsernameErr] = useState("")
 
     const [usernameAvailability, setUsernameAvailability] = useState(null)
     const [checking, setChecking] = useState(false)
@@ -29,28 +28,43 @@ function SignupForm() {
     })
 
     const handleUsername = value => {
-
-        //validation
-        if (value.match(/^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/)) {
-
-            setUsernameErr("")
-        } else if (value === "") {
-
-            setUsernameErr("username is required")
-        }
-        else {
-            setUsernameErr("allowed chars: . _ a-z A-Z 0-9")
-        }
         setUsername(value)
     }
 
+    const validateUsername = value => {
+        let validation = {
+            status: true,
+            error: ""
+        }
+        if (value.length < 6) {
+            validation.status = false;
+            validation.error = "username must be at least 6 characters";
+        }
+        else if (value === "") {
+            validation.status = false;
+            validation.error = "username is required";
+        }
+        else if (!value.match(/^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/)) {
+            validation.status = false;
+            validation.error = "allowed chars: . _ a-z A-Z 0-9";
+        }
+        return validation;
+    }
+
     useEffect(() => {
+
+
+        let usernameValidation = validateUsername(username)
+        if (!usernameValidation.status) {
+            formRef.current.setFieldError("username", usernameValidation.error)
+        } else {
+            formRef.current.setFieldError("username", "")
+        }
 
         if (username.length >= 6) {
             setTimeout(async () => {
                 setChecking(true)
                 let availability = await checkUsername({ username })
-                console.log(availability);
                 availability.available ? setUsernameAvailability(true) : setUsernameAvailability(false)
                 setChecking(false)
             }, 1000)
@@ -61,20 +75,34 @@ function SignupForm() {
 
     }, [username])
 
+    const formRef = useRef(null)
+
     return (
 
         <>
             <Formik
-                initialValues={{ email: "", password: "", password_confirmation: "" }}
+                innerRef={formRef}
+                initialValues={{ username: "", email: "", password: "", password_confirmation: "" }}
                 validationSchema={() => validationSchema}
+                validate={() => {
+                    console.log("here");
+                    const errors = {};
+
+                    let usernameValidation = validateUsername(username)
+                    if (!usernameValidation.status) {
+                        errors.username = usernameValidation.error
+                    }
+
+                    return errors
+                }}
                 onSubmit={async (values, { setErrors, setSubmitting }) => {
-                    values.username = username
+
                     setSubmitting(true)
                     let res = await register(values)
 
                     if (res.status) {
                         let data = res.data;
-                        
+
                         setMessage(data.message)
                         setEmail(data.user.email)
                         navigate('/auth/verify')
@@ -119,8 +147,8 @@ function SignupForm() {
                                 onChange={e => handleUsername(e.target.value)}
                             />
                         </div>
-                        {usernameErr !== "" && (
-                            <span className='ml-3 text-xs text-red-500'>{usernameErr}</span>
+                        {errors.username && touched.username && (
+                            <span className='ml-3 text-xs text-red-500'>{errors.username}</span>
                         )}
                         <div className='flex flex-col gap-y-2 mt-2'>
                             <label className="ml-3 text-sm text-gray-600">Email</label>
@@ -158,7 +186,7 @@ function SignupForm() {
                         {errors.password_confirmation && touched.password_confirmation && (
                             <span className='ml-3 text-xs text-red-500'>{errors.password_confirmation}</span>
                         )}
-                        <button className={`mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners ${isSubmitting ? 'bg-gray-200' : 'bg-[#4361EE]'} btn-hover text-white transition-all duration-300`}>
+                        <button type='submit' className={`mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners ${isSubmitting ? 'bg-gray-200' : 'bg-[#4361EE]'} btn-hover text-white transition-all duration-300`}>
                             <span className='text-lg'>Sign up</span>
                             <i className="fa-regular fa-user-plus text-base"></i>
                         </button>
