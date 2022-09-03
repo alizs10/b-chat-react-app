@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import YupPassword from 'yup-password';
 import { checkUsername, register } from '../../api/auth';
 import { Link, useNavigate } from 'react-router-dom';
+import { isNull } from 'lodash';
 
 
 YupPassword(Yup);
@@ -13,69 +14,37 @@ YupPassword(Yup);
 function SignupForm() {
 
 
-    const { setMessage, username, setUsername, setEmail } = useContext(AuthContext)
+    const { setMessage, setEmail } = useContext(AuthContext)
 
     const navigate = useNavigate()
+    const formRef = useRef(null)
 
 
     const [usernameAvailability, setUsernameAvailability] = useState(null)
     const [checking, setChecking] = useState(false)
 
+
     const validationSchema = Yup.object({
+        username: Yup.string().required().matches(/^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/, 'allowed chars: . _ a-z A-Z 0-9').min(6),
         email: Yup.string().required().email(),
         password: Yup.string().required().password(),
         password_confirmation: Yup.string().required().oneOf([Yup.ref('password'), null], "must match your password")
     })
 
-    const handleUsername = value => {
-        setUsername(value)
-    }
-
-    const validateUsername = value => {
-        let validation = {
-            status: true,
-            error: ""
-        }
-        if (value.length < 6) {
-            validation.status = false;
-            validation.error = "username must be at least 6 characters";
-        }
-        else if (value === "") {
-            validation.status = false;
-            validation.error = "username is required";
-        }
-        else if (!value.match(/^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/)) {
-            validation.status = false;
-            validation.error = "allowed chars: . _ a-z A-Z 0-9";
-        }
-        return validation;
-    }
-
-    useEffect(() => {
-
-
-        let usernameValidation = validateUsername(username)
-        if (!usernameValidation.status) {
-            formRef.current.setFieldError("username", usernameValidation.error)
-        } else {
-            formRef.current.setFieldError("username", "")
-        }
-
-        if (username.length >= 6) {
-            setTimeout(async () => {
-                setChecking(true)
-                let availability = await checkUsername({ username })
-                availability.available ? setUsernameAvailability(true) : setUsernameAvailability(false)
-                setChecking(false)
-            }, 1000)
-        } else {
+    const handleCheckUsername = async value => {
+        setChecking(true)
+        try {
+            let availability = await checkUsername({ username: value })
+            availability.available ? setUsernameAvailability(true) : setUsernameAvailability(false)
             setChecking(false)
-            setUsernameAvailability(null)
+
+        } catch (error) {
+
+            setChecking(false)
         }
 
-    }, [username])
+    }
 
-    const formRef = useRef(null)
 
     return (
 
@@ -84,17 +53,6 @@ function SignupForm() {
                 innerRef={formRef}
                 initialValues={{ username: "", email: "", password: "", password_confirmation: "" }}
                 validationSchema={() => validationSchema}
-                validate={() => {
-                    console.log("here");
-                    const errors = {};
-
-                    let usernameValidation = validateUsername(username)
-                    if (!usernameValidation.status) {
-                        errors.username = usernameValidation.error
-                    }
-
-                    return errors
-                }}
                 onSubmit={async (values, { setErrors, setSubmitting }) => {
 
                     setSubmitting(true)
@@ -130,21 +88,21 @@ function SignupForm() {
                             <span className='text-center text-xs text-red-500'>{errors.message}</span>
                         )}
                         <div className='flex flex-col gap-y-2 mt-2'>
-                            <div className='flex justify-between'>
-                                <label className="ml-3 text-sm text-gray-600">Username</label>
-                                {usernameAvailability != null && (
+                            <div className='flex justify-between mx-3'>
+                                <label className="text-sm text-gray-600">Username</label>
+                                <span className='flex gap-x-1 items-center'>
+                                    <button type='button' onClick={() => handleCheckUsername(values.username)} className='text-xs text-[#1C42EA]'>{checking ? '...' : 'check'}</button>
+                                    {!isNull(usernameAvailability) && (
+                                        <span className={`${usernameAvailability ? 'text-emerald-500' : 'text-red-500'} text-xs`}>({usernameAvailability ? 'available' : 'taken'})</span>
+                                    )}
+                                </span>
 
-                                    <span className='text-xs'>
-                                        {checking ? "checking" : (
-                                            usernameAvailability ? "available" : "taken"
-                                        )}
-                                    </span>
-                                )}
                             </div>
                             <input type="text" className='w-full border border-gray-200 p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800'
                                 name='username'
-                                value={username}
-                                onChange={e => handleUsername(e.target.value)}
+                                value={values.username}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
                             />
                         </div>
                         {errors.username && touched.username && (
@@ -203,5 +161,4 @@ function SignupForm() {
 
     )
 }
-
 export default SignupForm

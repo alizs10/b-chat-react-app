@@ -92,11 +92,16 @@ function LoginForm() {
                     </form>
                 )}
             </Formik>
+            <div className='flex-center flex-col gap-y-2'>
 
-            <div className='flex gap-x-2 items-end text-sm mx-auto'>
-                <span className="text-gray-600">Not a memeber?</span>
-                <Link to="/auth/register">
-                    <button className='text-[#1C42EA]'>Sign up!</button>
+                <div className='flex gap-x-2 items-end text-sm mx-auto'>
+                    <span className="text-gray-600">Not a memeber?</span>
+                    <Link to="/auth/register">
+                        <button className='text-[#1C42EA]'>Sign up!</button>
+                    </Link>
+                </div>
+                <Link to="/auth/forgot-password">
+                    <button className='text-gray-600 text-xs'>Forgot Password?</button>
                 </Link>
             </div>
         </>

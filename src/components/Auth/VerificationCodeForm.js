@@ -159,7 +159,7 @@ function VerificationCodeForm() {
             </div>
             <div className='w-4/5 md:w-3/5 lg:w-2/5 grid grid-cols-6 gap-x-2'>
 
-                <input type="text" className='col-span-1 border border-gray-200 text-center p-2 md:p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800'
+                <input type="text" autoFocus={true} className='col-span-1 border border-gray-200 text-center p-2 md:p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800'
                     onChange={e => handleVerificationCode(e, 0)}
                     onKeyDown={e => handleOnKeyDown(e, 0)}
 

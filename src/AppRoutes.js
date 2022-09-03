@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import App from './App'
 import Auth from './components/Auth/Auth'
+import ForgotPasswordForm from './components/Auth/ForgotPasswordForm'
 import LoginForm from './components/Auth/LoginForm'
 import SignupForm from './components/Auth/SignupForm'
 import VerificationCodeForm from './components/Auth/VerificationCodeForm'
@@ -27,6 +28,7 @@ function AppRoutes() {
                     <Route path='login' element={<LoginForm/>}/>
                     <Route path='register' element={<SignupForm/>}/>
                     <Route path='verify' element={<VerificationCodeForm/>}/>
+                    <Route path='forgot-password' element={<ForgotPasswordForm/>}/>
                 </Route>
             </Routes>
         </BrowserRouter>
