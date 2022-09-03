@@ -1,10 +1,12 @@
 import { Formik } from 'formik'
-import React from 'react'
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { object, string } from 'yup'
 import { forgotPassword } from '../../api/auth'
 
 function ForgotPasswordForm() {
 
+    const [message, setMessage] = useState("")
 
     const validationSchema = object({
         email: string().required().email()
@@ -14,9 +16,9 @@ function ForgotPasswordForm() {
         <>
 
             <Formik
-                initialValues={{email: ""}}
+                initialValues={{ email: "" }}
                 validationSchema={() => validationSchema}
-                onSubmit={async (values, { setSubmitting, setErrors }) => {
+                onSubmit={async (values, { setSubmitting, setErrors, resetForm }) => {
 
                     setSubmitting(true)
 
@@ -27,8 +29,9 @@ function ForgotPasswordForm() {
                     let res = await forgotPassword(data)
 
                     if (res.status) {
-                        console.log(res);
-                    
+                        let data = res.data
+                        setMessage(data.message)
+                        resetForm()
                     } else {
                         setErrors(res.errors)
                     }
@@ -44,6 +47,9 @@ function ForgotPasswordForm() {
                     isSubmitting,
                 }) => (
                     <form className='mx-auto p-3 flex flex-col gap-y-2' onSubmit={handleSubmit}>
+                        {message && (
+                            <span className='text-center text-xs text-gray-600'>{message}</span>
+                        )}
                         {errors.message && (
                             <span className='text-center text-xs text-red-500'>{errors.message}</span>
                         )}
@@ -59,7 +65,7 @@ function ForgotPasswordForm() {
                         {errors.email && touched.email && (
                             <span className='text-xs text-red-500'>{errors.email}</span>
                         )}
-                        
+
                         <button type='submit' disabled={isSubmitting ? true : false} className={`mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners ${isSubmitting ? "bg-gray-200" : "bg-[#4361EE]"} btn-hover text-white transition-all duration-300`}>
                             <span className='text-base'>Send Recovery Email</span>
                             <i className="fa-regular fa-paper-plane text-base"></i>
@@ -67,7 +73,9 @@ function ForgotPasswordForm() {
                     </form>
                 )}
             </Formik>
-
+            <Link to="/auth/login">
+                <button className='text-gray-600 text-xs'>Want to Login? click here</button>
+            </Link>
         </>
     )
 }
