@@ -1,4 +1,5 @@
 import React, { useContext, useRef, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import { object, string, ValidationError } from 'yup'
 import { verifyEmail } from '../../api/auth'
 import AuthContext from '../../Context/AuthContext'
@@ -6,12 +7,17 @@ import AuthContext from '../../Context/AuthContext'
 function VerificationCodeForm() {
 
 
-    const { email, message, setMessage } = useContext(AuthContext)
+    const { message, setMessage } = useContext(AuthContext)
+
+    const { email } = useParams()
 
     const [vCodeArr, setVCodeArr] = useState(["", "", "", "", "", ""])
     const [update, setUpdate] = useState(false)
     const [errors, setErrors] = useState({})
     const [formSubmitting, setFormSubmitting] = useState(false)
+
+    const [canRequestAgain, setCanRequestAgain] = useState(true)
+    const [isVerified, setIsVerified] = useState(false)
 
     const handleVerificationCode = (e, position) => {
 
@@ -97,7 +103,7 @@ function VerificationCodeForm() {
 
 
     const handleVerify = async e => {
-        console.log("clicked");
+
         e.preventDefault()
         setFormSubmitting(true)
         let data = {
@@ -112,16 +118,16 @@ function VerificationCodeForm() {
                 setErrors({})
 
                 let res = await verifyEmail(validatedData)
-                console.log(res);
+
                 if (res.status) {
                     let data = res.data;
-
                     setMessage(data.message)
-                    setTimeout()
-
-
+                    resetForm()
+                    setCanRequestAgain(false)
+                    setIsVerified(true)
                 } else {
-                    console.log(res.errors);
+
+                    setCanRequestAgain(true)
                     setErrors(res.errors)
                 }
             }
@@ -142,69 +148,104 @@ function VerificationCodeForm() {
 
     }
 
+    const resetForm = () => {
+        vcodeRef0.current.focus()
+        setVCodeArr(["", "", "", "", "", ""])
+    }
+
     return (
-        <form className='flex-center flex-col gap-y-2' onSubmit={handleVerify}>
+        <>
+            {!isVerified ? (
+                <>
+                    <form className='flex-center flex-col gap-y-2' onSubmit={handleVerify}>
 
-            <div className='w-4/5 md:w-3/5 lg:w-2/5'>
-                {message && (
-                    <span className='text-xs text-gray-600'>{message}, not receiving? <span className='text-blue-600'>click here</span></span>
-                )}
-                {errors && errors.email && (
-                    <span className='text-center block text-xs text-red-500'>{errors.email}</span>
-                )}
-                {errors && errors.message && (
-                    <span className='text-center block text-xs text-red-500'>{errors.message}</span>
-                )}
-                <span className="mt-4 ml-3 text-left block text-sm text-gray-600">Verification Code</span>
-            </div>
-            <div className='w-4/5 md:w-3/5 lg:w-2/5 grid grid-cols-6 gap-x-2'>
+                        <div className='w-4/5 md:w-3/5 lg:w-2/5'>
+                            <div className='flex-center flex-col gap-y-2'>
 
-                <input type="text" autoFocus={true} className='col-span-1 border border-gray-200 text-center p-2 md:p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800'
-                    onChange={e => handleVerificationCode(e, 0)}
-                    onKeyDown={e => handleOnKeyDown(e, 0)}
+                                {message && (
+                                    <span className='text-base text-gray-600'>{message}</span>
+                                )}
+                                {canRequestAgain && (
+                                    <span className="text-gray-600 text-xs">not receiving email? <span className='text-[#1C42EA]'>click here</span></span>
+                                )}
+                            </div>
+                            {errors && errors.email && (
+                                <span className='text-center block text-xs text-red-500'>{errors.email}</span>
+                            )}
+                            {errors && errors.message && (
+                                <span className='text-center block text-xs text-red-500'>{errors.message}</span>
+                            )}
+                            <span className="mt-4 ml-3 text-left block text-sm text-gray-600">Verification Code</span>
+                        </div>
+                        <div className='w-4/5 md:w-3/5 lg:w-2/5 grid grid-cols-6 gap-x-2'>
 
-                    value={vCodeArr[0]}
-                    ref={vcodeRef0}
-                />
-                <input type="text" className='col-span-1 border border-gray-200 text-center p-2 md:p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800'
-                    onChange={e => handleVerificationCode(e, 1)}
-                    onKeyDown={e => handleOnKeyDown(e, 1)}
-                    value={vCodeArr[1]}
-                    ref={vcodeRef1}
-                />
-                <input type="text" className='col-span-1 border border-gray-200 text-center p-2 md:p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800'
-                    onChange={e => handleVerificationCode(e, 2)}
-                    onKeyDown={e => handleOnKeyDown(e, 2)}
-                    value={vCodeArr[2]}
-                    ref={vcodeRef2}
-                />
-                <input type="text" className='col-span-1 border border-gray-200 text-center p-2 md:p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800'
-                    onChange={e => handleVerificationCode(e, 3)}
-                    onKeyDown={e => handleOnKeyDown(e, 3)}
-                    value={vCodeArr[3]}
-                    ref={vcodeRef3}
-                />
-                <input type="text" className='col-span-1 border border-gray-200 text-center p-2 md:p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800'
-                    onChange={e => handleVerificationCode(e, 4)}
-                    onKeyDown={e => handleOnKeyDown(e, 4)}
-                    value={vCodeArr[4]}
-                    ref={vcodeRef4}
-                />
-                <input type="text" className='col-span-1 border border-gray-200 text-center p-2 md:p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800'
-                    onChange={e => handleVerificationCode(e, 5)}
-                    onKeyDown={e => handleOnKeyDown(e, 5)}
-                    value={vCodeArr[5]}
-                    ref={vcodeRef5}
-                />
-                {errors && errors.verification_code && (
-                    <span className='mt-2 ml-3 col-span-6 text-xs text-red-500'>{errors.verification_code}</span>
-                )}
-            </div>
-            <button type='submit' disabled={formSubmitting ? true : false} className={`mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners ${formSubmitting ? 'bg-gray-200' : 'bg-[#4361EE]'} btn-hover text-white transition-all duration-300`}>
-                <span className='text-lg'>Verify</span>
-                <i className="fa-regular fa-badge-check text-base"></i>
-            </button>
-        </form>
+                            <input type="text" autoFocus={true} className='col-span-1 border border-gray-200 text-center p-2 md:p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800'
+                                onChange={e => handleVerificationCode(e, 0)}
+                                onKeyDown={e => handleOnKeyDown(e, 0)}
+
+                                value={vCodeArr[0]}
+                                ref={vcodeRef0}
+                            />
+                            <input type="text" className='col-span-1 border border-gray-200 text-center p-2 md:p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800'
+                                onChange={e => handleVerificationCode(e, 1)}
+                                onKeyDown={e => handleOnKeyDown(e, 1)}
+                                value={vCodeArr[1]}
+                                ref={vcodeRef1}
+                            />
+                            <input type="text" className='col-span-1 border border-gray-200 text-center p-2 md:p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800'
+                                onChange={e => handleVerificationCode(e, 2)}
+                                onKeyDown={e => handleOnKeyDown(e, 2)}
+                                value={vCodeArr[2]}
+                                ref={vcodeRef2}
+                            />
+                            <input type="text" className='col-span-1 border border-gray-200 text-center p-2 md:p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800'
+                                onChange={e => handleVerificationCode(e, 3)}
+                                onKeyDown={e => handleOnKeyDown(e, 3)}
+                                value={vCodeArr[3]}
+                                ref={vcodeRef3}
+                            />
+                            <input type="text" className='col-span-1 border border-gray-200 text-center p-2 md:p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800'
+                                onChange={e => handleVerificationCode(e, 4)}
+                                onKeyDown={e => handleOnKeyDown(e, 4)}
+                                value={vCodeArr[4]}
+                                ref={vcodeRef4}
+                            />
+                            <input type="text" className='col-span-1 border border-gray-200 text-center p-2 md:p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-800'
+                                onChange={e => handleVerificationCode(e, 5)}
+                                onKeyDown={e => handleOnKeyDown(e, 5)}
+                                value={vCodeArr[5]}
+                                ref={vcodeRef5}
+                            />
+                            {errors && errors.verification_code && (
+                                <span className='mt-2 ml-3 col-span-6 text-xs text-red-500'>{errors.verification_code}</span>
+                            )}
+                        </div>
+                        <button type='submit' disabled={formSubmitting ? true : false} className={`mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners ${formSubmitting ? 'bg-gray-200' : 'bg-[#4361EE]'} btn-hover text-white transition-all duration-300`}>
+                            <span className='text-base'>Verify</span>
+                            <i className="fa-regular fa-badge-check text-lg"></i>
+                        </button>
+                    </form>
+                    <Link to="/auth/login">
+                        <button className='text-gray-600 text-xs'>Want to Login? click here</button>
+                    </Link>
+                </>
+            ) : (
+                <div className='flex-center flex-col gap-y-2'>
+                    {message && (
+                        <span className='text-base text-gray-600'>{message}</span>
+                    )}
+                    <Link to="/auth/login">
+                        <button type='button' className="mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners 'bg-[#4361EE] btn-hover text-white transition-all duration-300">
+                            <span className='text-base'>Login</span>
+                            <i className="fa-regular fa-arrow-right-to-arc text-lg"></i>
+                        </button>
+                    </Link>
+                </div>
+            )}
+
+
+        </>
+
     )
 }
 

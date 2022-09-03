@@ -62,8 +62,7 @@ function SignupForm() {
                         let data = res.data;
 
                         setMessage(data.message)
-                        setEmail(data.user.email)
-                        navigate('/auth/verify')
+                        navigate(`/auth/verify/${data.user.email}`)
                     } else {
                         console.log(res.errors);
                         setErrors(res.errors)

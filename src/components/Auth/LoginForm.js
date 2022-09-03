@@ -4,11 +4,11 @@ import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { object, string } from 'yup'
 import { login } from '../../api/auth'
-import AuthContext from '../../Context/AuthContext'
+
 import { deleteUser, setUser } from '../../redux/slices/userSlice'
 
 function LoginForm() {
-
+    
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -86,8 +86,8 @@ function LoginForm() {
                             <span className='text-xs text-red-500'>{errors.password}</span>
                         )}
                         <button type='submit' disabled={isSubmitting ? true : false} className={`mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners ${isSubmitting ? "bg-gray-200" : "bg-[#4361EE]"} btn-hover text-white transition-all duration-300`}>
-                            <span className='text-lg'>Login</span>
-                            <i className="fa-regular fa-arrow-right-to-arc text-base"></i>
+                            <span className='text-base'>Login</span>
+                            <i className="fa-regular fa-arrow-right-to-arc text-lg"></i>
                         </button>
                     </form>
                 )}

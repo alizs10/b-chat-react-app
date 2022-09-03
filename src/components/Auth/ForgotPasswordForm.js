@@ -68,7 +68,7 @@ function ForgotPasswordForm() {
 
                         <button type='submit' disabled={isSubmitting ? true : false} className={`mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners ${isSubmitting ? "bg-gray-200" : "bg-[#4361EE]"} btn-hover text-white transition-all duration-300`}>
                             <span className='text-base'>Send Recovery Email</span>
-                            <i className="fa-regular fa-paper-plane text-base"></i>
+                            <i className="fa-regular fa-paper-plane text-lg"></i>
                         </button>
                     </form>
                 )}

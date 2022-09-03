@@ -28,7 +28,7 @@ function AppRoutes() {
                 }>
                     <Route path='login' element={<LoginForm/>}/>
                     <Route path='register' element={<SignupForm/>}/>
-                    <Route path='verify' element={<VerificationCodeForm/>}/>
+                    <Route path='verify/:email' element={<VerificationCodeForm/>}/>
                     <Route path='forgot-password' element={<ForgotPasswordForm/>}/>
                     <Route path='reset-password/:email/:token' element={<ResetPasswordForm/>}/>
                 </Route>
