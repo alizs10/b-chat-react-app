@@ -7,7 +7,7 @@ function Profile({ handleClose }) {
     className="w-full md:w-3/5 bg-white shadow-md rounded-corners p-3">
       <div className='flex justify-between items-center border-b border-gray-200 pb-1'>
         <span className="flex gap-x-2 items-center">
-          <i className="fa-regular fa-user-pen text-sm"></i>
+          <i className="fa-regular fa-circle-user text-base"></i>
           <span className="text-sm text-gray-800">Profile</span>
         </span>
         <span onClick={() => handleClose(false)} className='cursor-pointer flex-center w-8 h-8 text-xs rounded-full hover:bg-gray-200 transition-all duration-300'>

@@ -3,6 +3,7 @@ import SidebarContext from '../../Context/SidebarContext'
 import Backdrop from '../Helpers/Backdrop'
 import CenterContainer from '../Helpers/CenterContainer'
 import Profile from '../Profile/Profile'
+import Settings from '../Settings/Settings'
 import AlertsPopup from './Head/AlertsPopup'
 import UserPopup from './Head/UserPopup'
 import SearchInChat from './SearchInChat'
@@ -12,6 +13,7 @@ function Head() {
     const [userPopupVisibility, setUserPopupVisibility] = useState(false)
     const [alertsPopupVisibility, setAlertsPopupVisibility] = useState(false)
     const [profileVisibility, setProfileVisibility] = useState(false)
+    const [settingsVisibility, setSettingsVisibility] = useState(true)
 
     const { setSidebarVisibility } = useContext(SidebarContext)
 
@@ -41,7 +43,7 @@ function Head() {
                         </span>
                         {userPopupVisibility && (
                             <Backdrop handleClick={setUserPopupVisibility} toggler={userPopupVisibility}>
-                                <UserPopup profileToggler={setProfileVisibility} />
+                                <UserPopup settingsToggler={setSettingsVisibility} profileToggler={setProfileVisibility} />
                             </Backdrop>
                         )}
                     </div>
@@ -50,6 +52,10 @@ function Head() {
 
             <Backdrop toggler={profileVisibility} handleClick={setProfileVisibility}>
                 <CenterContainer element={<Profile handleClose={setProfileVisibility}/>} handleClick={setProfileVisibility}/>
+            </Backdrop>
+
+            <Backdrop toggler={settingsVisibility} handleClick={setSettingsVisibility}>
+                <CenterContainer element={<Settings handleClose={setSettingsVisibility}/>} handleClick={setSettingsVisibility}/>
             </Backdrop>
         </>
     )
