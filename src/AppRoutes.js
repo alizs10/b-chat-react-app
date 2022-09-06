@@ -15,22 +15,20 @@ function AppRoutes() {
         <BrowserRouter>
             <Routes>
                 <Route path='/' element={
-                    <AuthCheck>
-                        <App />
-                    </AuthCheck>
+
+                    <App />
+
                 } />
                 <Route path='/auth' element={
                     <AuthContextContainer>
-                        <AuthCheck>
-                            <Auth />
-                        </AuthCheck>
+                        <Auth />
                     </AuthContextContainer>
                 }>
-                    <Route path='login' element={<LoginForm/>}/>
-                    <Route path='register' element={<SignupForm/>}/>
-                    <Route path='verify/:email' element={<VerificationCodeForm/>}/>
-                    <Route path='forgot-password' element={<ForgotPasswordForm/>}/>
-                    <Route path='reset-password/:email/:token' element={<ResetPasswordForm/>}/>
+                    <Route path='login' element={<LoginForm />} />
+                    <Route path='register' element={<SignupForm />} />
+                    <Route path='verify/:email' element={<VerificationCodeForm />} />
+                    <Route path='forgot-password' element={<ForgotPasswordForm />} />
+                    <Route path='reset-password/:email/:token' element={<ResetPasswordForm />} />
                 </Route>
             </Routes>
         </BrowserRouter>

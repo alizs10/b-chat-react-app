@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import Chat from "./components/Chat";
+import Backdrop from "./components/Helpers/Backdrop";
+import CenterContainer from "./components/Helpers/CenterContainer";
 import Sidebar from "./components/Sidebar";
+import NewConversationWindow from "./components/Sidebar/NewConversationWindow";
 import SidebarContext from "./Context/SidebarContext";
 
 function App() {
