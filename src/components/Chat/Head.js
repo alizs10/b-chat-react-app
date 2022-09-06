@@ -11,7 +11,7 @@ function Head() {
 
     const [userPopupVisibility, setUserPopupVisibility] = useState(false)
     const [alertsPopupVisibility, setAlertsPopupVisibility] = useState(false)
-    const [profileVisibility, setProfileVisibility] = useState(true)
+    const [profileVisibility, setProfileVisibility] = useState(false)
 
     const { setSidebarVisibility } = useContext(SidebarContext)
 
@@ -41,15 +41,15 @@ function Head() {
                         </span>
                         {userPopupVisibility && (
                             <Backdrop handleClick={setUserPopupVisibility} toggler={userPopupVisibility}>
-                                <UserPopup />
+                                <UserPopup profileToggler={setProfileVisibility} />
                             </Backdrop>
                         )}
                     </div>
                 </div>
             </div>
 
-            <Backdrop toggler={profileVisibility}>
-                <CenterContainer element={<Profile/>}/>
+            <Backdrop toggler={profileVisibility} handleClick={setProfileVisibility}>
+                <CenterContainer element={<Profile handleClose={setProfileVisibility}/>} handleClick={setProfileVisibility}/>
             </Backdrop>
         </>
     )

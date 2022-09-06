@@ -7,7 +7,7 @@ import CenterContainer from './Helpers/CenterContainer'
 
 function Sidebar({ setSidebarVisibility }) {
 
-    const [newConversationWindowVisibility, setNewConversationWindowVisibility] = useState(true)
+    const [newConversationWindowVisibility, setNewConversationWindowVisibility] = useState(false)
 
     return (
         <>

@@ -2,7 +2,9 @@ import React from 'react'
 
 function Profile({ handleClose }) {
   return (
-    <div className="w-full md:w-3/5 bg-white shadow-md rounded-corners p-3">
+    <div
+    onClick={e => e.stopPropagation()} 
+    className="w-full md:w-3/5 bg-white shadow-md rounded-corners p-3">
       <div className='flex justify-between items-center border-b border-gray-200 pb-1'>
         <span className="flex gap-x-2 items-center">
           <i className="fa-regular fa-user-pen text-sm"></i>

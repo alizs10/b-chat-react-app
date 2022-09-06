@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { logout } from '../../../api/auth'
 import { deleteUser } from '../../../redux/slices/userSlice'
 
-function UserPopup() {
+function UserPopup({profileToggler}) {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -31,7 +31,9 @@ function UserPopup() {
 
     return (
         <div className="w-48 overflow-hidden flex flex-col absolute right-0 top-[5.5rem] z-30 shadow-md bg-white rounded-corners">
-            <button className="text-right hover:bg-gray-100 transition-all duration-300 flex-center gap-x-2 py-3 text-xs text-gray-800">
+            <button 
+            onClick={() => profileToggler(true)}
+            className="text-right hover:bg-gray-100 transition-all duration-300 flex-center gap-x-2 py-3 text-xs text-gray-800">
                 <i className="fa-regular fa-circle-user"></i>
                 <span>Your Profile</span>
             </button>
