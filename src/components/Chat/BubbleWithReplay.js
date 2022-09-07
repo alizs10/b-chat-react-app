@@ -38,8 +38,8 @@ function BubbleWithReplay() {
 
             </div>
             <div className='flex items-end gap-x-2'>
-                <span className="text-xs flex gap-x-4">
-                    <span className="text-[#4361ee]">2:43 PM</span>
+                <span className="text-[12px] mb-1">
+                    <span className="text-gray-600">2:43 PM</span>
                 </span>
             </div>
         </div>

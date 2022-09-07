@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import ReplayContext from '../../Context/ReplayContext'
 
-function Replay({ dir = "left", replayBtnRef, replayRemover, setReplayBtnVisibility }) {
+function Replay({ msgId, dir = "left", replayBtnRef, replayRemover, setReplayBtnVisibility }) {
 
     const handleMouseOver = () => {
         clearTimeout(replayRemover)
@@ -9,8 +10,11 @@ function Replay({ dir = "left", replayBtnRef, replayRemover, setReplayBtnVisibil
     const handleMouseLeave = () => {
         setReplayBtnVisibility(false)
     }
+
+    const { handleReplay } = useContext(ReplayContext)
+
     return (
-        <button ref={replayBtnRef} onMouseOver={() => handleMouseOver()} onMouseLeave={() => handleMouseLeave()} className={`absolute -top-2 ${dir === "left" ? "-right-10" : "-left-12"} shadow-md h-8 w-8 flex-center bg-white rounded-corners text-gray-600 hover:bg-blue-50 hover:text-[#1C42EA] transition-all duration-300`}>
+        <button onClick={() => handleReplay(msgId)} ref={replayBtnRef} onMouseOver={() => handleMouseOver()} onMouseLeave={() => handleMouseLeave()} className={`absolute -top-2 ${dir === "left" ? "-right-10" : "-left-12"} shadow-md h-8 w-8 flex-center bg-white rounded-corners text-gray-600 hover:bg-blue-50 hover:text-[#1C42EA] transition-all duration-300`}>
             <i className="fa-regular fa-reply text-xs"></i>
         </button>
     )
