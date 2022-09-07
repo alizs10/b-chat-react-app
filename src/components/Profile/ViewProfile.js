@@ -65,6 +65,13 @@ function ViewProfile({ handleClose, user }) {
 
                     </div>
 
+                    <div className="md:hidden self-center">
+                        <button onClick={() => handleClose(false)} className="px-3 py-2 flex-center gap-x-2 items-center border-2 border-gray-400 rounded-corners text-xs text-gray-400">
+                            <i className='fa-regular fa-xmark text-xs'></i>
+                            <span>Close</span>
+                        </button>
+                    </div>
+
                 </div>
 
             </div>
