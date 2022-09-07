@@ -30,7 +30,7 @@ function UserPopup({profileToggler,settingsToggler}) {
     }
 
     return (
-        <div className="w-48 overflow-hidden flex flex-col absolute right-0 top-[5.5rem] z-30 shadow-md bg-white rounded-corners">
+        <div className="w-48 overflow-hidden flex flex-col absolute right-0 top-20 z-30 shadow-md bg-white rounded-corners">
             <button 
             onClick={() => profileToggler(true)}
             className="text-right hover:bg-gray-100 transition-all duration-300 flex-center gap-x-2 py-3 text-xs text-gray-800">
