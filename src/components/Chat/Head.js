@@ -13,7 +13,7 @@ function Head() {
     const [userPopupVisibility, setUserPopupVisibility] = useState(false)
     const [alertsPopupVisibility, setAlertsPopupVisibility] = useState(false)
     const [profileVisibility, setProfileVisibility] = useState(false)
-    const [settingsVisibility, setSettingsVisibility] = useState(true)
+    const [settingsVisibility, setSettingsVisibility] = useState(false)
 
     const { setSidebarVisibility } = useContext(SidebarContext)
 

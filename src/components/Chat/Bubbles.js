@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Bubble from './Bubble'
 import BubbleWithReplay from './BubbleWithReplay'
 import MyBubble from './MyBubble'
@@ -7,11 +7,12 @@ import ReplayTo from './ReplayTo'
 
 function Bubbles() {
 
+  const [isReplying, setIsReplaying] = useState(false)
 
   const bubblesRef = useRef(null)
   useEffect(() => {
     console.log(bubblesRef.current.scrollHeight);
-    bubblesRef.current.style.scrollBehavior = "smooth" 
+    bubblesRef.current.style.scrollBehavior = "smooth"
     bubblesRef.current.scrollTop = bubblesRef.current.scrollHeight
   }, [])
 
@@ -27,7 +28,10 @@ function Bubbles() {
       <Bubble />
       <MyBubbleWithReplay />
       <BubbleWithReplay />
-      <ReplayTo/>
+
+      {isReplying && (
+        <ReplayTo />
+      )}
     </div>
   )
 }

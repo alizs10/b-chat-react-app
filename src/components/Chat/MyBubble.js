@@ -27,7 +27,7 @@ function MyBubble() {
         <div className="self-end mr-2 flex gap-x-4 items-end">
 
 
-            <div className='flex items-end gap-x-2 mb-3'>
+            <div className='flex items-end gap-x-2'>
                 <span className="text-xs flex gap-x-4">
 
                     <span className="text-[#4361ee]">2:43 PM</span>
@@ -37,7 +37,7 @@ function MyBubble() {
             <div onMouseOver={() => handleMouseOver()} onMouseLeave={() => handleMouseLeave()} className="bg-[#4361ee] p-3 rounded-corners w-full text-white text-base">
                 Hey
             </div>
-                {replayBtnVisibility && (<Replay setReplayBtnVisibility={setReplayBtnVisibility} replayRemover={replayRemover} replayBtnRef={replayBtnRef} />)}
+                {replayBtnVisibility && (<Replay dir="right" setReplayBtnVisibility={setReplayBtnVisibility} replayRemover={replayRemover} replayBtnRef={replayBtnRef} />)}
             </div>
 
         </div>

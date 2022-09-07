@@ -47,18 +47,18 @@ function Settings({ handleClose }) {
 
                 <span className="w-full flex justify-between text-xs">
                     <span className="flex gap-x-2 items-center text-sm text-gray-600">
-                        <i className="fa-regular fa-moon-stars"></i>
-                         <span>Dark Mode</span>
+                        <i className="fa-regular fa-people-group"></i>
+                        <span>Let others invite you to groups</span>
                     </span>
-                    <CheckBox handleToggle={handleToggleDarkMode} value={darkMode} />
+                    <CheckBox handleToggle={handleToggleGroupInvite} value={groupInvite} />
                 </span>
 
                 <span className="w-full flex justify-between text-xs">
                     <span className="flex gap-x-2 items-center text-sm text-gray-600">
-                    <i className="fa-regular fa-people-group"></i>
-                         <span>Let others invite you to groups</span>
+                        <i className="fa-regular fa-moon-stars"></i>
+                        <span>Dark Mode</span>
                     </span>
-                    <CheckBox handleToggle={handleToggleGroupInvite} value={groupInvite} />
+                    <CheckBox handleToggle={handleToggleDarkMode} value={darkMode} />
                 </span>
             </div>
 
