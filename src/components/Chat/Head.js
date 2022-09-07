@@ -15,13 +15,13 @@ function Head() {
     const [profileVisibility, setProfileVisibility] = useState(false)
     const [settingsVisibility, setSettingsVisibility] = useState(false)
 
-    const { setSidebarVisibility } = useContext(SidebarContext)
+    const { handleToggleSidebar } = useContext(SidebarContext)
 
     return (
         <>
             <div className="z-20 row-span-1 border-b border-gray-200 bg-white grid grid-cols-9">
                 <div className="lg:hidden col-span-1 flex-center">
-                    <span onClick={() => setSidebarVisibility(true)} className="cursor-pointer text-lg md:text-2xl text-gray-800 p-3 h-fit rounded-corners hover:bg-gray-100 transition-all duration-300">
+                    <span onClick={handleToggleSidebar} className="cursor-pointer text-lg md:text-2xl text-gray-800 p-3 h-fit rounded-corners hover:bg-gray-100 transition-all duration-300">
                         <i className="fa-regular fa-angle-right"></i>
                     </span>
                 </div>
