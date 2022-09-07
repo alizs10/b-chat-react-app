@@ -5,12 +5,15 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import ConfirmUI from '../Helpers/ConfirmUI';
 import { notify } from '../Helpers/notify';
+import EditBio from './EditBio';
+import EditableBio from './EditableBio';
 
 
 function Profile({ handleClose }) {
 
   const [errors, setErrors] = useState({})
   const [profilePhoto, setProfilePhoto] = useState({})
+  const [isEditingBio, setIsEditingBio] = useState(false)
 
   const profilePhotoInputRef = useRef(null)
   const profilePhotoViewRef = useRef(null)
@@ -63,7 +66,7 @@ function Profile({ handleClose }) {
 
   const handleRemoveProfilePhoto = () => {
 
-    const options = {
+    let options = {
       title: 'Remove Profile Photo',
       message: 'Are you sure you want to remove your profile photo?',
       buttons: [
@@ -83,19 +86,82 @@ function Profile({ handleClose }) {
       closeOnEscape: true,
       closeOnClickOutside: true,
       keyCodeForClose: [8, 32],
-      willUnmount: () => { },
-      afterClose: () => { },
-      onClickOutside: () => { },
-      onKeypress: () => { },
-      onKeypressEscape: () => { },
       overlayClassName: "overlay-custom-class-name",
       customUI: ({ onClose, title, message, buttons }) => {
-        return <ConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message}/>
+        return <ConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
       }
     };
 
     // first user should confirm
     confirmAlert(options)
+  }
+
+  const handleCancelEditBio = () => {
+
+
+    let options = {
+      title: 'Cancel Edit Bio',
+      message: 'Discard changes?',
+      buttons: [
+        {
+          label: 'Yes, Cancel it',
+          onClick: () => {
+            notify("canceled", "success")
+          }
+        },
+        {
+          label: 'Edit bio',
+          onClick: () => {
+            notify("canceled", "warning")
+          }
+        }
+      ],
+      closeOnEscape: true,
+      closeOnClickOutside: true,
+      keyCodeForClose: [8, 32],
+      overlayClassName: "overlay-custom-class-name",
+      customUI: ({ onClose, title, message, buttons }) => {
+        return <ConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
+      }
+    };
+
+    // first user should confirm
+    confirmAlert(options)
+
+  }
+  const handleEditBio = () => {
+
+
+    let options = {
+      title: 'Update Bio',
+      message: 'Save changes and update bio?',
+      buttons: [
+        {
+          label: 'Update',
+          onClick: () => {
+            notify("your bio updated successfully", "success")
+            setIsEditingBio(false)
+          }
+        },
+        {
+          label: 'cancel',
+          onClick: () => {
+            notify("canceled", "warning")
+          }
+        }
+      ],
+      closeOnEscape: true,
+      closeOnClickOutside: true,
+      keyCodeForClose: [8, 32],
+      overlayClassName: "overlay-custom-class-name",
+      customUI: ({ onClose, title, message, buttons }) => {
+        return <ConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
+      }
+    };
+
+    // first user should confirm
+    confirmAlert(options)
+
   }
 
   return (
@@ -135,17 +201,11 @@ function Profile({ handleClose }) {
           <span className="self-center text-xs text-red-500">{errors.profilePhoto}</span>
         )}
 
-        <span className="relative border py-3 px-4 border-gray-200 rounded-corners self-center">
-          <span className="text-xs bg-white px-2 absolute -top-2 left-4 text-gray-600">
-            bio
-          </span>
-          <span className="text-xs text-gray-800">
-            Comedian, Actress & father of two beautiful children
-          </span>
-          <span className="absolute -right-2 -bottom-2 text-xs hover:bg-yellow-50 hover:text-yellow-600 text-gray-600 transition-all duration-300 cursor-pointer shadow-md bg-white flex-center w-7 h-7 rounded-corners">
-            <i className="fa-regular fa-pen"></i>
-          </span>
-        </span>
+        {isEditingBio ? (
+          <EditBio onCancel={handleCancelEditBio} onConfirm={handleEditBio}/>
+        ) : (
+          <EditableBio onEdit={setIsEditingBio}/>
+        )}
 
         <div className="w-4/5 md:w-3/5 mt-4 self-center flex flex-col gap-y-2">
 
