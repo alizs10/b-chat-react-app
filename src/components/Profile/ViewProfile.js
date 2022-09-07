@@ -5,11 +5,14 @@ function ViewProfile({ handleClose, user }) {
 
 
     return (
-        <div className="relative overflow-hidden w-full md:w-2/5 shadow-md rounded-corners">
-            <img className="absolute w-full object-center -z-10" src='./assets/images/user-profile-5.webp'/>
+        <div className="relative overflow-hidden w-full h-screen md:h-fit md:w-2/5 shadow-md rounded-corners">
+            <div className="absolute bg-red-300 top-0 right-0 bottom-0 left-0 -z-10">
+                <img className="w-full h-full object-cover object-center" src='./assets/images/user-profile-5.webp' />
+
+            </div>
             <div
                 onClick={e => e.stopPropagation()}
-                className="p-3 bg-black/70">
+                className="p-3 bg-black/70 h-full">
                 <div className='flex justify-between items-center'>
                     <span className="flex gap-x-2 text-gray-200 items-center">
                         <i className="fa-regular fa-circle-user text-base"></i>
