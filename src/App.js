@@ -4,6 +4,9 @@ import Sidebar from "./components/Sidebar";
 
 import SidebarContext from "./Context/SidebarContext";
 
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 function App() {
 
   const [sidebarVisibility, setSidebarVisibility] = useState(false)
@@ -43,7 +46,7 @@ function App() {
         {sidebarVisibilityCondition && (<Chat />)}
 
       </div>
-
+      <ToastContainer />
     </SidebarContext.Provider>
   );
 }

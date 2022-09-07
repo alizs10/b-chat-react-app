@@ -1,6 +1,12 @@
 import React, { useRef, useState } from 'react'
 import { mixed, object, ValidationError } from 'yup'
 
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import ConfirmUI from '../Helpers/ConfirmUI';
+import { notify } from '../Helpers/notify';
+
+
 function Profile({ handleClose }) {
 
   const [errors, setErrors] = useState({})
@@ -38,14 +44,7 @@ function Profile({ handleClose }) {
         const objectUrl = URL.createObjectURL(res.profilePhoto)
         console.log(objectUrl);
         profilePhotoViewRef.current.src = objectUrl;
-        // var reader = new FileReader();
-        // var url = reader.readAsDataURL(res.profilePhoto);
 
-        // reader.onloadend = function (e) {
-        //   console.log(url);
-        //   console.log(reader.result);
-        //   profilePhotoViewRef.current.src = url;
-        // }
       }
 
     } catch (error) {
@@ -60,6 +59,43 @@ function Profile({ handleClose }) {
       }
     }
 
+  }
+
+  const handleRemoveProfilePhoto = () => {
+
+    const options = {
+      title: 'Remove Profile Photo',
+      message: 'Are you sure you want to remove your profile photo?',
+      buttons: [
+        {
+          label: 'Yes, Delete it',
+          onClick: () => {
+            notify("your profile photo deleted successfully", "success")
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => {
+            notify("cancel", "warning")
+          }
+        }
+      ],
+      closeOnEscape: true,
+      closeOnClickOutside: true,
+      keyCodeForClose: [8, 32],
+      willUnmount: () => { },
+      afterClose: () => { },
+      onClickOutside: () => { },
+      onKeypress: () => { },
+      onKeypressEscape: () => { },
+      overlayClassName: "overlay-custom-class-name",
+      customUI: ({ onClose, title, message, buttons }) => {
+        return <ConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message}/>
+      }
+    };
+
+    // first user should confirm
+    confirmAlert(options)
   }
 
   return (
@@ -88,7 +124,9 @@ function Profile({ handleClose }) {
                 onChange={e => handleProfilePhotoChange(e)}
                 name='profile-photo' type="file" accept=".jpg,.jpeg,.png,.webp" className="hidden" />
             </span>
-            <span className="hover:bg-red-50 hover:text-red-500 text-gray-600 transition-all duration-300 cursor-pointer shadow-md bg-white flex-center text-xs w-7 h-7 rounded-corners">
+            <span
+              onClick={handleRemoveProfilePhoto}
+              className="hover:bg-red-50 hover:text-red-500 text-gray-600 transition-all duration-300 cursor-pointer shadow-md bg-white flex-center text-xs w-7 h-7 rounded-corners">
               <i className="fa-regular fa-trash"></i>
             </span>
           </div>
