@@ -39,7 +39,7 @@ function ProfileInformation({onEdit}) {
             <div
             onClick={() => onEdit(true)}
             className="mt-8 flex w-full justify-end">
-                <button className="col-span-5 px-3 py-2 flex-center gap-x-2 items-center bg-yellow-200 rounded-corners text-xs text-gray-800">
+                <button className="col-span-5 px-3 py-2 flex-center gap-x-2 items-center border-2 border-yellow-200  rounded-corners text-xs text-yellow-600 bg-yellow-50 hover:bg-yellow-100 hover:text-yellow-700 transition-all duration-300">
                     <i className='fa-regular fa-pen text-xs'></i>
                     <span>Edit personal information</span>
                 </button>
