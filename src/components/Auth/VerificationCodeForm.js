@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { object, string, ValidationError } from 'yup'
 import { verifyEmail } from '../../api/auth'
 import AuthContext from '../../Context/AuthContext'
+import { notify } from '../Helpers/notify'
 
 function VerificationCodeForm() {
 
@@ -133,6 +134,11 @@ function VerificationCodeForm() {
             }
 
         } catch (err) {
+
+
+            if (err.code === "ERR_NETWORK") {
+                notify(err.code, "error")
+            }
 
             if (err instanceof ValidationError) {
                 let validationErrors = {}

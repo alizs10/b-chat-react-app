@@ -1,13 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import LoginForm from './LoginForm'
-import SignupForm from './SignupForm'
+import { ToastContainer } from 'react-toastify'
 
 function Auth() {
 
   const location = useLocation()
-  const [loginFormVisibility, setLoginFormVisibility] = useState(false)
-  const [signupFormVisibility, setSignupFormVisibility] = useState(false)
 
   return (
     <div className="w-screen h-screen bg-white flex-center flex-col gap-y-2">
@@ -23,9 +20,7 @@ function Auth() {
       )}
 
       <Outlet />
-      {/* {loginFormVisibility && !signupFormVisibility && (<LoginForm setLoginFormVisibility={setLoginFormVisibility} setSignupFormVisibility={setSignupFormVisibility} />)}
-      {signupFormVisibility && !loginFormVisibility && (<SignupForm setLoginFormVisibility={setLoginFormVisibility} setSignupFormVisibility={setSignupFormVisibility} />)} */}
-
+      <ToastContainer />
     </div>
   )
 }

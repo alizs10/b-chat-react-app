@@ -1,10 +1,5 @@
-import { isEmpty, isNull } from 'lodash'
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { checkUsername, login } from '../../api/auth'
 import AuthContext from '../../Context/AuthContext'
-import { deleteUser, setUser } from '../../redux/slices/userSlice'
 
 function AuthContextContainer({ children }) {
 

@@ -6,9 +6,10 @@ import { object, string } from 'yup'
 import { login } from '../../api/auth'
 
 import { deleteUser, setUser } from '../../redux/slices/userSlice'
+import { notify } from '../Helpers/notify'
 
 function LoginForm() {
-    
+
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -36,16 +37,25 @@ function LoginForm() {
                         password: values.password
                     }
 
-                    let res = await login(credentials)
+                    try {
+                        let res = await login(credentials)
 
-                    if (res.status) {
-                        localStorage.setItem('token', res.token)
-                        dispatch(setUser(res.user))
-                        navigate('/')
-                    } else {
-                        dispatch(deleteUser())
-                        setErrors(res.errors)
+                        if (res.status) {
+                            localStorage.setItem('token', res.token)
+                            dispatch(setUser(res.user))
+                            navigate('/')
+                        } else {
+                            dispatch(deleteUser())
+                            setErrors(res.errors)
+                        }
+
+                    } catch (error) {
+
+                        if (error.code === "ERR_NETWORK") {
+                            notify(error.code, "error")
+                        }
                     }
+
                 }}
             >
                 {({

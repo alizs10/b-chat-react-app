@@ -7,6 +7,7 @@ import YupPassword from 'yup-password';
 import { checkUsername, register } from '../../api/auth';
 import { Link, useNavigate } from 'react-router-dom';
 import { isNull } from 'lodash';
+import { notify } from '../Helpers/notify';
 
 
 YupPassword(Yup);
@@ -41,6 +42,10 @@ function SignupForm() {
         } catch (error) {
 
             setChecking(false)
+
+            if (error.code === "ERR_NETWORK") {
+                notify(error.code, "error")
+            }
         }
 
     }
@@ -56,17 +61,27 @@ function SignupForm() {
                 onSubmit={async (values, { setErrors, setSubmitting }) => {
 
                     setSubmitting(true)
-                    let res = await register(values)
 
-                    if (res.status) {
-                        let data = res.data;
+                    try {
+                        let res = await register(values)
 
-                        setMessage(data.message)
-                        navigate(`/auth/verify/${data.user.email}`)
-                    } else {
-                        console.log(res.errors);
-                        setErrors(res.errors)
+                        if (res.status) {
+                            let data = res.data;
+
+                            setMessage(data.message)
+                            navigate(`/auth/verify/${data.user.email}`)
+                        } else {
+                            console.log(res.errors);
+                            setErrors(res.errors)
+                            setSubmitting(false)
+                        }
+
+                    } catch (error) {
                         setSubmitting(false)
+
+                        if (error.code === "ERR_NETWORK") {
+                            notify(error.code, "error")
+                        }
                     }
 
                 }}
@@ -143,7 +158,7 @@ function SignupForm() {
                         {errors.password_confirmation && touched.password_confirmation && (
                             <span className='ml-3 text-xs text-red-500'>{errors.password_confirmation}</span>
                         )}
-                        <button type='submit' className={`mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners ${isSubmitting ? 'bg-gray-200' : 'bg-[#4361EE]'} btn-hover text-white transition-all duration-300`}>
+                        <button type='submit' disabled={isSubmitting ? true : false} className={`mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners ${isSubmitting ? 'bg-gray-200' : 'bg-[#4361EE]'} btn-hover text-white transition-all duration-300`}>
                             <span className='text-lg'>Sign up</span>
                             <i className="fa-regular fa-user-plus text-base"></i>
                         </button>
