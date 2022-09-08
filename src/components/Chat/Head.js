@@ -42,7 +42,7 @@ function Head() {
                         )}
                     </span>
                     <div onClick={() => setUserPopupVisibility(true)} className={`relative cursor-pointer transition-all duration-300 p-2 rounded-corners ${userPopupVisibility && "bg-gray-100"}`}>
-                        <img className='rounded-corners w-12 lg:w-14 lg:h-fit' src={isEmpty(user.profile_photo) ? './assets/images/default-avatar.png' : user.profile_photo } />
+                        <img className='rounded-corners w-12 h-12 lg:w-14 lg:h-14 object-cover object-center' src={isEmpty(user?.profile_photo) ? './assets/images/default-avatar.png' : process.env.REACT_APP_API_URL + '/storage/' + user?.profile_photo } />
                         <span className='absolute bottom-1 right-1 bg-white p-[3px] flex-center rounded-full'>
                             <span className='w-2 h-2 lg:w-3 lg:h-3 rounded-full bg-emerald-500'></span>
                         </span>

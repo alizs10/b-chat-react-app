@@ -16,7 +16,7 @@ function ProfileInformation({ onEdit }) {
                     <span className="text-gray-600">Name:</span>
                 </span>
                 <span className="text-gray-800">
-                    {isEmpty(user.name) ? 'your name' : user.name}
+                    {isEmpty(user?.name) ? 'your name' : user?.name}
                 </span>
             </span>
             <span className="w-full flex justify-between text-xs">
@@ -25,7 +25,7 @@ function ProfileInformation({ onEdit }) {
                     <span className="text-gray-600">Username:</span>
                 </span>
                 <span className="text-gray-800">
-                    @{user.username}
+                    @{user?.username}
                 </span>
             </span>
             <span className="w-full flex justify-between text-xs">
@@ -36,7 +36,7 @@ function ProfileInformation({ onEdit }) {
                 </span>
 
                 <span className="text-gray-800">
-                    {user.email}
+                    {user?.email}
                 </span>
             </span>
 

@@ -11,8 +11,9 @@ import EditBio from './EditBio';
 import EditProfileInformation from './EditProfileInformation';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
-import { updateProfile } from '../../api/profile';
+import { deleteAvatar, updateProfile } from '../../api/profile';
 import { setUser } from '../../redux/slices/userSlice';
+
 
 
 function Profile({ handleClose }) {
@@ -22,7 +23,7 @@ function Profile({ handleClose }) {
   const dispatch = useDispatch()
 
   const [errors, setErrors] = useState({})
-  const [profilePhoto, setProfilePhoto] = useState({})
+  const [avatar, setAvatar] = useState({})
   const [isEditingBio, setIsEditingBio] = useState(false)
   const [isEditingProfileInformation, setIsEditingProfileInformation] = useState(false)
 
@@ -30,7 +31,7 @@ function Profile({ handleClose }) {
   const profilePhotoViewRef = useRef(null)
 
   const imageValidationSchema = object().shape({
-    profilePhoto: mixed().test("fileSize", "The image should be less than 2mb", (file) => {
+    profile_photo: mixed().test("fileSize", "The image should be less than 2mb", (file) => {
       return file.size <= 2000000
     }).test("mimes", "supported mime types: jpeg, gif, png and webp", (file) => {
       let type = file.type;
@@ -41,35 +42,38 @@ function Profile({ handleClose }) {
   })
 
   const handleProfilePhotoChange = async e => {
+
     let file = e.target.files[0];
+    setAvatar(file)
     let inputs = {
-      profilePhoto: file
+      profile_photo: file
     }
 
     try {
       let res = await imageValidationSchema.validate(inputs, { abortEarly: false })
 
       if (res) {
-        setProfilePhoto(res.profilePhoto)
 
         // upload here
 
         let formData = new FormData;
-        formData.append('profile_photo', res.profilePhoto)
+        formData.append('profile_photo', res.profile_photo)
         formData.append('_method', "PUT")
 
         let response = await updateProfile(formData)
 
-        if(response.status)
-        {
-          dispatch(setUser(response.user))
+        if (response.status) {
+          dispatch(setUser(response.data.user))
         }
 
-        console.log(response);
-        // show photo
-        const objectUrl = URL.createObjectURL(res.profilePhoto)
-        console.log(objectUrl);
-        profilePhotoViewRef.current.src = objectUrl;
+        if (response.errors) {
+
+          setErrors(response.errors)
+          profilePhotoInputRef.current.value = null;
+          setAvatar({})
+
+        }
+
 
       }
 
@@ -77,12 +81,13 @@ function Profile({ handleClose }) {
       if (error instanceof ValidationError) {
         let validationErrors = {}
         error.inner.forEach((err) => {
-          console.log(err);
+
           validationErrors[err.path] = err.message;
         });
-        console.log(validationErrors);
         setErrors(validationErrors)
       }
+      profilePhotoInputRef.current.value = null;
+      setAvatar({})
     }
 
   }
@@ -96,7 +101,7 @@ function Profile({ handleClose }) {
         {
           label: 'Yes, Delete it',
           onClick: () => {
-            notify("your profile photo deleted successfully", "success")
+            handleDeleteAvatar()
           }
         },
         {
@@ -117,6 +122,25 @@ function Profile({ handleClose }) {
 
     // first user should confirm
     confirmAlert(options)
+  }
+
+  const handleDeleteAvatar = async () => {
+
+    try {
+      let res = await deleteAvatar()
+
+      if (res.status) {
+        console.log(res);
+        dispatch(setUser(res.data.user))
+        notify("your profile photo deleted successfully", "success")
+
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+
+
   }
 
   const handleCancelEditBio = () => {
@@ -309,7 +333,8 @@ function Profile({ handleClose }) {
       <div className='w-full py-2 flex flex-col gap-y-4'>
 
         <span className="self-center relative w-24">
-          <img ref={profilePhotoViewRef} className='border-2 border-gray-200 rounded-corners w-24 h-24 object-cover object-center' src={isEmpty(user.profile_photo) ? './assets/images/default-avatar.png' : user.profile_photo } />
+          <img ref={profilePhotoViewRef} className='border-2 border-gray-200 rounded-corners w-24 h-24 object-cover object-center'
+            src={isEmpty(user?.profile_photo) ? './assets/images/default-avatar.png' : process.env.REACT_APP_API_URL + '/storage/' + user?.profile_photo} />
           <div className="absolute -right-4 -bottom-2 flex flex-col gap-y-2">
             <span onClick={() => profilePhotoInputRef.current.click()} className="hover:bg-yellow-50 hover:text-yellow-600 text-gray-600 transition-all duration-300 cursor-pointer shadow-md bg-white flex-center text-xs w-7 h-7 rounded-corners">
               <i className="fa-regular fa-pen"></i>
@@ -317,21 +342,24 @@ function Profile({ handleClose }) {
                 onChange={e => handleProfilePhotoChange(e)}
                 name='profile-photo' type="file" accept=".jpg,.jpeg,.png,.webp" className="hidden" />
             </span>
-            <span
-              onClick={handleRemoveProfilePhoto}
-              className="hover:bg-red-50 hover:text-red-500 text-gray-600 transition-all duration-300 cursor-pointer shadow-md bg-white flex-center text-xs w-7 h-7 rounded-corners">
-              <i className="fa-regular fa-trash"></i>
-            </span>
+            {!isEmpty(user.profile_photo) && (
+
+              <span
+                onClick={handleRemoveProfilePhoto}
+                className="hover:bg-red-50 hover:text-red-500 text-gray-600 transition-all duration-300 cursor-pointer shadow-md bg-white flex-center text-xs w-7 h-7 rounded-corners">
+                <i className="fa-regular fa-trash"></i>
+              </span>
+            )}
           </div>
         </span>
-        {errors.profilePhoto && (
-          <span className="self-center text-xs text-red-500">{errors.profilePhoto}</span>
+        {errors.profile_photo && (
+          <span className="self-center text-xs text-red-500">{errors.profile_photo}</span>
         )}
 
         {isEditingBio ? (
-          <EditBio value={user.bio} onCancel={handleCancelEditBio} onConfirm={handleEditBio} />
+          <EditBio value={user?.bio} onCancel={handleCancelEditBio} onConfirm={handleEditBio} />
         ) : (
-          <Bio value={user.bio} onEdit={setIsEditingBio} />
+          <Bio value={user?.bio} onEdit={setIsEditingBio} />
         )}
 
         {isEditingProfileInformation ? (
