@@ -1,6 +1,6 @@
 import React from 'react'
 
-function EditableBio({onEdit}) {
+function Bio({onEdit}) {
     return (
         <span className="relative w-fit text-center border py-3 px-4 border-gray-200 rounded-corners self-center">
             <span className="text-xs bg-white px-2 absolute -top-2 left-4 text-gray-600">
@@ -18,4 +18,4 @@ function EditableBio({onEdit}) {
     )
 }
 
-export default EditableBio
+export default Bio

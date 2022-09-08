@@ -5,8 +5,10 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import ConfirmUI from '../Helpers/ConfirmUI';
 import { notify } from '../Helpers/notify';
+import ProfileInformation from './ProfileInformation';
+import Bio from './Bio';
 import EditBio from './EditBio';
-import EditableBio from './EditableBio';
+import EditProfileInformation from './EditProfileInformation';
 
 
 function Profile({ handleClose }) {
@@ -14,6 +16,7 @@ function Profile({ handleClose }) {
   const [errors, setErrors] = useState({})
   const [profilePhoto, setProfilePhoto] = useState({})
   const [isEditingBio, setIsEditingBio] = useState(false)
+  const [isEditingProfileInformation, setIsEditingProfileInformation] = useState(false)
 
   const profilePhotoInputRef = useRef(null)
   const profilePhotoViewRef = useRef(null)
@@ -79,7 +82,7 @@ function Profile({ handleClose }) {
         {
           label: 'No',
           onClick: () => {
-            notify("cancel", "warning")
+            notify("canceled", "warning")
           }
         }
       ],
@@ -106,6 +109,7 @@ function Profile({ handleClose }) {
         {
           label: 'Yes, Cancel it',
           onClick: () => {
+            setIsEditingBio(false)
             notify("canceled", "success")
           }
         },
@@ -139,8 +143,8 @@ function Profile({ handleClose }) {
         {
           label: 'Update',
           onClick: () => {
-            notify("your bio updated successfully", "success")
             setIsEditingBio(false)
+            notify("your bio updated successfully", "success")
           }
         },
         {
@@ -163,6 +167,76 @@ function Profile({ handleClose }) {
     confirmAlert(options)
 
   }
+
+  const handleCancelEditProfileInformation = () => {
+
+    let options = {
+      title: 'Discard changes',
+      message: 'Discard changes?',
+      buttons: [
+        {
+          label: 'Discard changes',
+          onClick: () => {
+            setIsEditingProfileInformation(false)
+            notify("Discard changes", "success")
+          }
+        },
+        {
+          label: 'continue editing',
+          onClick: () => {
+            notify("canceled", "warning")
+          }
+        }
+      ],
+      closeOnEscape: true,
+      closeOnClickOutside: true,
+      keyCodeForClose: [8, 32],
+      overlayClassName: "overlay-custom-class-name",
+      customUI: ({ onClose, title, message, buttons }) => {
+        return <ConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
+      }
+    };
+
+    // first user should confirm
+    confirmAlert(options)
+
+  }
+
+  const handleEditProfileInformation = () => {
+
+
+    let options = {
+      title: 'Update Profile Information',
+      message: 'Save changes and update information?',
+      buttons: [
+        {
+          label: 'Update',
+          onClick: () => {
+            setIsEditingProfileInformation(false)
+            notify("your information updated successfully", "success")
+          }
+        },
+        {
+          label: 'continue editing',
+          onClick: () => {
+            notify("canceled", "warning")
+          }
+        }
+      ],
+      closeOnEscape: true,
+      closeOnClickOutside: true,
+      keyCodeForClose: [8, 32],
+      overlayClassName: "overlay-custom-class-name",
+      customUI: ({ onClose, title, message, buttons }) => {
+        return <ConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
+      }
+    };
+
+    // first user should confirm
+    confirmAlert(options)
+
+  }
+
 
   return (
     <div
@@ -202,54 +276,19 @@ function Profile({ handleClose }) {
         )}
 
         {isEditingBio ? (
-          <EditBio onCancel={handleCancelEditBio} onConfirm={handleEditBio}/>
+          <EditBio onCancel={handleCancelEditBio} onConfirm={handleEditBio} />
         ) : (
-          <EditableBio onEdit={setIsEditingBio}/>
+          <Bio onEdit={setIsEditingBio} />
         )}
 
-        <div className="w-4/5 md:w-3/5 mt-4 self-center flex flex-col gap-y-2">
-
-          <span className="w-full flex justify-between text-xs">
-            <span className="flex gap-x-2 items-center">
-              <i className="fa-regular fa-input-text"></i>
-              <span className="text-gray-600">Name:</span>
-            </span>
-            <span className="text-gray-800">
-              Ali ZohourSoleimani
-            </span>
-          </span>
-          <span className="w-full flex justify-between text-xs">
-            <span className="flex gap-x-2 items-center">
-              <i className="fa-regular fa-at"></i>
-              <span className="text-gray-600">Username:</span>
-            </span>
-            <span className="text-gray-800">
-              @alizs10
-            </span>
-          </span>
-          <span className="w-full flex justify-between text-xs">
-            <span className="flex gap-x-2 items-center">
-              <i className="fa-regular fa-envelope"></i>
-              <span className="text-gray-600">Email:</span>
-
-            </span>
-
-            <span className="text-gray-800">
-              ali.text77@gmail.com
-            </span>
-          </span>
-
-          <div className="mt-8 flex w-full justify-end">
-            <button className="col-span-5 px-3 py-2 flex-center gap-x-2 items-center bg-yellow-200 rounded-corners text-xs text-gray-800">
-              <i className='fa-regular fa-pen text-xs'></i>
-              <span>Edit personal information</span>
-            </button>
-          </div>
-
-        </div>
+        {isEditingProfileInformation ? (
+          <EditProfileInformation onCancel={handleCancelEditProfileInformation} onConfirm={handleEditProfileInformation} />
+        ) : (
+          <ProfileInformation onEdit={setIsEditingProfileInformation} />
+        )}
 
         <div className="mb-4 self-center w-4/5 md:w-3/5 flex justify-end">
-          <button className="px-3 py-2 flex-center gap-x-2 items-center border-2 rounded-corners text-xs text-gray-600 hover:border-red-500 hover:text-red-500 transition-all duration-300">
+          <button className="px-3 py-2 flex-center gap-x-2 items-center border-2 rounded-corners text-xs text-gray-600 hover:border-red-500 hover:text-red-500 hover:bg-red-50 transition-all duration-300">
             <i className='fa-regular fa-trash text-xs'></i>
             <span>Delete Account</span>
           </button>

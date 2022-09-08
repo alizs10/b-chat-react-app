@@ -8,7 +8,7 @@ function EditBio({onCancel, onConfirm}) {
         bio
       </span>
       <input type="text" className='w-full border border-gray-200 p-3 focus:outline-none bg-transparent rounded-corners text-gray-600'
-        name="username"
+        name="bio"
       />
       <span className="absolute -right-12 -bottom-2 flex gap-x-2 items-center">
 
