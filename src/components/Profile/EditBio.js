@@ -1,6 +1,6 @@
 import React from 'react'
 
-function EditBio({onCancel, onConfirm}) {
+function EditBio({value, onCancel, onConfirm}) {
   return (
 
     <span className="relative w-full md:w-3/5 border border-gray-200 rounded-corners self-center">
@@ -8,6 +8,7 @@ function EditBio({onCancel, onConfirm}) {
         bio
       </span>
       <input type="text" className='w-full border border-gray-200 p-3 focus:outline-none bg-transparent rounded-corners text-gray-600'
+        value={value}
         name="bio"
       />
       <span className="absolute -right-12 -bottom-2 flex gap-x-2 items-center">

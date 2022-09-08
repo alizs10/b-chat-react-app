@@ -9,9 +9,17 @@ import ProfileInformation from './ProfileInformation';
 import Bio from './Bio';
 import EditBio from './EditBio';
 import EditProfileInformation from './EditProfileInformation';
+import { useDispatch, useSelector } from 'react-redux';
+import { isEmpty } from 'lodash';
+import { updateProfile } from '../../api/profile';
+import { setUser } from '../../redux/slices/userSlice';
 
 
 function Profile({ handleClose }) {
+
+  const { user } = useSelector(state => state.user)
+
+  const dispatch = useDispatch()
 
   const [errors, setErrors] = useState({})
   const [profilePhoto, setProfilePhoto] = useState({})
@@ -44,8 +52,20 @@ function Profile({ handleClose }) {
       if (res) {
         setProfilePhoto(res.profilePhoto)
 
-        // upload
+        // upload here
 
+        let formData = new FormData;
+        formData.append('profile_photo', res.profilePhoto)
+        formData.append('_method', "PUT")
+
+        let response = await updateProfile(formData)
+
+        if(response.status)
+        {
+          dispatch(setUser(response.user))
+        }
+
+        console.log(response);
         // show photo
         const objectUrl = URL.createObjectURL(res.profilePhoto)
         console.log(objectUrl);
@@ -178,7 +198,7 @@ function Profile({ handleClose }) {
           label: 'Discard changes',
           onClick: () => {
             setIsEditingProfileInformation(false)
-            notify("Discard changes", "success")
+            notify("Discard changes", "info")
           }
         },
         {
@@ -289,7 +309,7 @@ function Profile({ handleClose }) {
       <div className='w-full py-2 flex flex-col gap-y-4'>
 
         <span className="self-center relative w-24">
-          <img ref={profilePhotoViewRef} className='border-2 border-gray-200 rounded-corners w-24 h-24 object-cover object-center' src='./assets/images/user-profile-1.webp' />
+          <img ref={profilePhotoViewRef} className='border-2 border-gray-200 rounded-corners w-24 h-24 object-cover object-center' src={isEmpty(user.profile_photo) ? './assets/images/default-avatar.png' : user.profile_photo } />
           <div className="absolute -right-4 -bottom-2 flex flex-col gap-y-2">
             <span onClick={() => profilePhotoInputRef.current.click()} className="hover:bg-yellow-50 hover:text-yellow-600 text-gray-600 transition-all duration-300 cursor-pointer shadow-md bg-white flex-center text-xs w-7 h-7 rounded-corners">
               <i className="fa-regular fa-pen"></i>
@@ -309,9 +329,9 @@ function Profile({ handleClose }) {
         )}
 
         {isEditingBio ? (
-          <EditBio onCancel={handleCancelEditBio} onConfirm={handleEditBio} />
+          <EditBio value={user.bio} onCancel={handleCancelEditBio} onConfirm={handleEditBio} />
         ) : (
-          <Bio onEdit={setIsEditingBio} />
+          <Bio value={user.bio} onEdit={setIsEditingBio} />
         )}
 
         {isEditingProfileInformation ? (
@@ -321,9 +341,9 @@ function Profile({ handleClose }) {
         )}
 
         <div className="mb-4 self-center w-4/5 md:w-3/5 flex justify-end">
-          <button 
-          onClick={handleDeleteAcc}
-          className="px-3 py-2 flex-center gap-x-2 items-center border-2 rounded-corners text-xs text-gray-600 hover:border-red-500 hover:text-red-500 hover:bg-red-50 transition-all duration-300">
+          <button
+            onClick={handleDeleteAcc}
+            className="px-3 py-2 flex-center gap-x-2 items-center border-2 rounded-corners text-xs text-gray-600 hover:border-red-500 hover:text-red-500 hover:bg-red-50 transition-all duration-300">
             <i className='fa-regular fa-trash text-xs'></i>
             <span>Delete Account</span>
           </button>

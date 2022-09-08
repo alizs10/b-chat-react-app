@@ -1,4 +1,6 @@
+import { isEmpty } from 'lodash'
 import React, { useContext, useState } from 'react'
+import { useSelector } from 'react-redux'
 import SidebarContext from '../../Context/SidebarContext'
 import Backdrop from '../Helpers/Backdrop'
 import CenterContainer from '../Helpers/CenterContainer'
@@ -9,6 +11,9 @@ import UserPopup from './Head/UserPopup'
 import SearchInChat from './SearchInChat'
 
 function Head() {
+
+    const { user } = useSelector(state => state.user)
+
 
     const [userPopupVisibility, setUserPopupVisibility] = useState(false)
     const [alertsPopupVisibility, setAlertsPopupVisibility] = useState(false)
@@ -37,7 +42,7 @@ function Head() {
                         )}
                     </span>
                     <div onClick={() => setUserPopupVisibility(true)} className={`relative cursor-pointer transition-all duration-300 p-2 rounded-corners ${userPopupVisibility && "bg-gray-100"}`}>
-                        <img className='rounded-corners w-12 lg:w-14 lg:h-fit' src='/assets/images/user-profile-1.webp' />
+                        <img className='rounded-corners w-12 lg:w-14 lg:h-fit' src={isEmpty(user.profile_photo) ? './assets/images/default-avatar.png' : user.profile_photo } />
                         <span className='absolute bottom-1 right-1 bg-white p-[3px] flex-center rounded-full'>
                             <span className='w-2 h-2 lg:w-3 lg:h-3 rounded-full bg-emerald-500'></span>
                         </span>
@@ -51,11 +56,11 @@ function Head() {
             </div>
 
             <Backdrop toggler={profileVisibility} handleClick={setProfileVisibility}>
-                <CenterContainer element={<Profile handleClose={setProfileVisibility}/>} handleClick={setProfileVisibility}/>
+                <CenterContainer element={<Profile handleClose={setProfileVisibility} />} handleClick={setProfileVisibility} />
             </Backdrop>
 
             <Backdrop toggler={settingsVisibility} handleClick={setSettingsVisibility}>
-                <CenterContainer element={<Settings handleClose={setSettingsVisibility}/>} handleClick={setSettingsVisibility}/>
+                <CenterContainer element={<Settings handleClose={setSettingsVisibility} />} handleClick={setSettingsVisibility} />
             </Backdrop>
         </>
     )

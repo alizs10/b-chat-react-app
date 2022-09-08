@@ -1,6 +1,10 @@
+import { isEmpty } from 'lodash'
 import React from 'react'
+import { useSelector } from 'react-redux'
 
-function ProfileInformation({onEdit}) {
+function ProfileInformation({ onEdit }) {
+    const { user } = useSelector(state => state.user)
+
     return (
 
 
@@ -12,7 +16,7 @@ function ProfileInformation({onEdit}) {
                     <span className="text-gray-600">Name:</span>
                 </span>
                 <span className="text-gray-800">
-                    Ali ZohourSoleimani
+                    {isEmpty(user.name) ? 'your name' : user.name}
                 </span>
             </span>
             <span className="w-full flex justify-between text-xs">
@@ -21,7 +25,7 @@ function ProfileInformation({onEdit}) {
                     <span className="text-gray-600">Username:</span>
                 </span>
                 <span className="text-gray-800">
-                    @alizs10
+                    @{user.username}
                 </span>
             </span>
             <span className="w-full flex justify-between text-xs">
@@ -32,13 +36,13 @@ function ProfileInformation({onEdit}) {
                 </span>
 
                 <span className="text-gray-800">
-                    ali.text77@gmail.com
+                    {user.email}
                 </span>
             </span>
 
             <div
-            onClick={() => onEdit(true)}
-            className="mt-8 flex w-full justify-end">
+                onClick={() => onEdit(true)}
+                className="mt-8 flex w-full justify-end">
                 <button className="col-span-5 px-3 py-2 flex-center gap-x-2 items-center border-2 border-yellow-200  rounded-corners text-xs text-yellow-600 bg-yellow-50 hover:bg-yellow-100 hover:text-yellow-700 transition-all duration-300">
                     <i className='fa-regular fa-pen text-xs'></i>
                     <span>Edit personal information</span>

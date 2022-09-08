@@ -1,13 +1,14 @@
+import { isEmpty } from 'lodash'
 import React from 'react'
 
-function Bio({onEdit}) {
+function Bio({value,onEdit}) {
     return (
         <span className="relative w-fit text-center border py-3 px-4 border-gray-200 rounded-corners self-center">
             <span className="text-xs bg-white px-2 absolute -top-2 left-4 text-gray-600">
                 bio
             </span>
             <span className="text-xs text-gray-800">
-                Comedian, Actress & father of two beautiful children
+                {isEmpty(value) ? 'something about yourself' : value}
             </span>
             <span
             onClick={onEdit}
