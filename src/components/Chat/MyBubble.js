@@ -17,7 +17,7 @@ function MyBubble() {
             setReplayBtnVisibility(false)
         }
 
-        setReplayRemover(setTimeout(removeReplay, 1000))
+        setReplayRemover(setTimeout(removeReplay, 10000))
     }
 
     const replayBtnRef = useRef(null)
