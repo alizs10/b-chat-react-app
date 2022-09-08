@@ -237,6 +237,39 @@ function Profile({ handleClose }) {
 
   }
 
+  const handleDeleteAcc = () => {
+
+    let options = {
+      title: 'Delete Account',
+      message: 'Are you sure you want to delete your account?',
+      buttons: [
+        {
+          label: 'Yes, Delete My Account',
+          onClick: () => {
+            notify("your account deleted successfully", "success")
+          }
+        },
+        {
+          label: 'cancel',
+          onClick: () => {
+            notify("canceled", "warning")
+          }
+        }
+      ],
+      closeOnEscape: true,
+      closeOnClickOutside: true,
+      keyCodeForClose: [8, 32],
+      overlayClassName: "overlay-custom-class-name",
+      customUI: ({ onClose, title, message, buttons }) => {
+        return <ConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
+      }
+    };
+
+    // first user should confirm
+    confirmAlert(options)
+
+  }
+
 
   return (
     <div
@@ -288,7 +321,9 @@ function Profile({ handleClose }) {
         )}
 
         <div className="mb-4 self-center w-4/5 md:w-3/5 flex justify-end">
-          <button className="px-3 py-2 flex-center gap-x-2 items-center border-2 rounded-corners text-xs text-gray-600 hover:border-red-500 hover:text-red-500 hover:bg-red-50 transition-all duration-300">
+          <button 
+          onClick={handleDeleteAcc}
+          className="px-3 py-2 flex-center gap-x-2 items-center border-2 rounded-corners text-xs text-gray-600 hover:border-red-500 hover:text-red-500 hover:bg-red-50 transition-all duration-300">
             <i className='fa-regular fa-trash text-xs'></i>
             <span>Delete Account</span>
           </button>
