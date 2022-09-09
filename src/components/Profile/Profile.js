@@ -72,10 +72,11 @@ function Profile({ handleClose }) {
 
         if (response.status) {
           dispatch(setUser(response.data.user))
+          notify("your profile photo updated successfully", "success")
         }
 
         if (response.errors) {
-
+          notify("couldn't update your profile photo", "error")
           setErrors(response.errors)
           profilePhotoInputRef.current.value = null;
           setAvatar({})

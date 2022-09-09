@@ -164,3 +164,33 @@ export const deleteAccount = async data => {
     });
 
 }
+
+
+export const sendVerificationCode = async () => {
+
+    let url = process.env.REACT_APP_API_URL + '/api/auth/send-verification-code';
+
+    return await axios.get(url, null, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        }
+    }).then(response => {
+
+        return { status: true, data: response.data }
+
+    }).catch(err => {
+
+        if (err.response.status == 422) {
+
+            let errData = err.response.data.errors;
+            return { status: false, errors: convertApiErrors(errData) }
+
+        } else if (err.response.status == 401) {
+            return { status: false, errors: { message: err.response.data.message } }
+        }
+
+        return err.response.data;
+    });
+
+}

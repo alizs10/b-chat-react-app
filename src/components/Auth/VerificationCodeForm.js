@@ -1,12 +1,17 @@
+import { isEmpty } from 'lodash'
 import React, { useContext, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { object, string, ValidationError } from 'yup'
 import { verifyEmail } from '../../api/auth'
 import AuthContext from '../../Context/AuthContext'
+import { setUser } from '../../redux/slices/userSlice'
 import { notify } from '../Helpers/notify'
 
 function VerificationCodeForm() {
 
+    const { user } = useSelector(state => state.user)
+    const dispatch = useDispatch()
 
     const { message, setMessage } = useContext(AuthContext)
 
@@ -122,6 +127,10 @@ function VerificationCodeForm() {
 
                 if (res.status) {
                     let data = res.data;
+                    if(!isEmpty(user))
+                    {
+                        dispatch(setUser(data.user))
+                    }
                     setMessage(data.message)
                     resetForm()
                     setCanRequestAgain(false)
@@ -240,12 +249,23 @@ function VerificationCodeForm() {
                     {message && (
                         <span className='text-base text-gray-600'>{message}</span>
                     )}
-                    <Link to="/auth/login">
-                        <button type='button' className="mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners bg-[#4361EE] btn-hover text-white transition-all duration-300">
-                            <span className='text-base'>Login</span>
-                            <i className="fa-regular fa-arrow-right-to-arc text-lg"></i>
-                        </button>
-                    </Link>
+
+                    {isEmpty(user) ? (
+                        <Link to="/auth/login">
+                            <button type='button' className="mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners bg-[#4361EE] btn-hover text-white transition-all duration-300">
+                                <span className='text-base'>Login</span>
+                                <i className="fa-regular fa-arrow-right-to-arc text-lg"></i>
+                            </button>
+                        </Link>
+
+                    ) : (
+                        <Link to="/">
+                            <button type='button' className="mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners bg-[#4361EE] btn-hover text-white transition-all duration-300">
+                                <span className='text-base'>Home</span>
+                                <i className="fa-regular fa-arrow-right-to-arc text-lg"></i>
+                            </button>
+                        </Link>
+                    )}
                 </div>
             )}
 

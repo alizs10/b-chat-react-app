@@ -1,10 +1,32 @@
 import { isEmpty } from 'lodash'
 import React from 'react'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { sendVerificationCode } from '../../api/profile'
+import { notify } from '../Helpers/notify'
 
-function ProfileInformation({ onEdit, name, email, username }) {
+function ProfileInformation({ onEdit }) {
+
+    const { user } = useSelector(state => state.user)
+    const navigate = useNavigate()
+
+    const handleVerifyEmail = async () => {
+        try {
+            let res = await sendVerificationCode()
+
+            if(res.status)
+            {
+                navigate('/auth/verify/'+ user.email)
+                setTimeout(() => {
+                    notify("verification code sent successfully", "success")
+                }, 1000)
+            }
+        } catch (error) {
+            
+        }
+    }
 
     return (
-
 
         <div className="w-4/5 md:w-3/5 mt-4 self-center flex flex-col gap-y-2">
 
@@ -14,7 +36,7 @@ function ProfileInformation({ onEdit, name, email, username }) {
                     <span className="text-gray-600">Name:</span>
                 </span>
                 <span className="text-gray-800">
-                    {isEmpty(name) ? 'your name' : name}
+                    {isEmpty(user?.name) ? 'your name' : user?.name}
                 </span>
             </span>
             <span className="w-full flex justify-between text-xs">
@@ -23,7 +45,7 @@ function ProfileInformation({ onEdit, name, email, username }) {
                     <span className="text-gray-600">Username:</span>
                 </span>
                 <span className="text-gray-800">
-                    @{username}
+                    @{user?.username}
                 </span>
             </span>
             <span className="w-full flex justify-between text-xs">
@@ -33,8 +55,16 @@ function ProfileInformation({ onEdit, name, email, username }) {
 
                 </span>
 
-                <span className="text-gray-800">
-                    {email}
+                <span className='flex items-center gap-x-2'>
+
+                    <span className="text-gray-800">
+                        {user?.email}
+                    </span>
+                    {isEmpty(user.email_verified_at) && (
+                        <span 
+                        onClick={handleVerifyEmail}
+                        className='text-[#1C42EA] cursor-pointer'>verify</span>
+                    )}
                 </span>
             </span>
 
