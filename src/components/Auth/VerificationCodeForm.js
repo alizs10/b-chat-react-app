@@ -241,7 +241,7 @@ function VerificationCodeForm() {
                         <span className='text-base text-gray-600'>{message}</span>
                     )}
                     <Link to="/auth/login">
-                        <button type='button' className="mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners 'bg-[#4361EE] btn-hover text-white transition-all duration-300">
+                        <button type='button' className="mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners bg-[#4361EE] btn-hover text-white transition-all duration-300">
                             <span className='text-base'>Login</span>
                             <i className="fa-regular fa-arrow-right-to-arc text-lg"></i>
                         </button>

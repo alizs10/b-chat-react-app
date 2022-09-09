@@ -11,8 +11,10 @@ import EditBio from './EditBio';
 import EditProfileInformation from './EditProfileInformation';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
-import { deleteAvatar, updateBio, updateProfile, updateProfileInfo } from '../../api/profile';
+import { deleteAccount, deleteAvatar, updateBio, updateProfile, updateProfileInfo } from '../../api/profile';
 import { setUser } from '../../redux/slices/userSlice';
+import DeleteAccConfirmUI from './DeleteAccConfirmUI';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -21,6 +23,7 @@ function Profile({ handleClose }) {
   const { user } = useSelector(state => state.user)
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const [errors, setErrors] = useState({})
   const [avatar, setAvatar] = useState({})
@@ -28,6 +31,7 @@ function Profile({ handleClose }) {
   const [email, setEmail] = useState(user?.email ?? "")
   const [username, setUsername] = useState(user?.username ?? "")
   const [name, setName] = useState(user?.name ?? "")
+
   const [isEditingBio, setIsEditingBio] = useState(false)
   const [isEditingProfileInformation, setIsEditingProfileInformation] = useState(false)
 
@@ -337,8 +341,30 @@ function Profile({ handleClose }) {
       buttons: [
         {
           label: 'Yes, Delete My Account',
-          onClick: () => {
-            notify("your account deleted successfully", "success")
+          onClick: async (pin) => {
+
+            try {
+              let data = {
+                password: pin
+              }
+
+              let response = await deleteAccount(data)
+
+              if (response.status) {
+                localStorage.removeItem('token')
+                dispatch(setUser({}))
+                navigate('/auth')
+                setTimeout(() => {
+                  notify("your account deleted successfully", "success")
+                }, 2000)
+              } else {
+                notify(response.data.message, "error")
+
+              }
+            } catch (error) {
+
+            }
+
           }
         },
         {
@@ -350,10 +376,10 @@ function Profile({ handleClose }) {
       ],
       closeOnEscape: true,
       closeOnClickOutside: true,
-      keyCodeForClose: [8, 32],
+      keyCodeForClose: [32],
       overlayClassName: "overlay-custom-class-name",
       customUI: ({ onClose, title, message, buttons }) => {
-        return <ConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
+        return <DeleteAccConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
       }
     };
 
