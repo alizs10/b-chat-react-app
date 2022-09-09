@@ -16,7 +16,7 @@ function Conversation({ conversation, active, setActiveConversation, setSidebarV
             <div className='relative cursor-pointer w-16 h-16'>
                 <img className='rounded-corners w-full h-full object-cover object-center' src={isEmpty(conversation.with_user.profile_photo) ? './assets/images/default-avatar.png' : process.env.REACT_APP_API_URL + '/storage/' + conversation.with_user.profile_photo} />
                 <span className='absolute -bottom-1 -right-0 bg-white p-[3px] flex-center rounded-full'>
-                    <span className={`w-3 h-3 rounded-full ${conversation.status ? "bg-emerald-500" : "bg-gray-400"}`}></span>
+                    <span className={`w-3 h-3 rounded-full ${conversation.with_user.user_status == 1 ? "bg-emerald-500" : "bg-gray-400"}`}></span>
                 </span>
             </div>
             <div className='w-[85%] flex flex-col gap-y-2'>
