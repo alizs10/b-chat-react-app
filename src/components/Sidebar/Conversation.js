@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash'
+import { isEmpty, truncate } from 'lodash'
 import React from 'react'
 var moment = require('moment')
 
@@ -24,7 +24,7 @@ function Conversation({ conversation, active, setActiveConversation, setSidebarV
                     <span className='font-bold text-lg'>{conversation.with_user.name ? conversation.with_user.name : conversation.with_user.username}</span>
                     <span className='text-sm text-gray-600'>{moment(conversation.created_at).fromNow()}</span>
                 </div>
-                <span className='text-sm'>{conversation.last_message ? conversation.last_message : 'send first message'}</span>
+                <span className='text-sm'>{conversation.last_message ? truncate(conversation.last_message.body) : 'send first message'}</span>
             </div>
         </li>
     )
