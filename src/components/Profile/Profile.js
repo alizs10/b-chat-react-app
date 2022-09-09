@@ -11,7 +11,7 @@ import EditBio from './EditBio';
 import EditProfileInformation from './EditProfileInformation';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
-import { deleteAvatar, updateProfile } from '../../api/profile';
+import { deleteAvatar, updateBio, updateProfile } from '../../api/profile';
 import { setUser } from '../../redux/slices/userSlice';
 
 
@@ -24,6 +24,7 @@ function Profile({ handleClose }) {
 
   const [errors, setErrors] = useState({})
   const [avatar, setAvatar] = useState({})
+  const [bio, setBio] = useState(user?.bio ?? "")
   const [isEditingBio, setIsEditingBio] = useState(false)
   const [isEditingProfileInformation, setIsEditingProfileInformation] = useState(false)
 
@@ -187,8 +188,7 @@ function Profile({ handleClose }) {
         {
           label: 'Update',
           onClick: () => {
-            setIsEditingBio(false)
-            notify("your bio updated successfully", "success")
+            handleUpdateBio();
           }
         },
         {
@@ -210,6 +210,24 @@ function Profile({ handleClose }) {
     // first user should confirm
     confirmAlert(options)
 
+  }
+
+  const handleUpdateBio = async () => {
+
+    try {
+
+      let formData = new FormData;
+      formData.append('bio', bio)
+      formData.append('_method', "put")
+      let response = await updateBio(formData)
+      if (response.status) {
+        dispatch(setUser(response.data.user))
+        setIsEditingBio(false)
+        notify("your bio updated successfully", "success")
+      }
+    } catch (error) {
+
+    }
   }
 
   const handleCancelEditProfileInformation = () => {
@@ -357,9 +375,9 @@ function Profile({ handleClose }) {
         )}
 
         {isEditingBio ? (
-          <EditBio value={user?.bio} onCancel={handleCancelEditBio} onConfirm={handleEditBio} />
+          <EditBio value={bio} handleChange={setBio} onCancel={handleCancelEditBio} onConfirm={handleEditBio} />
         ) : (
-          <Bio value={user?.bio} onEdit={setIsEditingBio} />
+          <Bio value={bio} onEdit={setIsEditingBio} />
         )}
 
         {isEditingProfileInformation ? (
