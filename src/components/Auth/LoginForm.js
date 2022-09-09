@@ -3,7 +3,9 @@ import React, { useContext } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { object, string } from 'yup'
+import { initialData } from '../../api/app'
 import { login } from '../../api/auth'
+import { setConversations } from '../../redux/slices/conversationsSlice'
 
 import { deleteUser, setUser } from '../../redux/slices/userSlice'
 import { notify } from '../Helpers/notify'
@@ -43,7 +45,7 @@ function LoginForm() {
                         if (res.status) {
                             localStorage.setItem('token', res.token)
                             dispatch(setUser(res.user))
-                            navigate('/')
+                            
                         } else {
                             dispatch(deleteUser())
                             setErrors(res.errors)

@@ -6,13 +6,26 @@ import SidebarContext from "./Context/SidebarContext";
 
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch } from "react-redux";
+import { setConversations } from "./redux/slices/conversationsSlice";
+import { initialData } from "./api/app";
 
 function App() {
+  const dispatch = useDispatch()
 
   const [sidebarVisibility, setSidebarVisibility] = useState(false)
   const [isBigScreen, setIsBigScreen] = useState(false)
 
   useEffect(() => {
+
+    async function initial() {
+      console.log("here");
+      let res = await initialData()
+      console.log(res);
+      dispatch(setConversations(res.conversations))
+    }
+
+    initial()
 
     function handleWindowResize() {
       if (window.innerWidth > 1024) {
@@ -22,6 +35,7 @@ function App() {
         setIsBigScreen(false)
       }
     }
+
     handleWindowResize()
     window.addEventListener("resize", handleWindowResize)
 
