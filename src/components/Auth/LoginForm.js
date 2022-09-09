@@ -45,6 +45,10 @@ function LoginForm() {
                         if (res.status) {
                             localStorage.setItem('token', res.token)
                             dispatch(setUser(res.user))
+                            navigate('/')
+                            setTimeout(() => {
+                                notify("you're logged in", "success")
+                            }, 1000)
                             
                         } else {
                             dispatch(deleteUser())
