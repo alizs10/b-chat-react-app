@@ -1,9 +1,7 @@
 import { isEmpty } from 'lodash'
 import React from 'react'
-import { useSelector } from 'react-redux'
 
-function ProfileInformation({ onEdit }) {
-    const { user } = useSelector(state => state.user)
+function ProfileInformation({ onEdit, name, email, username }) {
 
     return (
 
@@ -16,7 +14,7 @@ function ProfileInformation({ onEdit }) {
                     <span className="text-gray-600">Name:</span>
                 </span>
                 <span className="text-gray-800">
-                    {isEmpty(user?.name) ? 'your name' : user?.name}
+                    {isEmpty(name) ? 'your name' : name}
                 </span>
             </span>
             <span className="w-full flex justify-between text-xs">
@@ -25,7 +23,7 @@ function ProfileInformation({ onEdit }) {
                     <span className="text-gray-600">Username:</span>
                 </span>
                 <span className="text-gray-800">
-                    @{user?.username}
+                    @{username}
                 </span>
             </span>
             <span className="w-full flex justify-between text-xs">
@@ -36,7 +34,7 @@ function ProfileInformation({ onEdit }) {
                 </span>
 
                 <span className="text-gray-800">
-                    {user?.email}
+                    {email}
                 </span>
             </span>
 

@@ -11,7 +11,7 @@ import EditBio from './EditBio';
 import EditProfileInformation from './EditProfileInformation';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
-import { deleteAvatar, updateBio, updateProfile } from '../../api/profile';
+import { deleteAvatar, updateBio, updateProfile, updateProfileInfo } from '../../api/profile';
 import { setUser } from '../../redux/slices/userSlice';
 
 
@@ -25,6 +25,9 @@ function Profile({ handleClose }) {
   const [errors, setErrors] = useState({})
   const [avatar, setAvatar] = useState({})
   const [bio, setBio] = useState(user?.bio ?? "")
+  const [email, setEmail] = useState(user?.email ?? "")
+  const [username, setUsername] = useState(user?.username ?? "")
+  const [name, setName] = useState(user?.name ?? "")
   const [isEditingBio, setIsEditingBio] = useState(false)
   const [isEditingProfileInformation, setIsEditingProfileInformation] = useState(false)
 
@@ -274,8 +277,7 @@ function Profile({ handleClose }) {
         {
           label: 'Update',
           onClick: () => {
-            setIsEditingProfileInformation(false)
-            notify("your information updated successfully", "success")
+            handleUpdateProfileInfo()
           }
         },
         {
@@ -297,6 +299,34 @@ function Profile({ handleClose }) {
     // first user should confirm
     confirmAlert(options)
 
+  }
+
+  const handleUpdateProfileInfo = async () => {
+
+    try {
+
+      let formData = new FormData;
+      formData.append('name', name)
+      formData.append('username', username)
+      formData.append('email', email)
+      formData.append('_method', "PUT")
+      let response = await updateProfileInfo(formData)
+
+      if (response.status) {
+        dispatch(setUser(response.data.user))
+        setIsEditingProfileInformation(false)
+        setErrors({})
+        notify("your information updated successfully", "success")
+
+      }
+
+      if (response.errors) {
+        setErrors(response.errors)
+        notify("Couldn't update your profile information", "error")
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const handleDeleteAcc = () => {
@@ -381,9 +411,9 @@ function Profile({ handleClose }) {
         )}
 
         {isEditingProfileInformation ? (
-          <EditProfileInformation onCancel={handleCancelEditProfileInformation} onConfirm={handleEditProfileInformation} />
+          <EditProfileInformation errors={errors} name={name} email={email} username={username} handleName={setName} handleUsername={setUsername} handleEmail={setEmail} onCancel={handleCancelEditProfileInformation} onConfirm={handleEditProfileInformation} />
         ) : (
-          <ProfileInformation onEdit={setIsEditingProfileInformation} />
+          <ProfileInformation name={name} email={email} username={username} onEdit={setIsEditingProfileInformation} />
         )}
 
         <div className="mb-4 self-center w-4/5 md:w-3/5 flex justify-end">
