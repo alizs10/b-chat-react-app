@@ -1,27 +1,30 @@
 import { useEffect, useState } from "react";
+
 import Chat from "./components/Chat";
 import Sidebar from "./components/Sidebar";
 
+import { useDispatch } from "react-redux";
+import { setConversations } from "./redux/slices/conversationsSlice";
+
+import { AppContext } from "./Context/AppContext";
 import SidebarContext from "./Context/SidebarContext";
+
+import { initialData } from "./api/app";
 
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { useDispatch } from "react-redux";
-import { setConversations } from "./redux/slices/conversationsSlice";
-import { initialData } from "./api/app";
 
 function App() {
   const dispatch = useDispatch()
 
+  const [activeConversation, setActiveConversation] = useState(null)
   const [sidebarVisibility, setSidebarVisibility] = useState(false)
   const [isBigScreen, setIsBigScreen] = useState(false)
 
   useEffect(() => {
 
     async function initial() {
-      console.log("here");
       let res = await initialData()
-      console.log(res);
       dispatch(setConversations(res.conversations))
     }
 
@@ -50,18 +53,22 @@ function App() {
   const sidebarVisibilityCondition = (!sidebarVisibility && !isBigScreen) || (sidebarVisibility && isBigScreen)
 
   return (
-    <SidebarContext.Provider value={{
-      sidebarVisibility, setSidebarVisibility,
-      handleToggleSidebar
+    <AppContext.Provider value={{
+      activeConversation, setActiveConversation
     }}>
+      <SidebarContext.Provider value={{
+        sidebarVisibility, setSidebarVisibility,
+        handleToggleSidebar
+      }}>
 
-      <div className="grid grid-cols-9 h-screen overflow-hidden">
-        {sidebarVisibility && (<Sidebar />)}
-        {sidebarVisibilityCondition && (<Chat />)}
+        <div className="grid grid-cols-9 h-screen overflow-hidden">
+          {sidebarVisibility && (<Sidebar />)}
+          {sidebarVisibilityCondition && (<Chat />)}
 
-      </div>
-      <ToastContainer />
-    </SidebarContext.Provider>
+        </div>
+        <ToastContainer />
+      </SidebarContext.Provider>
+    </AppContext.Provider>
   );
 }
 
