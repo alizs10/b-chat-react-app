@@ -24,7 +24,7 @@ function Chat() {
     try {
       let response = await getUserProfile(id)
       if (response.status) {
-        setViewProfileUser(res.user)
+        setViewProfileUser(response.user)
         setViewProfileVisibility(true)
       }
     } catch (error) {

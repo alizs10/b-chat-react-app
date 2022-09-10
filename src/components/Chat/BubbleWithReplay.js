@@ -1,6 +1,7 @@
 import { isEmpty, truncate } from 'lodash'
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { ChatContext } from '../../Context/ChatContext'
 import Replay from './Replay'
 
 let moment = require('moment')

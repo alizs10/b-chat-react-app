@@ -5,8 +5,8 @@ function ViewProfile({ handleClose, user }) {
 
     return (
         <div className="relative overflow-hidden w-full h-screen md:h-fit md:w-2/5 shadow-md rounded-corners">
-            <div className="absolute bg-red-300 top-0 right-0 bottom-0 left-0 -z-10">
-                <img className="w-full h-full object-cover object-center" src='./assets/images/user-profile-5.webp' />
+            <div className="absolute top-0 right-0 bottom-0 left-0 -z-10">
+                <img className="w-full h-full object-cover object-center" src={isEmpty(user.profile_photo) ? './assets/images/default-avatar.png' : process.env.REACT_APP_API_URL + '/storage/' + user.profile_photo} />
 
             </div>
             <div
