@@ -38,7 +38,7 @@ function MyBubble({ message }) {
                 <div dir='auto' onMouseOver={() => handleMouseOver()} onMouseLeave={() => handleMouseLeave()} className="bg-[#4361ee] p-3 rounded-corners w-full text-white text-base">
                     {message.body}
                 </div>
-                {replayBtnVisibility && (<Replay dir="right" setReplayBtnVisibility={setReplayBtnVisibility} replayRemover={replayRemover} replayBtnRef={replayBtnRef} />)}
+                {replayBtnVisibility && (<Replay message={message} dir="right" setReplayBtnVisibility={setReplayBtnVisibility} replayRemover={replayRemover} replayBtnRef={replayBtnRef} />)}
             </div>
 
         </div>

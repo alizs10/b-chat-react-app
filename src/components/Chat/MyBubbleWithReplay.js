@@ -51,7 +51,7 @@ function MyBubbleWithReplay({ message }) {
                     <span className="p-3 bg-[#4361ee]" dir='auto'>{message.body}</span>
                 </div>
 
-                {replayBtnVisibility && (<Replay dir="right" setReplayBtnVisibility={setReplayBtnVisibility} replayRemover={replayRemover} replayBtnRef={replayBtnRef} />)}
+                {replayBtnVisibility && (<Replay message={message} dir="right" setReplayBtnVisibility={setReplayBtnVisibility} replayRemover={replayRemover} replayBtnRef={replayBtnRef} />)}
 
             </div>
         </div>

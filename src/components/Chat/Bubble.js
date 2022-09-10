@@ -42,7 +42,7 @@ function Bubble({ message }) {
                     <p dir='auto'>
                         {message.body}
                     </p>
-                    {replayBtnVisibility && (<Replay setReplayBtnVisibility={setReplayBtnVisibility} replayRemover={replayRemover} replayBtnRef={replayBtnRef} />)}
+                    {replayBtnVisibility && (<Replay message={message} setReplayBtnVisibility={setReplayBtnVisibility} replayRemover={replayRemover} replayBtnRef={replayBtnRef} />)}
                 </div>
 
 

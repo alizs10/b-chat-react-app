@@ -36,15 +36,8 @@ function Chat() {
   const [isReplying, setIsReplaying] = useState(false)
   const [replayMsg, setReplayMsg] = useState({})
 
-  const handleReplay = (id = null) => {
-    let msgTest = {
-      body: "hello, this is a test message  to be replayed",
-      user: {
-        fullName: "Matt LeBlanc"
-      }
-    }
-
-    setReplayMsg(msgTest)
+  const handleReplay = (message) => {
+    setReplayMsg(message)
     setIsReplaying(true)
   }
 
@@ -67,7 +60,7 @@ function Chat() {
             )}
 
             {isReplying && (
-              <ReplayTo msg={replayMsg} />
+              <ReplayTo message={replayMsg} />
             )}
           </div>
           {activeConversation && (

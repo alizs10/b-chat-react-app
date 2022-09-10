@@ -48,7 +48,7 @@ function BubbleWithReplay({ message }) {
                             )}
                         </span>
                         <span dir='auto'>{truncate(message.parent.body)}</span>
-                        {replayBtnVisibility && (<Replay setReplayBtnVisibility={setReplayBtnVisibility} replayRemover={replayRemover} replayBtnRef={replayBtnRef} />)}
+                        {replayBtnVisibility && (<Replay message={message} setReplayBtnVisibility={setReplayBtnVisibility} replayRemover={replayRemover} replayBtnRef={replayBtnRef} />)}
                     </div>
                     <span className="p-3" dir='auto'>
                         {message.body}
