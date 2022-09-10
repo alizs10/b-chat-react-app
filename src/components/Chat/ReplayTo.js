@@ -11,7 +11,7 @@ function ReplayTo({msg}) {
     }
 
     return (
-        <div className='border-y-2 border-gray-200 sticky bottom-0 z-20 grid grid-cols-12 bg-white p-3 text-xs text-gray-800'>
+        <div className='self-end sticky bottom-0 left-0 right-0 border-y-2 border-gray-200  w-full z-20 grid grid-cols-12 bg-white p-3 text-xs text-gray-800'>
             <div className='flex flex-col gap-y-2 col-span-11'>
                 <span className='text-xs text-gray-600'>Replay To: {msg.user.fullName}</span>
                 <span className='text-sm  text-gray-800'>{msg.body}</span>

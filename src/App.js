@@ -9,12 +9,14 @@ import { setConversations } from "./redux/slices/conversationsSlice";
 import { AppContext } from "./Context/AppContext";
 import SidebarContext from "./Context/SidebarContext";
 
-import { initialData } from "./api/app";
+import { getMessages, initialData } from "./api/app";
 
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { setMessages } from "./redux/slices/messagesSlice";
 
 function App() {
+
   const dispatch = useDispatch()
 
   const [activeConversation, setActiveConversation] = useState(null)
@@ -45,6 +47,24 @@ function App() {
 
     return () => window.removeEventListener("resize", handleWindowResize);
   }, [])
+
+  useEffect(() => {
+
+    async function messages() {
+      let response = await getMessages(activeConversation)
+
+      if (response.status) {
+        console.log("here we go");
+        dispatch(setMessages(response.messages))
+      }
+    }
+
+    if (activeConversation) {
+      messages();
+    }
+
+
+  }, [activeConversation])
 
   const handleToggleSidebar = () => {
     setSidebarVisibility(!sidebarVisibility)
