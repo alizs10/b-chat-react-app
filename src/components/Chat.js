@@ -18,13 +18,13 @@ function Chat() {
   const { activeConversation, setActiveConversation } = useContext(AppContext)
 
   const [viewProfileVisibility, setViewProfileVisibility] = useState(false)
-  const [viewProfile, setViewProfile] = useState({})
+  const [viewProfileUser, setViewProfileUser] = useState({})
 
   const handleViewProfile = async id => {
     try {
       let response = await getUserProfile(id)
       if (response.status) {
-        setViewProfile(res.user)
+        setViewProfileUser(res.user)
         setViewProfileVisibility(true)
       }
     } catch (error) {
@@ -74,7 +74,7 @@ function Chat() {
             <ChatInput />
           )}
           <Backdrop toggler={viewProfileVisibility} handleClick={setViewProfileVisibility}>
-            <CenterContainer handleClick={setViewProfileVisibility} element={<ViewProfile handleClose={setViewProfileVisibility} user={{ fullName: "Mehran Modiri" }} />} />
+            <CenterContainer handleClick={setViewProfileVisibility} element={<ViewProfile handleClose={setViewProfileVisibility} user={viewProfileUser} />} />
           </Backdrop>
         </div>
       </ReplayContext.Provider>
