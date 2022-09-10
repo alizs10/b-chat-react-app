@@ -7,6 +7,8 @@ let moment = require('moment')
 
 function BubbleWithReplay({ message }) {
 
+    const { handleViewProfile } = useContext(ChatContext)
+
     const { user } = useSelector(state => state.user)
 
     const [replayBtnVisibility, setReplayBtnVisibility] = useState(false)
@@ -31,7 +33,9 @@ function BubbleWithReplay({ message }) {
     return (
         <div className="ml-2 flex gap-x-4 items-end">
             <div className='relative flex flex-col gap-y-1 w-fit max-w-[70%]'>
-                <span className='cursor-pointer w-fit flex gap-x-1 items-center'>
+                <span
+                    onClick={() => handleViewProfile(message.user_id)}
+                    className='cursor-pointer w-fit flex gap-x-1 items-center'>
                     <img className='w-8 h-8 object-center object-cover rounded-corners' src={isEmpty(message.writer?.profile_photo) ? './assets/images/default-avatar.png' : process.env.REACT_APP_API_URL + '/storage/' + message.writer?.profile_photo} />
                     <span className="text-gray-600 ml-2">{isEmpty(message.writer.name) ? message.writer.username : message.writer.name}</span>
                 </span>
