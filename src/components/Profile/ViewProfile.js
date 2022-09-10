@@ -25,8 +25,8 @@ function ViewProfile({ handleClose, user }) {
 
                 <div className='w-full py-2 flex flex-col gap-y-4'>
 
-                    <span className="self-center relative w-24">
-                        <img className='rounded-corners w-24' src={isEmpty(user.profile_photo) ? './assets/images/default-avatar.png' : process.env.REACT_APP_API_URL + '/storage/' + user.profile_photo} />
+                    <span className="self-center relative w-24 h-24">
+                        <img className='rounded-corners w-24 h-24 object-cover object-center' src={isEmpty(user.profile_photo) ? './assets/images/default-avatar.png' : process.env.REACT_APP_API_URL + '/storage/' + user.profile_photo} />
                     </span>
 
                     {!isEmpty(user.bio) && (

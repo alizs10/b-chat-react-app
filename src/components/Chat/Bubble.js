@@ -34,7 +34,7 @@ function Bubble({ message }) {
                 <span 
                 onClick={() => handleViewProfile(message.user_id)}
                 className='cursor-pointer w-fit flex gap-x-1 items-center'>
-                    <img className='w-8 rounded-corners' src={isEmpty(message.writer?.profile_photo) ? './assets/images/default-avatar.png' : process.env.REACT_APP_API_URL + '/storage/' + message.writer?.profile_photo} />
+                    <img className='w-8 h-8 object-cover object-center rounded-corners' src={isEmpty(message.writer?.profile_photo) ? './assets/images/default-avatar.png' : process.env.REACT_APP_API_URL + '/storage/' + message.writer?.profile_photo} />
                     <span className="text-gray-600 ml-2">{isEmpty(message.writer.name) ? message.writer.username : message.writer.name}</span>
                 </span>
 
