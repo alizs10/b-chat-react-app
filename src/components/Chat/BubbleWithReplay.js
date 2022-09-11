@@ -60,7 +60,11 @@ function BubbleWithReplay({ message }) {
             <div className='flex items-end gap-x-2 ml-8'>
                 <span className="text-[12px] mb-1">
                     <span className="text-gray-600">
-                        {moment(message.created_at).format('LT')}
+                    {message?.pending ? (
+                            <i className="fa-regular fa-clock text-sm"></i>
+                        ) : (
+                            moment(message.created_at).format('LT')
+                        )}
                     </span>
                 </span>
             </div>
