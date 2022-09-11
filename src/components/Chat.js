@@ -1,8 +1,11 @@
+import { isEmpty, now } from 'lodash'
 import React, { useContext, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { getUserProfile } from '../api/users'
 import { AppContext } from '../Context/AppContext'
 import { ChatContext } from '../Context/ChatContext'
 import ReplayContext from '../Context/ReplayContext'
+import { addMessage } from '../redux/slices/messagesSlice'
 import Bubbles from './Chat/Bubbles'
 import ChatInput from './Chat/ChatInput'
 import Head from './Chat/Head'
@@ -10,10 +13,15 @@ import Preview from './Chat/Preview'
 import ReplayTo from './Chat/ReplayTo'
 import Backdrop from './Helpers/Backdrop'
 import CenterContainer from './Helpers/CenterContainer'
+import { findDataById } from './Helpers/helpers'
 import ViewProfile from './Profile/ViewProfile'
 
 
 function Chat() {
+
+  const { user } = useSelector(state => state.user)
+  const { messages } = useSelector(state => state.messages)
+  const dispatch = useDispatch()
 
   const { activeConversation, setActiveConversation } = useContext(AppContext)
 
@@ -41,9 +49,36 @@ function Chat() {
     setIsReplaying(true)
   }
 
+  const handleSendMessage = async (body) => {
+    let payload = {}
+    payload.body = body;
+    payload.user_id = user.id;
+    if (isReplying && !isEmpty(replayMsg)) {
+      payload.parent_id = replayMsg.id;
+      let parent = findDataById(replayMsg.id, messages)
+      if (parent) {
+        payload.parent = parent;
+      } else {
+        return false;
+      }
+
+    } else {
+      payload.parent_id = null;
+    }
+    payload.created_at = now()
+    payload.id = Math.random() * 1000000;
+    payload.writer = user;
+
+    dispatch(addMessage(payload))
+    setIsReplaying(false)
+    setReplayMsg({})
+    return true;
+  }
+
   return (
     <ChatContext.Provider value={{
-      handleViewProfile
+      handleViewProfile,
+      handleSendMessage
     }}>
       <ReplayContext.Provider value={{
         isReplying, setIsReplaying,

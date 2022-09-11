@@ -60,7 +60,7 @@ function ViewProfile({ handleClose, user }) {
                                 <span className="">Username:</span>
                             </span>
                             <span className="   text-gray-200">
-                                {user.username}
+                                @{user.username}
                             </span>
                         </span>
 

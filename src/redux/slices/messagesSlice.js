@@ -10,7 +10,8 @@ export const messagesSlice = createSlice({
       state.messages = action.payload
     },
     addMessage: (state, action) => {
-      state.messages = action.payload
+      let newMessage = action.payload;
+      state.messages = [newMessage,...state.messages]
     },
     removeMessage: (state) => {
       state.messages = []

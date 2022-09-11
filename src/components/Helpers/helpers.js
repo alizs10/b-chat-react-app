@@ -9,3 +9,9 @@ export const convertApiErrors = errors => {
     return errorsObj;
 
 }
+
+export const findDataById = (id, array) => {
+    let matches = array.filter(value => value.id == id);
+
+    return matches.length > 0 ? matches[0] : false;
+}
