@@ -1,5 +1,5 @@
 import { isEmpty, now } from 'lodash'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { sendMessage } from '../api/messages'
 import { getUserProfile } from '../api/users'
@@ -14,7 +14,7 @@ import Preview from './Chat/Preview'
 import ReplayTo from './Chat/ReplayTo'
 import Backdrop from './Helpers/Backdrop'
 import CenterContainer from './Helpers/CenterContainer'
-import { addDataToArray, findDataById, replaceDataById } from './Helpers/helpers'
+import { addDataToArray, findDataById, removeDataById, replaceDataById } from './Helpers/helpers'
 import ViewProfile from './Profile/ViewProfile'
 
 
@@ -73,28 +73,16 @@ function Chat() {
     payload.pending = true;
 
     // send message temporary
-    dispatch(addMessage(payload))
+
+
+    
     if (setIsReplaying) {
       setIsReplaying(false)
       setReplayMsg({})
     }
-
-    // send message permanently
-    try {
-      let response = await sendMessage(payload);
-
-      if (response.status) {
-        // replace temporary message with permanently message
-        let newMessagesArr = replaceDataById(payload.id, addDataToArray(payload, messages), response.data.message)
-        console.log(newMessagesArr);
-        dispatch(setMessages(newMessagesArr))
-      }
-
-    } catch (error) {
-      console.log(error);
-    }
     return true;
   }
+
 
   return (
     <ChatContext.Provider value={{

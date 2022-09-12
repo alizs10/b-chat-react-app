@@ -29,3 +29,8 @@ export const replaceDataById = (id, array, newData) => {
 
     return filteredArray;
 }
+
+export const removeDataById = (id, array) => {
+    let filteredArray = array.filter(value => value.id != id);
+    return filteredArray;
+}

@@ -5,7 +5,7 @@ export const notify = (message, type) => {
     if (type === "success") {
 
         toast.success(message, {
-            position: "top-right",
+            position: "bottom-center",
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -16,7 +16,7 @@ export const notify = (message, type) => {
     }
     if (type === "error") {
         toast.error(message, {
-            position: "top-right",
+            position: "bottom-center",
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -27,7 +27,7 @@ export const notify = (message, type) => {
     }
     if (type === "warning") {
         toast.warn(message, {
-            position: "top-right",
+            position: "bottom-center",
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -39,7 +39,7 @@ export const notify = (message, type) => {
 
     if (type === "info") {
         toast.info(message, {
-            position: "top-right",
+            position: "bottom-center",
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
