@@ -1,6 +1,12 @@
 import axios from "axios";
 import { convertApiErrors } from "../components/Helpers/helpers";
 
+export const getMessages = async ({queryKey}) => {
+    const id = queryKey[1]
+    let url = process.env.REACT_APP_API_URL + `/api/conversation/${id}/messages`;
+    return await axios.get(url)
+}
+
 export const sendMessage = async data => {
 
     let url = process.env.REACT_APP_API_URL + '/api/message/store';

@@ -1,6 +1,7 @@
 import { isEmpty } from 'lodash'
 import React, { useContext, useRef, useState } from 'react'
 import { ChatContext } from '../../Context/ChatContext'
+
 import Replay from './Replay'
 
 let moment = require('moment')
@@ -8,6 +9,8 @@ let moment = require('moment')
 function Bubble({ message }) {
 
     const {handleViewProfile} = useContext(ChatContext)
+    
+
 
     const [replayBtnVisibility, setReplayBtnVisibility] = useState(false)
     const [replayRemover, setReplayRemover] = useState(null)

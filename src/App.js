@@ -9,27 +9,28 @@ import { setConversations } from "./redux/slices/conversationsSlice";
 import { AppContext } from "./Context/AppContext";
 import SidebarContext from "./Context/SidebarContext";
 
-import { getMessages, initialData } from "./api/app";
+import { initialData } from "./api/app";
 
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-import { setMessages } from "./redux/slices/messagesSlice";
-
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 function App() {
 
-  const onSuccess = (Data) => {
-    dispatch(setConversations(Data.data.conversations))
+  const onSuccess = (conversations) => {
+    dispatch(setConversations(conversations))
   }
 
   const { data, isError, isLoading } = useQuery(
     ['conversations'],
     initialData,
     {
+      refetchOnWindowFocus: false,
       onSuccess,
-      refetchOnWindowFocus: false
+      select: data => {
+        return data.data.conversations
+      }
     }
   )
 
@@ -57,23 +58,6 @@ function App() {
     return () => window.removeEventListener("resize", handleWindowResize);
   }, [])
 
-  useEffect(() => {
-
-    async function messages() {
-      let response = await getMessages(activeConversation)
-
-      if (response.status) {
-        console.log("here we go");
-        dispatch(setMessages(response.messages))
-      }
-    }
-
-    if (activeConversation) {
-      messages();
-    }
-
-
-  }, [activeConversation])
 
   const handleToggleSidebar = () => {
     setSidebarVisibility(!sidebarVisibility)
