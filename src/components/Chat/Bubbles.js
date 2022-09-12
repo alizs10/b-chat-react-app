@@ -16,9 +16,7 @@ function Bubbles() {
 
   const { messages } = useSelector(state => state.messages)
 
-
   const { activeConversation } = useContext(AppContext)
-
 
   const dispatch = useDispatch()
   const onSuccess = messages => {
@@ -37,27 +35,14 @@ function Bubbles() {
     }
   )
 
-  const bubblesRef = useRef(null)
-  useEffect(() => {
-    bubblesRef.current.style.scrollBehavior = "smooth"
-    bubblesRef.current.scrollTop = bubblesRef.current.scrollHeight
-  }, [])
-
-
-
   return (
-
-
-    <div ref={bubblesRef} className='relative row-span-5 pt-12 pb-0 overflow-y-scroll flex flex-col-reverse styled-scrollbar gap-y-14'>
-
-
+    <div className='relative row-span-5 pt-12 pb-4 overflow-y-scroll flex flex-col-reverse styled-scrollbar gap-y-14'>
       {messages && (
         messages.map(message => (
           <Message key={message.id} message={message} />
         ))
       )}
     </div>
-
   )
 }
 

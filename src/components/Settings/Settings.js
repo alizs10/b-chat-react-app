@@ -6,6 +6,7 @@ function Settings({ handleClose }) {
     const [privateAcc, setPrivateAcc] = useState(false)
     const [darkMode, setDarkMode] = useState(false)
     const [groupInvite, setGroupInvite] = useState(false)
+    const [alwaysOffline, setAlwaysOffline] = useState(false)
 
     const handleTogglePrivateAcc = () => {
         setPrivateAcc(!privateAcc)
@@ -17,6 +18,10 @@ function Settings({ handleClose }) {
 
     const handleToggleGroupInvite = () => {
         setGroupInvite(!groupInvite)
+    }
+
+    const handleToggleAlwaysOffline = () => {
+        setAlwaysOffline(!alwaysOffline)
     }
 
     return (
@@ -51,6 +56,14 @@ function Settings({ handleClose }) {
                         <span>Let others invite you to groups</span>
                     </span>
                     <CheckBox handleToggle={handleToggleGroupInvite} value={groupInvite} />
+                </span>
+
+                <span className="w-full flex justify-between text-xs">
+                    <span className="flex gap-x-2 items-center text-sm text-gray-600">
+                        <i className="fa-regular fa-signal-slash"></i>
+                        <span>Always offline</span>
+                    </span>
+                    <CheckBox handleToggle={handleToggleAlwaysOffline} value={alwaysOffline} />
                 </span>
 
                 <span className="w-full flex justify-between text-xs">
