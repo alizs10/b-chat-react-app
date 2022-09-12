@@ -1,41 +1,15 @@
-import axios from "axios";
-import { convertApiErrors } from "../components/Helpers/helpers";
+import request from "../utils/request";
 
-export const getMessages = async ({queryKey}) => {
-    const id = queryKey[1]
-    let url = process.env.REACT_APP_API_URL + `/api/conversation/${id}/messages`;
-    return await axios.get(url)
+export const getMessages = async ({ queryKey }) => {
+    let id = queryKey[1];
+    return await request.get(`/api/conversation/${id}/messages`)
 }
 
 export const sendMessage = async data => {
 
-    let url = process.env.REACT_APP_API_URL + '/api/message/store';
-    let csrfUrl = process.env.REACT_APP_API_URL + '/sanctum/csrf-cookie';
+    
 
-
-    return await axios.get(csrfUrl).then(response => {
-        return axios.post(url, data, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            }
-        }).then(response => {
-
-            return { status: true, data: response.data }
-
-        }).catch(err => {
-
-            if (err.response.status == 422) {
-
-                let errData = err.response.data.errors;
-                return { status: false, errors: convertApiErrors(errData) }
-
-            } else if (err.response.status == 401) {
-                return { status: false, errors: { message: err.response.data.message } }
-            }
-
-            return err.response.data;
-        });
-    });
-
+    return request.get('sanctum/csrf-cookie').then(() => {
+            return request.post(`/api/message/store`, data)
+    })
 }

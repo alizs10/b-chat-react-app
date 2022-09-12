@@ -1,12 +1,12 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { isEmpty, now } from 'lodash'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { sendMessage } from '../api/messages'
 import { getUserProfile } from '../api/users'
 import { AppContext } from '../Context/AppContext'
 import { ChatContext } from '../Context/ChatContext'
 import ReplayContext from '../Context/ReplayContext'
-import { addMessage, setMessages } from '../redux/slices/messagesSlice'
 import Bubbles from './Chat/Bubbles'
 import ChatInput from './Chat/ChatInput'
 import Head from './Chat/Head'
@@ -14,7 +14,7 @@ import Preview from './Chat/Preview'
 import ReplayTo from './Chat/ReplayTo'
 import Backdrop from './Helpers/Backdrop'
 import CenterContainer from './Helpers/CenterContainer'
-import { addDataToArray, findDataById, removeDataById, replaceDataById } from './Helpers/helpers'
+import { findDataById } from './Helpers/helpers'
 import ViewProfile from './Profile/ViewProfile'
 
 
@@ -50,6 +50,16 @@ function Chat() {
     setIsReplaying(true)
   }
 
+  const queryClient = useQueryClient()
+
+  const { mutate: sendNewMessage } = useMutation(newMessage => {
+    sendMessage(newMessage)
+  }, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['messages', activeConversation])
+    }
+  })
+
   const handleSendMessage = async (body) => {
     let payload = {}
     payload.body = body;
@@ -73,9 +83,9 @@ function Chat() {
     payload.pending = true;
 
     // send message temporary
+    sendNewMessage(payload)
 
 
-    
     if (setIsReplaying) {
       setIsReplaying(false)
       setReplayMsg({})

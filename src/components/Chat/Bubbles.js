@@ -1,33 +1,26 @@
 import { useQuery } from '@tanstack/react-query'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getMessages } from '../../api/messages'
 import { AppContext } from '../../Context/AppContext'
-import ReplayContext from '../../Context/ReplayContext'
 import { setMessages } from '../../redux/slices/messagesSlice'
-import Bubble from './Bubble'
-import BubbleWithReplay from './BubbleWithReplay'
 import Message from './Message'
-import MyBubble from './MyBubble'
-import MyBubbleWithReplay from './MyBubbleWithReplay'
-import ReplayTo from './ReplayTo'
 
 function Bubbles() {
 
-  const { messages } = useSelector(state => state.messages)
+  // const { messages } = useSelector(state => state.messages)
 
   const { activeConversation } = useContext(AppContext)
 
   const dispatch = useDispatch()
-  const onSuccess = messages => {
-    dispatch(setMessages(messages))
-  }
+  // const onSuccess = messages => {
+  //   dispatch(setMessages(messages))
+  // }
 
-  const { data, isLoading, isError, error } = useQuery(
+  const { data:messages, isLoading, isError, error } = useQuery(
     ['messages', activeConversation],
     getMessages,
     {
-      onSuccess,
       refetchOnWindowFocus: false,
       select: data => {
         return data.data.messages
