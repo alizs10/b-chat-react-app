@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { logout } from '../../../api/auth'
 import { deleteUser } from '../../../redux/slices/userSlice'
+import { notify } from '../../Helpers/notify'
 
 function UserPopup({profileToggler,settingsToggler}) {
 
@@ -19,6 +20,9 @@ function UserPopup({profileToggler,settingsToggler}) {
                 localStorage.removeItem('token')
                 dispatch(deleteUser())
                 navigate('/auth')
+                setTimeout(() => {
+                    notify("you're successfully logged out", "info")
+                }, 1000)
             }
             else {
                 console.log(res);
