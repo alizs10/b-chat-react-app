@@ -13,9 +13,25 @@ import { getMessages, initialData } from "./api/app";
 
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+
 import { setMessages } from "./redux/slices/messagesSlice";
 
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
 function App() {
+
+  const onSuccess = (Data) => {
+    dispatch(setConversations(Data.data.conversations))
+  }
+
+  const { data, isError, isLoading } = useQuery(
+    ['conversations'],
+    initialData,
+    {
+      onSuccess,
+      refetchOnWindowFocus: false
+    }
+  )
 
   const dispatch = useDispatch()
 
@@ -24,13 +40,6 @@ function App() {
   const [isBigScreen, setIsBigScreen] = useState(false)
 
   useEffect(() => {
-
-    async function initial() {
-      let res = await initialData()
-      dispatch(setConversations(res.conversations))
-    }
-
-    initial()
 
     function handleWindowResize() {
       if (window.innerWidth > 1024) {
@@ -73,6 +82,7 @@ function App() {
   const sidebarVisibilityCondition = (!sidebarVisibility && !isBigScreen) || (sidebarVisibility && isBigScreen)
 
   return (
+
     <AppContext.Provider value={{
       activeConversation, setActiveConversation
     }}>
@@ -89,6 +99,8 @@ function App() {
         <ToastContainer />
       </SidebarContext.Provider>
     </AppContext.Provider>
+
+
   );
 }
 
