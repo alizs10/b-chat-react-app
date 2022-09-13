@@ -1,16 +1,34 @@
+import { useMutation } from '@tanstack/react-query'
 import { Formik } from 'formik'
-import React, { useContext } from 'react'
+import React, { useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { object, string } from 'yup'
-import { initialData } from '../../api/app'
 import { login } from '../../api/auth'
-import { setConversations } from '../../redux/slices/conversationsSlice'
 
 import { deleteUser, setUser } from '../../redux/slices/userSlice'
 import { notify } from '../Helpers/notify'
 
 function LoginForm() {
+
+    const { mutate: sendLoginRequest } = useMutation(credential => login(credential), {
+        onSuccess: data => {
+            let res = data;
+            if (res.status) {
+                console.log(res);
+                localStorage.setItem('token', res.data.token)
+                dispatch(setUser(res.data.user))
+                navigate('/')
+                setTimeout(() => {
+                    notify("you're logged in", "success")
+                }, 1000)
+                
+            } else {
+                dispatch(deleteUser())
+                loginFormRef?.current.setErrors(res.errors)
+            }
+        }
+    })
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -25,9 +43,12 @@ function LoginForm() {
         password: string().required().min(8).max(16)
     })
 
+    const loginFormRef = useRef(null)
+
     return (
         <>
             <Formik
+            innerRef={loginFormRef}
                 initialValues={initialValues}
                 validationSchema={() => validationSchema}
                 onSubmit={async (values, { setSubmitting, setErrors }) => {
@@ -38,30 +59,7 @@ function LoginForm() {
                         username: values.username,
                         password: values.password
                     }
-
-                    try {
-                        let res = await login(credentials)
-
-                        if (res.status) {
-                            localStorage.setItem('token', res.token)
-                            dispatch(setUser(res.user))
-                            navigate('/')
-                            setTimeout(() => {
-                                notify("you're logged in", "success")
-                            }, 1000)
-                            
-                        } else {
-                            dispatch(deleteUser())
-                            setErrors(res.errors)
-                        }
-
-                    } catch (error) {
-
-                        if (error.code === "ERR_NETWORK") {
-                            notify(error.code, "error")
-                        }
-                    }
-
+                    sendLoginRequest(credentials)
                 }}
             >
                 {({
