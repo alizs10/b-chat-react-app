@@ -6,7 +6,16 @@ axios.interceptors.response.use(
         return response;
     },
     function (error) {
-        return error;
+
+        if (error.response.status == 422) {
+            let errData = error.response.data.errors;
+            return { status: false, errors: errData }
+
+        } else if (error.response.status == 401) {
+            return { status: false, errors: { message: [error.response.data.message] } }
+        }
+
+        return error.response.data;
     }
 )
 let token = localStorage.getItem('token');
