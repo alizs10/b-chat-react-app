@@ -21,10 +21,8 @@ import ViewProfile from './Profile/ViewProfile'
 function Chat() {
 
   const { user } = useSelector(state => state.user)
-  const { messages } = useSelector(state => state.messages)
-  const dispatch = useDispatch()
-
-  const { activeConversation, setActiveConversation } = useContext(AppContext)
+  
+  const { activeConversation } = useContext(AppContext)
 
   const [viewProfileVisibility, setViewProfileVisibility] = useState(false)
   const [viewProfileUser, setViewProfileUser] = useState({})
@@ -51,6 +49,7 @@ function Chat() {
   }
 
   const queryClient = useQueryClient()
+  const messagesQueryData = queryClient.getQueryData(['messages', activeConversation])
 
   const { mutate: sendNewMessage } = useMutation(sendMessage, {
     onMutate: (newMessage) => {
@@ -66,6 +65,7 @@ function Chat() {
 
     },
     onSuccess: (data, newMessage) => {
+      console.log(data, newMessage);
       let res = data;
       queryClient.setQueryData(['messages', activeConversation], (oldQueryData) => {
 
@@ -84,13 +84,14 @@ function Chat() {
   })
 
   const handleSendMessage = (body) => {
+    
     let payload = {}
     payload.body = body;
     payload.user_id = user.id;
     payload.conversation_id = activeConversation;
     if (isReplying && !isEmpty(replayMsg)) {
       payload.parent_id = replayMsg.id;
-      let parent = findDataById(replayMsg.id, messages)
+      let parent = findDataById(replayMsg.id, messagesQueryData.data.messages)
       if (parent) {
         payload.parent = parent;
       } else {
@@ -102,12 +103,12 @@ function Chat() {
     }
     payload.created_at = now()
     payload.id = Math.floor(Math.random() * 1000000);
+
     payload.writer = user;
     payload.pending = true;
-
+    
     // send message temporary
     sendNewMessage(payload)
-
 
     if (setIsReplaying) {
       setIsReplaying(false)

@@ -3,19 +3,11 @@ import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getMessages } from '../../api/messages'
 import { AppContext } from '../../Context/AppContext'
-import { setMessages } from '../../redux/slices/messagesSlice'
 import Message from './Message'
 
 function Bubbles() {
 
-  // const { messages } = useSelector(state => state.messages)
-
   const { activeConversation } = useContext(AppContext)
-
-  const dispatch = useDispatch()
-  // const onSuccess = messages => {
-  //   dispatch(setMessages(messages))
-  // }
 
   const { data:messages, isLoading, isError, error } = useQuery(
     ['messages', activeConversation],
