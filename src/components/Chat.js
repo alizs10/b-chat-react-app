@@ -52,15 +52,25 @@ function Chat() {
 
   const queryClient = useQueryClient()
 
-  const { mutate: sendNewMessage } = useMutation(newMessage => {
-    sendMessage(newMessage)
-  }, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['messages', activeConversation])
+  const { mutate: sendNewMessage } = useMutation(sendMessage, {
+    onSuccess: data => {
+      let newMessage = data?.data?.message
+
+      queryClient.setQueryData(['messages', activeConversation], (oldQueryData) => {
+        console.log(oldQueryData.data);
+        return {
+          ...oldQueryData,
+          data: {
+            status: true,
+            messages: [data.data.message, ...oldQueryData.data.messages]
+          }
+        }
+      })
+
     }
   })
 
-  const handleSendMessage = async (body) => {
+  const handleSendMessage = (body) => {
     let payload = {}
     payload.body = body;
     payload.user_id = user.id;

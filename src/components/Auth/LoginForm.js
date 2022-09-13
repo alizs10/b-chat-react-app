@@ -15,7 +15,6 @@ function LoginForm() {
         onSuccess: data => {
             let res = data;
             if (res.status) {
-                console.log(res);
                 localStorage.setItem('token', res.data.token)
                 dispatch(setUser(res.data.user))
                 navigate('/')
