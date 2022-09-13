@@ -53,16 +53,29 @@ function Chat() {
   const queryClient = useQueryClient()
 
   const { mutate: sendNewMessage } = useMutation(sendMessage, {
-    onSuccess: data => {
-      let newMessage = data?.data?.message
-
+    onMutate: (newMessage) => {
       queryClient.setQueryData(['messages', activeConversation], (oldQueryData) => {
-        console.log(oldQueryData.data);
         return {
           ...oldQueryData,
           data: {
             status: true,
-            messages: [data.data.message, ...oldQueryData.data.messages]
+            messages: [newMessage, ...oldQueryData.data.messages]
+          }
+        }
+      })
+
+    },
+    onSuccess: (data, newMessage) => {
+      let res = data;
+      queryClient.setQueryData(['messages', activeConversation], (oldQueryData) => {
+
+        let filteredOldMessages = oldQueryData.data.messages.filter(msg => msg.id != newMessage.id)
+
+        return {
+          ...oldQueryData,
+          data: {
+            status: true,
+            messages: [res.data.message, ...filteredOldMessages]
           }
         }
       })
