@@ -64,28 +64,22 @@ function SignupForm() {
 
     const { mutate: sendRegisterReq } = useMutation(register, {
         onError: (error) => {
-            console.log("ho", error);
-            if(error instanceof AxiosError)
-            {
-                console.log("yes");
-            }
+            console.log(error);
             formRef?.current?.setSubmitting(false)
             setProgress(100)
 
         },
         onSuccess: (data) => {
+            setProgress(100)
+            formRef?.current?.setSubmitting(false)
             const res = data?.data;
 
-            if (res.user) {
+            if (data.status) {
                 setMessage(res.message)
                 navigate(`/auth/verify/${res.user.email}`)
             } else {
-                console.log("we're here");
-                console.log(res.errors);
-                formRef?.current?.setSubmitting(false)
-                // setErrors(res.errors)
+                formRef?.current?.setErrors(data.errors)
             }
-            setProgress(100)
 
         },
 

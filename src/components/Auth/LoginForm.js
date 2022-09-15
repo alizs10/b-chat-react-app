@@ -21,8 +21,10 @@ function LoginForm() {
     const { mutate: sendLoginRequest } = useMutation(credential => login(credential), {
         onSuccess: data => {
             setProgress(100)
+            loginFormRef?.current.setSubmitting(false)
+
             let res = data;
-            if (res.status) {
+            if (res?.status) {
                 localStorage.setItem('token', res.data.token)
                 dispatch(setUser(res.data.user))
                 navigate('/')
@@ -33,8 +35,8 @@ function LoginForm() {
             } else {
                 dispatch(deleteUser())
                 loginFormRef?.current.setErrors(res.errors)
+                notify(res.errors.message[0], "warning")
             }
-            loginFormRef?.current.setSubmitting(false)
         }
     })
 
