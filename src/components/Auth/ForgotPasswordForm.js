@@ -1,10 +1,39 @@
+import { useMutation } from '@tanstack/react-query'
 import { Formik } from 'formik'
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { object, string } from 'yup'
 import { forgotPassword } from '../../api/auth'
+import { BChatContext } from '../../Context/BChatContext'
 
 function ForgotPasswordForm() {
+
+    const { setLoading, setProgress } = useContext(BChatContext)
+
+
+    useEffect(() => {
+        setLoading(true)
+        setProgress(100)
+    }, [])
+
+    const { mutate: forgotPasswordMutate } = useMutation(forgotPassword, {
+        onSuccess: (data) => {
+            setProgress(100)
+            forgotPasswordFormRef?.current.setSubmitting(false)
+            let res = data?.data
+
+            if (res && res.status) {
+                setMessage(res.message)
+                forgotPasswordFormRef?.current.resetForm()
+            } else {
+                forgotPasswordFormRef?.current.setErrors(data.errors)
+            }
+        },
+        onError: (error) => {
+            setProgress(100)
+            console.log(error);
+        },
+    })
 
     const [message, setMessage] = useState("")
 
@@ -12,29 +41,24 @@ function ForgotPasswordForm() {
         email: string().required().email()
     })
 
+    const forgotPasswordFormRef = useRef(null)
     return (
         <>
 
             <Formik
+                innerRef={forgotPasswordFormRef}
                 initialValues={{ email: "" }}
                 validationSchema={() => validationSchema}
-                onSubmit={async (values, { setSubmitting, setErrors, resetForm }) => {
+                onSubmit={(values, { setSubmitting }) => {
 
                     setSubmitting(true)
+                    setLoading(true)
+                    setProgress(70)
 
                     let data = {
                         email: values.email
                     }
-
-                    let res = await forgotPassword(data)
-
-                    if (res.status) {
-                        let data = res.data
-                        setMessage(data.message)
-                        resetForm()
-                    } else {
-                        setErrors(res.errors)
-                    }
+                    forgotPasswordMutate(data)
                 }}
             >
                 {({

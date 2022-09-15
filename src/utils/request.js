@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { convertApiErrors } from '../components/Helpers/helpers';
 import { notify } from '../components/Helpers/notify';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
@@ -14,7 +15,7 @@ axios.interceptors.response.use(
 
         if (error.response.status == 422) {
             let errData = error.response.data.errors;
-            return { status: false, errors: errData }
+            return { status: false, errors: convertApiErrors(errData) }
 
         } else if (error.response.status == 401) {
             return { status: false, errors: { message: [error.response.data.message] } }
