@@ -1,14 +1,24 @@
+import { useMutation } from '@tanstack/react-query'
 import { isEmpty } from 'lodash'
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { object, string, ValidationError } from 'yup'
 import { verifyEmail } from '../../api/auth'
 import AuthContext from '../../Context/AuthContext'
+import { BChatContext } from '../../Context/BChatContext'
 import { setUser } from '../../redux/slices/userSlice'
 import { notify } from '../Helpers/notify'
 
 function VerificationCodeForm() {
+
+    const { setLoading, setProgress } = useContext(BChatContext)
+
+    useEffect(() => {
+        setLoading(true)
+        setProgress(100)
+    }, [])
+
 
     const { user } = useSelector(state => state.user)
     const dispatch = useDispatch()
@@ -108,6 +118,7 @@ function VerificationCodeForm() {
     })
 
 
+
     const handleVerify = async e => {
 
         e.preventDefault()
@@ -122,32 +133,12 @@ function VerificationCodeForm() {
 
             if (validatedData) {
                 setErrors({})
-
-                let res = await verifyEmail(validatedData)
-
-                if (res.status) {
-                    let data = res.data;
-                    if(!isEmpty(user))
-                    {
-                        dispatch(setUser(data.user))
-                    }
-                    setMessage(data.message)
-                    resetForm()
-                    setCanRequestAgain(false)
-                    setIsVerified(true)
-                } else {
-
-                    setCanRequestAgain(true)
-                    setErrors(res.errors)
-                }
+                setLoading(true)
+                setProgress(70)
+                verifyEmailMutate(validatedData)
             }
 
         } catch (err) {
-
-
-            if (err.code === "ERR_NETWORK") {
-                notify(err.code, "error")
-            }
 
             if (err instanceof ValidationError) {
                 let validationErrors = {}
@@ -167,6 +158,37 @@ function VerificationCodeForm() {
         vcodeRef0.current.focus()
         setVCodeArr(["", "", "", "", "", ""])
     }
+
+
+    const { mutate: verifyEmailMutate } = useMutation(verifyEmail, {
+        onError: (error) => {
+            console.log(error);
+            setFormSubmitting(false)
+            setProgress(100)
+
+        },
+        onSuccess: (data) => {
+            setProgress(100)
+            setFormSubmitting(false)
+
+            const res = data?.data;
+
+            if (data.status) {
+                if (!isEmpty(user)) {
+                    dispatch(setUser(res.user))
+                }
+                setMessage(res.message)
+                resetForm()
+                setCanRequestAgain(false)
+                setIsVerified(true)
+            } else {
+                setCanRequestAgain(true)
+                setErrors(data.errors)
+            }
+
+        },
+    })
+
 
     return (
         <>
