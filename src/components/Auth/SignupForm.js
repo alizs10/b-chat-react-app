@@ -65,7 +65,18 @@ function SignupForm() {
             console.log(error);
         },
         onSuccess: (data) => {
+
             console.log(data);
+            // if (res.status) {
+            //     let data = res.data;
+
+            //     setMessage(data.message)
+            //     navigate(`/auth/verify/${data.user.email}`)
+            // } else {
+            //     console.log(res.errors);
+            //     setErrors(res.errors)
+            //     setSubmitting(false)
+            // }
         },
 
     })
