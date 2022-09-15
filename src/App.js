@@ -39,8 +39,7 @@ function App() {
   const [activeConversation, setActiveConversation] = useState(null)
   const [sidebarVisibility, setSidebarVisibility] = useState(false)
   const [isBigScreen, setIsBigScreen] = useState(false)
-  const [loading, setLoading] = useState(false)
-
+  
   useEffect(() => {
 
     function handleWindowResize() {
@@ -69,8 +68,7 @@ function App() {
   return (
 
     <AppContext.Provider value={{
-      activeConversation, setActiveConversation,
-      loading, setLoading
+      activeConversation, setActiveConversation
     }}>
       <SidebarContext.Provider value={{
         sidebarVisibility, setSidebarVisibility,
@@ -83,6 +81,7 @@ function App() {
 
         </div>
         <ToastContainer />
+        
       </SidebarContext.Provider>
     </AppContext.Provider>
 

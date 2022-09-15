@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
 
 import { useLocation, useNavigate } from 'react-router-dom';
 import { checkAuthentication } from '../../api/auth';
+import { BChatContext } from '../../Context/BChatContext';
 
 import { deleteUser, setUser } from '../../redux/slices/userSlice';
 
@@ -14,6 +15,11 @@ function AuthCheck({ children }) {
 
     const navigate = useNavigate();
 
+    const {progress, setProgress, loading, setLoading} = useContext(BChatContext)
+
+    useEffect(() => {
+        setLoading(true)
+    }, [])
 
     const onError = () => {
         dispatch(deleteUser())
@@ -30,6 +36,8 @@ function AuthCheck({ children }) {
         } else {
             navigate('/auth')
         }
+
+        setProgress(100)
     }
 
     const { isLoading, isError, data, error } = useQuery(
@@ -69,6 +77,9 @@ function AuthCheck({ children }) {
 
             }
         }
+
+        setProgress(100)
+
     }
 
     return !isLoading ? (

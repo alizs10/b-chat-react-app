@@ -1,16 +1,23 @@
 import { useMutation } from '@tanstack/react-query'
 import { Formik } from 'formik'
-import React, { useRef } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { object, string } from 'yup'
 import { login } from '../../api/auth'
+import { BChatContext } from '../../Context/BChatContext'
 
 import { deleteUser, setUser } from '../../redux/slices/userSlice'
 import { notify } from '../Helpers/notify'
 
 function LoginForm() {
 
+    const {setLoading, setProgress} = useContext(BChatContext)
+
+    useEffect(() => {
+        setLoading(true)
+        setProgress(100)
+    }, [])
     const { mutate: sendLoginRequest } = useMutation(credential => login(credential), {
         onSuccess: data => {
             let res = data;

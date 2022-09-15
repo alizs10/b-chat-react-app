@@ -8,12 +8,19 @@ import { checkUsername, register } from '../../api/auth';
 import { Link, useNavigate } from 'react-router-dom';
 import { isNull } from 'lodash';
 import { notify } from '../Helpers/notify';
+import { BChatContext } from '../../Context/BChatContext';
 
 
 YupPassword(Yup);
 
 function SignupForm() {
 
+    const { setLoading, setProgress } = useContext(BChatContext)
+
+    useEffect(() => {
+        setLoading(true)
+        setProgress(100)
+    }, [])
 
     const { setMessage, setEmail } = useContext(AuthContext)
 
@@ -33,6 +40,7 @@ function SignupForm() {
     })
 
     const handleCheckUsername = async value => {
+        setLoading(true)
         setChecking(true)
         try {
             let availability = await checkUsername({ username: value })
@@ -47,6 +55,7 @@ function SignupForm() {
                 notify(error.code, "error")
             }
         }
+        setProgress(100)
 
     }
 
