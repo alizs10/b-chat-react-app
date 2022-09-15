@@ -14,6 +14,24 @@ function AuthCheck({ children }) {
 
     const navigate = useNavigate();
 
+
+    const onError = () => {
+        dispatch(deleteUser())
+
+        if (location.pathname === "/auth") {
+            navigate('/auth')
+        } else if (location.pathname === "/auth/login") {
+            navigate('/auth/login')
+        }
+        else if (location.pathname === "/auth/register") {
+            navigate('/auth/register')
+        } else if (location.pathname === "/auth/verify") {
+            navigate('/auth/verify')
+        } else {
+            navigate('/auth')
+        }
+    }
+
     const { isLoading, isError, data, error } = useQuery(
         ['check-auth'],
         checkAuthentication,
@@ -21,7 +39,8 @@ function AuthCheck({ children }) {
             refetchOnWindowFocus: false,
             onSuccess: data => {
                 check(data)
-            }
+            },
+            onError
         }
     )
 
@@ -38,20 +57,7 @@ function AuthCheck({ children }) {
                 dispatch(setUser(res.data))
                 navigate('/')
             } else {
-                dispatch(deleteUser())
-
-                if (location.pathname === "/auth") {
-                    navigate('/auth')
-                } else if (location.pathname === "/auth/login") {
-                    navigate('/auth/login')
-                }
-                else if (location.pathname === "/auth/register") {
-                    navigate('/auth/register')
-                } else if (location.pathname === "/auth/verify") {
-                    navigate('/auth/verify')
-                } else {
-                    navigate('/auth')
-                }
+                onError()
             }
 
         } else {

@@ -39,6 +39,7 @@ function App() {
   const [activeConversation, setActiveConversation] = useState(null)
   const [sidebarVisibility, setSidebarVisibility] = useState(false)
   const [isBigScreen, setIsBigScreen] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
 
@@ -68,7 +69,8 @@ function App() {
   return (
 
     <AppContext.Provider value={{
-      activeConversation, setActiveConversation
+      activeConversation, setActiveConversation,
+      loading, setLoading
     }}>
       <SidebarContext.Provider value={{
         sidebarVisibility, setSidebarVisibility,
