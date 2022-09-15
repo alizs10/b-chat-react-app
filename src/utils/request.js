@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { notify } from '../components/Helpers/notify';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 axios.interceptors.response.use(
@@ -6,6 +7,10 @@ axios.interceptors.response.use(
         return response;
     },
     function (error) {
+
+        if (error.code === "ERR_NETWORK") {
+            notify(error.code, "error")
+        }
 
         if (error.response.status == 422) {
             let errData = error.response.data.errors;

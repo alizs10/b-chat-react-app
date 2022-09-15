@@ -9,6 +9,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { isNull } from 'lodash';
 import { notify } from '../Helpers/notify';
 import { BChatContext } from '../../Context/BChatContext';
+import { useMutation } from '@tanstack/react-query';
 
 
 YupPassword(Yup);
@@ -59,6 +60,16 @@ function SignupForm() {
 
     }
 
+    const { mutate: sendRegisterReq } = useMutation(register, {
+        onError: (error) => {
+            console.log(error);
+        },
+        onSuccess: (data) => {
+            console.log(data);
+        },
+
+    })
+
 
     return (
 
@@ -67,31 +78,31 @@ function SignupForm() {
                 innerRef={formRef}
                 initialValues={{ username: "", email: "", password: "", password_confirmation: "" }}
                 validationSchema={() => validationSchema}
-                onSubmit={async (values, { setErrors, setSubmitting }) => {
-
+                onSubmit={async (values, { setSubmitting }) => {
+                    setLoading(true)
                     setSubmitting(true)
+                    sendRegisterReq(values)
+                    // try {
+                    //     let res = await register(values)
 
-                    try {
-                        let res = await register(values)
+                    //     if (res.status) {
+                    //         let data = res.data;
 
-                        if (res.status) {
-                            let data = res.data;
+                    //         setMessage(data.message)
+                    //         navigate(`/auth/verify/${data.user.email}`)
+                    //     } else {
+                    //         console.log(res.errors);
+                    //         setErrors(res.errors)
+                    //         setSubmitting(false)
+                    //     }
 
-                            setMessage(data.message)
-                            navigate(`/auth/verify/${data.user.email}`)
-                        } else {
-                            console.log(res.errors);
-                            setErrors(res.errors)
-                            setSubmitting(false)
-                        }
+                    // } catch (error) {
+                    //     setSubmitting(false)
 
-                    } catch (error) {
-                        setSubmitting(false)
-
-                        if (error.code === "ERR_NETWORK") {
-                            notify(error.code, "error")
-                        }
-                    }
+                    //     if (error.code === "ERR_NETWORK") {
+                    //         notify(error.code, "error")
+                    //     }
+                    // }
 
                 }}
             >
