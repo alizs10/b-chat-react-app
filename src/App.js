@@ -11,7 +11,6 @@ import SidebarContext from "./Context/SidebarContext";
 
 import { initialData } from "./api/app";
 
-import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 import { useQuery } from "@tanstack/react-query";
@@ -80,7 +79,7 @@ function App() {
           {sidebarVisibilityCondition && (<Chat />)}
 
         </div>
-        <ToastContainer />
+
         
       </SidebarContext.Provider>
     </AppContext.Provider>

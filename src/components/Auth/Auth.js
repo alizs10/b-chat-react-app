@@ -1,6 +1,5 @@
 import React from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { ToastContainer } from 'react-toastify'
 
 function Auth() {
 
@@ -20,7 +19,6 @@ function Auth() {
       )}
 
       <Outlet />
-      <ToastContainer />
     </div>
   )
 }
