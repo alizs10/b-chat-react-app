@@ -10,6 +10,7 @@ import { isNull } from 'lodash';
 import { notify } from '../Helpers/notify';
 import { BChatContext } from '../../Context/BChatContext';
 import { useMutation } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 
 
 YupPassword(Yup);
@@ -42,10 +43,11 @@ function SignupForm() {
 
     const handleCheckUsername = async value => {
         setLoading(true)
+        setProgress(70)
         setChecking(true)
         try {
-            let availability = await checkUsername({ username: value })
-            availability.available ? setUsernameAvailability(true) : setUsernameAvailability(false)
+            let res = await checkUsername({ username: value })
+            res.data.available ? setUsernameAvailability(true) : setUsernameAvailability(false)
             setChecking(false)
 
         } catch (error) {
@@ -62,21 +64,29 @@ function SignupForm() {
 
     const { mutate: sendRegisterReq } = useMutation(register, {
         onError: (error) => {
-            console.log(error);
+            console.log("ho", error);
+            if(error instanceof AxiosError)
+            {
+                console.log("yes");
+            }
+            formRef?.current?.setSubmitting(false)
+            setProgress(100)
+
         },
         onSuccess: (data) => {
+            const res = data?.data;
 
-            console.log(data);
-            // if (res.status) {
-            //     let data = res.data;
+            if (res.user) {
+                setMessage(res.message)
+                navigate(`/auth/verify/${res.user.email}`)
+            } else {
+                console.log("we're here");
+                console.log(res.errors);
+                formRef?.current?.setSubmitting(false)
+                // setErrors(res.errors)
+            }
+            setProgress(100)
 
-            //     setMessage(data.message)
-            //     navigate(`/auth/verify/${data.user.email}`)
-            // } else {
-            //     console.log(res.errors);
-            //     setErrors(res.errors)
-            //     setSubmitting(false)
-            // }
         },
 
     })
@@ -89,31 +99,12 @@ function SignupForm() {
                 innerRef={formRef}
                 initialValues={{ username: "", email: "", password: "", password_confirmation: "" }}
                 validationSchema={() => validationSchema}
-                onSubmit={async (values, { setSubmitting }) => {
-                    setLoading(true)
+                onSubmit={(values, { setSubmitting }) => {
                     setSubmitting(true)
+                    setLoading(true)
+                    setProgress(70)
+
                     sendRegisterReq(values)
-                    // try {
-                    //     let res = await register(values)
-
-                    //     if (res.status) {
-                    //         let data = res.data;
-
-                    //         setMessage(data.message)
-                    //         navigate(`/auth/verify/${data.user.email}`)
-                    //     } else {
-                    //         console.log(res.errors);
-                    //         setErrors(res.errors)
-                    //         setSubmitting(false)
-                    //     }
-
-                    // } catch (error) {
-                    //     setSubmitting(false)
-
-                    //     if (error.code === "ERR_NETWORK") {
-                    //         notify(error.code, "error")
-                    //     }
-                    // }
 
                 }}
             >

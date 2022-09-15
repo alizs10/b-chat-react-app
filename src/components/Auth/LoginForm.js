@@ -20,6 +20,7 @@ function LoginForm() {
     }, [])
     const { mutate: sendLoginRequest } = useMutation(credential => login(credential), {
         onSuccess: data => {
+            setProgress(100)
             let res = data;
             if (res.status) {
                 localStorage.setItem('token', res.data.token)
@@ -33,6 +34,7 @@ function LoginForm() {
                 dispatch(deleteUser())
                 loginFormRef?.current.setErrors(res.errors)
             }
+            loginFormRef?.current.setSubmitting(false)
         }
     })
 
@@ -57,9 +59,11 @@ function LoginForm() {
             innerRef={loginFormRef}
                 initialValues={initialValues}
                 validationSchema={() => validationSchema}
-                onSubmit={async (values, { setSubmitting, setErrors }) => {
-
+                onSubmit={(values, { setSubmitting }) => {
+        
                     setSubmitting(true)
+                    setLoading(true)
+                    setProgress(70)
 
                     let credentials = {
                         username: values.username,
@@ -105,7 +109,8 @@ function LoginForm() {
                         {errors.password && touched.password && (
                             <span className='text-xs text-red-500'>{errors.password}</span>
                         )}
-                        <button type='submit' disabled={isSubmitting ? true : false} className={`mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners ${isSubmitting ? "bg-gray-200" : "bg-[#4361EE]"} btn-hover text-white transition-all duration-300`}>
+                        {console.log(isSubmitting)}
+                        <button type='submit' disabled={isSubmitting} className={`mt-4 flex-center gap-x-2 items-center py-3 px-5 rounded-corners ${isSubmitting ? "bg-gray-200" : "bg-[#4361EE]"} btn-hover text-white transition-all duration-300`}>
                             <span className='text-base'>Login</span>
                             <i className="fa-regular fa-arrow-right-to-arc text-lg"></i>
                         </button>
