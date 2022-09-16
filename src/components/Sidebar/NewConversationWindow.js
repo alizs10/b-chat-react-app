@@ -27,7 +27,7 @@ function NewConversationWindow({ handleClose }) {
         if (isExist) {
           console.log(isExist);
           setActiveConversation(isExist.id)
-          handleClose()
+          
         }
       }
       if (!isExist) {
@@ -42,8 +42,7 @@ function NewConversationWindow({ handleClose }) {
           }
         })
       }
-
-
+      handleClose()
     },
     onError: (error) => {
       console.log(error);
