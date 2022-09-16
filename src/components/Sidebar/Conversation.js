@@ -7,8 +7,14 @@ function Conversation({ conversation, setSidebarVisibility }) {
 
     const { activeConversation, setActiveConversation } = useContext(AppContext)
 
+    const handleSelectConversation = () => {
+        setActiveConversation(conversation.id)
+        if (activeConversation == conversation.id && window.innerWidth < 1024) {
+            setSidebarVisibility(false)
+        }
+    }
     return (
-        <li onClick={() => setActiveConversation(conversation.id)} className={`cursor-pointer transition-all duration-300 ${activeConversation == conversation.id ? 'bg-[#abc4ff] ' : 'hover:bg-gray-100 text-gray-700'} border-b border-gray-100 flex gap-2 w-full p-3 rounded-corners `}>
+        <li onClick={handleSelectConversation} className={`cursor-pointer transition-all duration-300 ${activeConversation == conversation.id ? 'bg-[#abc4ff] ' : 'hover:bg-gray-100 text-gray-700'} border-b border-gray-100 flex gap-2 w-full p-3 rounded-corners `}>
             <div className='relative cursor-pointer w-16 h-16'>
                 <img className='rounded-corners w-full h-full object-cover object-center' src={isEmpty(conversation.with_user.profile_photo) ? './assets/images/default-avatar.png' : process.env.REACT_APP_API_URL + '/storage/' + conversation.with_user.profile_photo} />
                 <span className='absolute -bottom-1 -right-0 bg-white p-[3px] flex-center rounded-full'>
