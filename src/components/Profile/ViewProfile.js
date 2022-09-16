@@ -54,16 +54,17 @@ function ViewProfile({ handleClose, user }) {
                                 </span>
                             </span>
                         )}
-                        <span className="w-full flex justify-between text-xs">
-                            <span className="flex gap-x-2 items-center text-gray-200">
-                                <i className="fa-regular fa-at"></i>
-                                <span className="">Username:</span>
+                        {!isEmpty(user.username) && (
+                            <span className="w-full flex justify-between text-xs">
+                                <span className="flex gap-x-2 items-center text-gray-200">
+                                    <i className="fa-regular fa-at"></i>
+                                    <span className="">Username:</span>
+                                </span>
+                                <span className="   text-gray-200">
+                                    @{user.username}
+                                </span>
                             </span>
-                            <span className="   text-gray-200">
-                                @{user.username}
-                            </span>
-                        </span>
-
+                        )}
 
                     </div>
 
