@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { mixed, object, ValidationError } from 'yup'
 
 import { confirmAlert } from 'react-confirm-alert';
@@ -15,11 +15,14 @@ import { deleteAccount, deleteAvatar, updateBio, updateProfile, updateProfileInf
 import { setUser } from '../../redux/slices/userSlice';
 import DeleteAccConfirmUI from './DeleteAccConfirmUI';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { BChatContext } from '../../Context/BChatContext';
 
 
 
 function Profile({ handleClose }) {
 
+  const { setLoading, setProgress } = useContext(BChatContext)
   const { user } = useSelector(state => state.user)
 
   const dispatch = useDispatch()
@@ -334,6 +337,27 @@ function Profile({ handleClose }) {
     }
   }
 
+  const { mutate: deleteAccountMutate } = useMutation(deleteAccount, {
+    onSettled: (data, error) => {
+      // request success
+      if (data.status == 200) {
+        if (data.data.status) {
+          localStorage.removeItem('token')
+          dispatch(setUser({}))
+          navigate('/auth')
+          setTimeout(() => {
+            notify("your account deleted successfully", "success")
+          }, 500)
+        } else {
+          notify(data.data.message, "error")
+        }
+      } else {
+        console.log(error);
+      }
+      setProgress(100)
+    }
+  })
+
   const handleDeleteAcc = () => {
 
     let options = {
@@ -343,29 +367,9 @@ function Profile({ handleClose }) {
         {
           label: 'Yes, Delete My Account',
           onClick: async (pin) => {
-
-            try {
-              let data = {
-                password: pin
-              }
-
-              let response = await deleteAccount(data)
-
-              if (response.status) {
-                localStorage.removeItem('token')
-                dispatch(setUser({}))
-                navigate('/auth')
-                setTimeout(() => {
-                  notify("your account deleted successfully", "success")
-                }, 2000)
-              } else {
-                notify(response.data.message, "error")
-
-              }
-            } catch (error) {
-
-            }
-
+            setLoading(true)
+            setProgress(70)
+            deleteAccountMutate({ password: pin })
           }
         },
         {
