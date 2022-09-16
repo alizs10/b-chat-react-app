@@ -12,12 +12,24 @@ import { notify } from '../Helpers/notify'
 
 function LoginForm() {
 
-    const {setLoading, setProgress} = useContext(BChatContext)
+    const { setLoading, setProgress } = useContext(BChatContext)
 
     useEffect(() => {
-        setLoading(true)
         setProgress(100)
     }, [])
+
+    const handleNavigateToRegister = () => {
+        setLoading(true)
+        setProgress(70)
+        navigate('/auth/register')
+    }
+
+    const handleNavigateToForgotPassword = () => {
+        setLoading(true)
+        setProgress(70)
+        navigate("/auth/forgot-password")
+    }
+
     const { mutate: sendLoginRequest } = useMutation(credential => login(credential), {
         onSuccess: data => {
             setProgress(100)
@@ -31,7 +43,7 @@ function LoginForm() {
                 setTimeout(() => {
                     notify("you're logged in", "success")
                 }, 1000)
-                
+
             } else {
                 dispatch(deleteUser())
                 loginFormRef?.current.setErrors(res.errors)
@@ -58,11 +70,11 @@ function LoginForm() {
     return (
         <>
             <Formik
-            innerRef={loginFormRef}
+                innerRef={loginFormRef}
                 initialValues={initialValues}
                 validationSchema={() => validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
-        
+
                     setSubmitting(true)
                     setLoading(true)
                     setProgress(70)
@@ -123,13 +135,17 @@ function LoginForm() {
 
                 <div className='flex gap-x-2 items-end text-sm mx-auto'>
                     <span className="text-gray-600">Not a memeber?</span>
-                    <Link to="/auth/register">
-                        <button className='text-[#1C42EA]'>Sign up!</button>
-                    </Link>
+
+                    <button
+                        onClick={handleNavigateToRegister}
+                        className='text-[#1C42EA]'>Sign up!</button>
+
                 </div>
-                <Link to="/auth/forgot-password">
-                    <button className='text-gray-600 text-xs'>Forgot Password?</button>
-                </Link>
+
+                <button
+                onClick={handleNavigateToForgotPassword}
+                className='text-gray-600 text-xs'>Forgot Password?</button>
+
             </div>
         </>
     )

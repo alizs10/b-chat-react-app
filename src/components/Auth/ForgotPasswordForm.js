@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { Formik } from 'formik'
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { object, string } from 'yup'
 import { forgotPassword } from '../../api/auth'
 import { BChatContext } from '../../Context/BChatContext'
@@ -9,12 +9,18 @@ import { BChatContext } from '../../Context/BChatContext'
 function ForgotPasswordForm() {
 
     const { setLoading, setProgress } = useContext(BChatContext)
-
+    const navigate = useNavigate()
 
     useEffect(() => {
-        setLoading(true)
         setProgress(100)
     }, [])
+
+    const handleNavigateToLogin = () => {
+        setLoading(true)
+        setProgress(70)
+        navigate('/auth/login')
+    }
+
 
     const { mutate: forgotPasswordMutate } = useMutation(forgotPassword, {
         onSuccess: (data) => {
@@ -97,9 +103,11 @@ function ForgotPasswordForm() {
                     </form>
                 )}
             </Formik>
-            <Link to="/auth/login">
-                <button className='text-gray-600 text-xs'>Want to Login? click here</button>
-            </Link>
+
+            <button
+            onClick={handleNavigateToLogin}
+            className='text-gray-600 text-xs'>Want to Login? click here</button>
+
         </>
     )
 }

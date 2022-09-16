@@ -15,7 +15,6 @@ function VerificationCodeForm() {
     const { setLoading, setProgress } = useContext(BChatContext)
 
     useEffect(() => {
-        setLoading(true)
         setProgress(100)
     }, [])
 

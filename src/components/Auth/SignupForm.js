@@ -19,8 +19,13 @@ function SignupForm() {
 
     const { setLoading, setProgress } = useContext(BChatContext)
 
-    useEffect(() => {
+    const handleNavigateToLogin = () => {
         setLoading(true)
+        setProgress(70)
+        navigate('/auth/login')
+    }
+
+    useEffect(() => {
         setProgress(100)
     }, [])
 
@@ -76,7 +81,9 @@ function SignupForm() {
 
             if (data.status) {
                 setMessage(res.message)
+                setLoading(true)
                 navigate(`/auth/verify/${res.user.email}`)
+                setProgress(70)
             } else {
                 formRef?.current?.setErrors(data.errors)
             }
@@ -183,9 +190,11 @@ function SignupForm() {
             </Formik>
             <div className='flex gap-x-2 items-end text-sm mx-auto'>
                 <span className="text-gray-600">Already a memeber?</span>
-                <Link to="/auth/login">
-                    <button className='text-[#1C42EA]'>Login!</button>
-                </Link>
+
+                <button
+                    onClick={handleNavigateToLogin}
+                    className='text-[#1C42EA]'>Login!</button>
+
             </div>
         </>
 
