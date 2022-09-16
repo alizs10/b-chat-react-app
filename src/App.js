@@ -38,7 +38,17 @@ function App() {
   const [activeConversation, setActiveConversation] = useState(null)
   const [sidebarVisibility, setSidebarVisibility] = useState(false)
   const [isBigScreen, setIsBigScreen] = useState(false)
-  
+
+  useEffect(() => {
+
+    if (activeConversation) {
+      if (window.innerWidth < 1024) {
+        setSidebarVisibility(false)
+      }
+    }
+
+  }, [activeConversation])
+
   useEffect(() => {
 
     function handleWindowResize() {
@@ -80,7 +90,7 @@ function App() {
 
         </div>
 
-        
+
       </SidebarContext.Provider>
     </AppContext.Provider>
 

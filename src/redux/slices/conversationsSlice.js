@@ -10,7 +10,7 @@ export const conversationsSlice = createSlice({
       state.conversations = action.payload
     },
     addConversation: (state, action) => {
-      state.conversations = action.payload
+      state.conversations = [action.payload, ...state.conversations]
     },
     removeConversation: (state) => {
       state.conversations = []

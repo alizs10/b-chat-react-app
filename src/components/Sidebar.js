@@ -1,9 +1,10 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import Conversations from './Sidebar/Conversations'
 import NewConversationWindow from './Sidebar/NewConversationWindow'
 import Backdrop from '../components/Helpers/Backdrop'
 import CenterContainer from './Helpers/CenterContainer'
 import SidebarContext from '../Context/SidebarContext'
+import { AppContext } from '../Context/AppContext'
 
 
 function Sidebar() {

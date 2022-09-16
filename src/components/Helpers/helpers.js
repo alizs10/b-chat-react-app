@@ -1,3 +1,5 @@
+import { isNull } from "lodash";
+
 export const convertApiErrors = errors => {
 
     let errorsObj = {};
@@ -17,9 +19,8 @@ export const addDataToArray = (data, array) => {
 }
 
 export const findDataById = (id, array) => {
-    let matches = array.filter(value => value.id == id);
-
-    return matches.length > 0 ? matches[0] : false;
+    let matches = array.find(value => value.id == id);
+    return !isNull(matches) ? matches : false;
 }
 
 export const replaceDataById = (id, array, newData) => {

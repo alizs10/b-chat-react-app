@@ -1,17 +1,50 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import React, { useContext, useState } from 'react'
 import { checkUsername } from '../../api/conversations'
 import * as Yup from 'yup';
 import { BChatContext } from '../../Context/BChatContext';
 import { notify } from '../Helpers/notify';
+import { useDispatch, useSelector } from 'react-redux';
+import { addConversation } from '../../redux/slices/conversationsSlice';
+import { findDataById } from '../Helpers/helpers';
+import { AppContext } from '../../Context/AppContext';
 
 function NewConversationWindow({ handleClose }) {
 
   const { loading, setLoading, setProgress } = useContext(BChatContext)
 
+  const { conversations } = useSelector(state => state.conversations)
+  const { setActiveConversation } = useContext(AppContext)
+  const dispatch = useDispatch()
+  const queryClient = useQueryClient();
+
   const { mutate } = useMutation(checkUsername, {
     onSuccess: (data) => {
-      console.log(data);
+      let newConversation = data?.data?.result?.conversation;
+      let isExist = false;
+      if (newConversation) {
+        console.log(findDataById(newConversation.id, conversations));
+        isExist = findDataById(newConversation.id, conversations);
+        if (isExist) {
+          console.log(isExist);
+          setActiveConversation(isExist.id)
+          handleClose()
+        }
+      }
+      if (!isExist) {
+        queryClient.setQueryData(["conversations"], (oldQueryData) => {
+
+          dispatch(addConversation(data.data.result.conversation))
+          return {
+            ...oldQueryData,
+            data: {
+              conversations: [...oldQueryData.data.conversations, data.data.result.conversation]
+            }
+          }
+        })
+      }
+
+
     },
     onError: (error) => {
       console.log(error);
@@ -26,7 +59,7 @@ function NewConversationWindow({ handleClose }) {
   })
 
   const handleCheckUsername = async () => {
-    if (loading){
+    if (loading) {
       notify("can't send another request while there's one still in progress", "warning")
       return
     }
@@ -86,9 +119,9 @@ function NewConversationWindow({ handleClose }) {
         {error && (
           <span className='ml-3 text-xs text-red-500'>{error}</span>
         )}
-        <button 
-        onClick={handleCheckUsername}
-        disabled={loading} className={`mt-2 btn-hover w-full py-3 ${loading ? 'bg-gray-200' : 'bg-[#4361EE]'} text-white text-sm rounded-corners`}>
+        <button
+          onClick={handleCheckUsername}
+          disabled={loading} className={`mt-2 btn-hover w-full py-3 ${loading ? 'bg-gray-200' : 'bg-[#4361EE]'} text-white text-sm rounded-corners`}>
           Start Conversation
         </button>
 
