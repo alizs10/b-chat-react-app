@@ -6,9 +6,6 @@ export const getMessages = async ({ queryKey }) => {
 }
 
 export const sendMessage = async data => {
-
-    
-
     return request.get('sanctum/csrf-cookie').then(() => {
             return request.post(`/api/message/store`, data)
     })

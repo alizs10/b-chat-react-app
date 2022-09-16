@@ -1,8 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { AppContext } from '../../Context/AppContext'
 import { ChatContext } from '../../Context/ChatContext'
+import { findDataById } from '../Helpers/helpers'
 
 function ChatInput() {
 
+  const { activeConversation } = useContext(AppContext)
   const { handleSendMessage } = useContext(ChatContext)
 
   const [body, setBody] = useState("")
@@ -31,6 +35,13 @@ function ChatInput() {
         setBody("")
       }
     }
+  }
+
+  const {conversations} = useSelector(state => state.conversations)
+
+  if(findDataById(activeConversation, conversations).with_user.username === null)
+  {
+    return null;
   }
 
   return (

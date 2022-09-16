@@ -1,196 +1,38 @@
-import axios from "axios";
-import { convertApiErrors } from "../components/Helpers/helpers";
+import request from "../utils/request";
 
 export const updateProfile = async data => {
-
-
-    let url = process.env.REACT_APP_API_URL + '/api/profile/avatar/update';
-    let csrfUrl = process.env.REACT_APP_API_URL + '/sanctum/csrf-cookie';
-
-
-    return await axios.get(csrfUrl).then(response => {
-        return axios.post(url, data, {
-            headers: {
-                'Content-Type': 'multipart/form',
-                'Accept': 'application/json',
-            }
-        }).then(response => {
-
-            return { status: true, data: response.data }
-
-        }).catch(err => {
-
-            if (err.response.status == 422) {
-
-                let errData = err.response.data.errors;
-                return { status: false, errors: convertApiErrors(errData) }
-
-            } else if (err.response.status == 401) {
-                return { status: false, errors: { message: err.response.data.message } }
-            }
-
-            return err.response.data;
-        });
-    });
-
+    return request.get('sanctum/csrf-cookie').then(() => {
+        return request.post(`/api/profile/avatar/update`, data,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form'
+                }
+            })
+    })
 }
 
 export const deleteAvatar = async () => {
-
-    let url = process.env.REACT_APP_API_URL + '/api/profile/avatar/destroy';
-
-    return await axios.get(url, null, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        }
-    }).then(response => {
-
-        return { status: true, data: response.data }
-
-    }).catch(err => {
-
-        if (err.response.status == 422) {
-
-            let errData = err.response.data.errors;
-            return { status: false, errors: convertApiErrors(errData) }
-
-        } else if (err.response.status == 401) {
-            return { status: false, errors: { message: err.response.data.message } }
-        }
-
-        return err.response.data;
-    });
-
+    return await request.get(`/api/profile/avatar/destroy`)
 }
 
 export const updateBio = async data => {
-
-
-    let url = process.env.REACT_APP_API_URL + '/api/profile/bio/update';
-    let csrfUrl = process.env.REACT_APP_API_URL + '/sanctum/csrf-cookie';
-
-
-    return await axios.get(csrfUrl).then(response => {
-        return axios.post(url, data, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            }
-        }).then(response => {
-
-            return { status: true, data: response.data }
-
-        }).catch(err => {
-
-            if (err.response.status == 422) {
-
-                let errData = err.response.data.errors;
-                return { status: false, errors: convertApiErrors(errData) }
-
-            } else if (err.response.status == 401) {
-                return { status: false, errors: { message: err.response.data.message } }
-            }
-
-            return err.response.data;
-        });
-    });
+    return request.get('sanctum/csrf-cookie').then(() => {
+        return request.post(`/api/profile/bio/update`, data)
+    })
 }
 
 export const updateProfileInfo = async data => {
-
-
-    let url = process.env.REACT_APP_API_URL + '/api/profile/info/update';
-    let csrfUrl = process.env.REACT_APP_API_URL + '/sanctum/csrf-cookie';
-
-
-    return await axios.get(csrfUrl).then(response => {
-        return axios.post(url, data, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            }
-        }).then(response => {
-
-            return { status: true, data: response.data }
-
-        }).catch(err => {
-
-            if (err.response.status == 422) {
-
-                let errData = err.response.data.errors;
-                return { status: false, errors: convertApiErrors(errData) }
-
-            } else if (err.response.status == 401) {
-                return { status: false, errors: { message: err.response.data.message } }
-            }
-
-            return err.response.data;
-        });
-    });
-
+    return request.get('sanctum/csrf-cookie').then(() => {
+        return request.post(`/api/profile/info/update`, data)
+    })
 }
 
 export const deleteAccount = async data => {
-
-
-    let url = process.env.REACT_APP_API_URL + '/api/profile/delete-account';
-    let csrfUrl = process.env.REACT_APP_API_URL + '/sanctum/csrf-cookie';
-
-
-    return await axios.get(csrfUrl).then(response => {
-        return axios.post(url, data, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            }
-        }).then(response => {
-
-            return { status: true, data: response.data }
-
-        }).catch(err => {
-
-            if (err.response.status == 422) {
-
-                let errData = err.response.data.errors;
-                return { status: false, errors: convertApiErrors(errData) }
-
-            } else if (err.response.status == 401) {
-                return { status: false, errors: { message: err.response.data.message } }
-            }
-
-            return err.response.data;
-        });
-    });
-
+    return request.get('sanctum/csrf-cookie').then(() => {
+        return request.post(`/api/profile/delete-account`, data)
+    })
 }
 
-
 export const sendVerificationCode = async () => {
-
-    let url = process.env.REACT_APP_API_URL + '/api/auth/send-verification-code';
-
-    return await axios.get(url, null, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        }
-    }).then(response => {
-
-        return { status: true, data: response.data }
-
-    }).catch(err => {
-
-        if (err.response.status == 422) {
-
-            let errData = err.response.data.errors;
-            return { status: false, errors: convertApiErrors(errData) }
-
-        } else if (err.response.status == 401) {
-            return { status: false, errors: { message: err.response.data.message } }
-        }
-
-        return err.response.data;
-    });
-
+    return await request.get(`/api/auth/send-verification-code`)
 }

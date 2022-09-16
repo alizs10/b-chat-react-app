@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { isEmpty, now } from 'lodash'
 import React, { useContext, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { sendMessage } from '../api/messages'
 import { getUserProfile } from '../api/users'
 import { AppContext } from '../Context/AppContext'
