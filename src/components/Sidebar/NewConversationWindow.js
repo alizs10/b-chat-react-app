@@ -23,7 +23,6 @@ function NewConversationWindow({ handleClose }) {
       let newConversation = data?.data?.result?.conversation;
       let isExist = false;
       if (newConversation) {
-        console.log(findDataById(newConversation.id, conversations));
         isExist = findDataById(newConversation.id, conversations);
         if (isExist) {
           console.log(isExist);
