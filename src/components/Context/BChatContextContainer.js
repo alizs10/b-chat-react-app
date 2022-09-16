@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { ToastContainer } from 'react-toastify'
 import LoadingBar from 'react-top-loading-bar'
 import { BChatContext } from '../../Context/BChatContext'
 
@@ -15,9 +16,13 @@ function BChatContextContainer({ children }) {
     }}>
       {children}
       {loading && (
-          <LoadingBar color={'#4361EE'} progress={progress}
-            onLoaderFinished={() => setProgress(0)} />
-        )}
+        <LoadingBar color={'#4361EE'} progress={progress}
+          onLoaderFinished={() => {
+            setProgress(0)
+            setLoading(false)
+          }} />
+      )}
+      <ToastContainer />
     </BChatContext.Provider>
   )
 }

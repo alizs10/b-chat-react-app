@@ -8,7 +8,7 @@ import { verifyEmail } from '../../api/auth'
 import AuthContext from '../../Context/AuthContext'
 import { BChatContext } from '../../Context/BChatContext'
 import { setUser } from '../../redux/slices/userSlice'
-import { notify } from '../Helpers/notify'
+
 
 function VerificationCodeForm() {
 

@@ -15,7 +15,7 @@ function AuthCheck({ children }) {
 
     const navigate = useNavigate();
 
-    const {progress, setProgress, loading, setLoading} = useContext(BChatContext)
+    const {setProgress, setLoading} = useContext(BChatContext)
 
     useEffect(() => {
         setLoading(true)
