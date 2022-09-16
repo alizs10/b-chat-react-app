@@ -5,12 +5,11 @@ import AuthContext from '../../Context/AuthContext'
 import * as Yup from 'yup';
 import YupPassword from 'yup-password';
 import { checkUsername, register } from '../../api/auth';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { isNull } from 'lodash';
 import { notify } from '../Helpers/notify';
 import { BChatContext } from '../../Context/BChatContext';
 import { useMutation } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
 
 
 YupPassword(Yup);
@@ -46,25 +45,52 @@ function SignupForm() {
         password_confirmation: Yup.string().required().oneOf([Yup.ref('password'), null], "must match your password")
     })
 
+    const { mutate: checkUsernameMutate } = useMutation(checkUsername, {
+        onSettled: (data, error) => {
+            console.log(data);
+            data?.data?.available ? setUsernameAvailability(true) : setUsernameAvailability(false)
+            setChecking(false)
+            setProgress(100)
+        }
+    })
+
+    const usernameValidationSchema = Yup.object({
+        username: Yup.string().required().matches(/^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/, 'allowed chars: . _ a-z A-Z 0-9').min(6),
+    })
+
     const handleCheckUsername = async value => {
-        setLoading(true)
-        setProgress(70)
-        setChecking(true)
+        if (checking) {
+            notify("can't send another request while there's one still in progress", "warning")
+            return
+        }
+
         try {
-            let res = await checkUsername({ username: value })
-            res.data.available ? setUsernameAvailability(true) : setUsernameAvailability(false)
-            setChecking(false)
+            setLoading(true)
+            setProgress(70)
+            setChecking(true)
+            let data = { username: value }
 
-        } catch (error) {
-
-            setChecking(false)
-
-            if (error.code === "ERR_NETWORK") {
-                notify(error.code, "error")
+            let validatedData = await usernameValidationSchema.validate(data, { abortEarly: false })
+            if (validatedData) {
+                formRef?.current.setErrors({})
+                checkUsernameMutate(data)
             }
+
+        } catch (err) {
+
+            if (err instanceof Yup.ValidationError) {
+                setUsernameAvailability(null)
+                let validationErrors = {}
+                err.inner.forEach((error) => {
+                    validationErrors[error.path] = error.message;
+                });
+
+                formRef?.current.setErrors(validationErrors)
+                setChecking(false)
+            }
+            
         }
         setProgress(100)
-
     }
 
     const { mutate: sendRegisterReq } = useMutation(register, {
@@ -72,7 +98,6 @@ function SignupForm() {
             console.log(error);
             formRef?.current?.setSubmitting(false)
             setProgress(100)
-
         },
         onSuccess: (data) => {
             setProgress(100)
