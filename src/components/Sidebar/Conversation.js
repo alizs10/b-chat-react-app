@@ -24,7 +24,14 @@ function Conversation({ conversation, setSidebarVisibility }) {
             <div className='w-[85%] flex flex-col gap-y-2'>
                 <div className='flex justify-between items-center'>
                     <span className='font-bold text-lg'>{conversation.with_user.name ? conversation.with_user.name : conversation.with_user.username}</span>
-                    <span className='text-sm text-gray-600'>{moment(conversation.created_at).fromNow()}</span>
+                    <span className='text-sm text-gray-600'>{
+                        isEmpty(conversation.last_message) ? (
+                            moment(conversation.created_at).fromNow()
+                        ) :
+                            (
+                                moment(conversation.last_message.created_at).fromNow()
+                            )
+                    }</span>
                 </div>
                 <span className='text-sm'>{conversation.last_message ? truncate(conversation.last_message.body) : 'send first message'}</span>
             </div>
