@@ -13,6 +13,8 @@ function NewConversationWindow({ handleClose }) {
 
   const { loading, setLoading, setProgress } = useContext(BChatContext)
 
+  const [message, setMessage] = useState("")
+
   const { conversations } = useSelector(state => state.conversations)
   const { setActiveConversation } = useContext(AppContext)
   const dispatch = useDispatch()
@@ -27,10 +29,12 @@ function NewConversationWindow({ handleClose }) {
         if (isExist) {
           console.log(isExist);
           setActiveConversation(isExist.id)
-          
+          handleClose()
         }
+      } else {
+        setMessage(data.data.error)
       }
-      if (!isExist) {
+      if (!isExist && newConversation) {
         queryClient.setQueryData(["conversations"], (oldQueryData) => {
 
           dispatch(addConversation(data.data.result.conversation))
@@ -41,8 +45,9 @@ function NewConversationWindow({ handleClose }) {
             }
           }
         })
+        handleClose()
+
       }
-      handleClose()
     },
     onError: (error) => {
       console.log(error);
@@ -103,6 +108,9 @@ function NewConversationWindow({ handleClose }) {
       </div>
 
       <div className="mt-4 w-full flex flex-col gap-4 md:gap-2">
+        {message && (
+          <span className='text-center text-xs text-red-500'>{message}</span>
+        )}
         <div className="col-span-9 text-sm text-gray-600">
           Insert Username:
         </div>
