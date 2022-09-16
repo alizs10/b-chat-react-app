@@ -1,23 +1,29 @@
 import { isEmpty, truncate } from 'lodash'
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { AppContext } from '../../Context/AppContext'
+import { findDataById } from '../Helpers/helpers'
 import Replay from './Replay'
 
 let moment = require('moment')
 
 function MyBubbleWithReplay({ message }) {
 
+    const { conversations } = useSelector(state => state.conversations)
     const { user } = useSelector(state => state.user)
+    const { activeConversation } = useContext(AppContext)
 
     const [replayBtnVisibility, setReplayBtnVisibility] = useState(false)
     const [replayRemover, setReplayRemover] = useState(null)
 
     const handleMouseOver = () => {
+        if (!findDataById(activeConversation, conversations).with_user.username) return        
         setReplayBtnVisibility(true)
     }
 
     const handleMouseLeave = () => {
 
+        if(!replayBtnVisibility) return
         function removeReplay() {
             setReplayBtnVisibility(false)
         }

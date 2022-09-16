@@ -1,7 +1,9 @@
 import { isEmpty, truncate } from 'lodash'
 import React, { useContext, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { AppContext } from '../../Context/AppContext'
 import { ChatContext } from '../../Context/ChatContext'
+import { findDataById } from '../Helpers/helpers'
 import Replay from './Replay'
 
 let moment = require('moment')
@@ -10,17 +12,23 @@ function BubbleWithReplay({ message }) {
 
     const { handleViewProfile } = useContext(ChatContext)
 
+    const { conversations } = useSelector(state => state.conversations)
+    const { activeConversation } = useContext(AppContext)
+
     const { user } = useSelector(state => state.user)
 
     const [replayBtnVisibility, setReplayBtnVisibility] = useState(false)
     const [replayRemover, setReplayRemover] = useState(null)
 
+
     const handleMouseOver = () => {
+        if (!findDataById(activeConversation, conversations).with_user.username) return
         setReplayBtnVisibility(true)
     }
 
     const handleMouseLeave = () => {
 
+        if (!replayBtnVisibility) return
         function removeReplay() {
             setReplayBtnVisibility(false)
         }
@@ -60,7 +68,7 @@ function BubbleWithReplay({ message }) {
             <div className='flex items-end gap-x-2 ml-8'>
                 <span className="text-[12px] mb-1">
                     <span className="text-gray-600">
-                    {message?.pending ? (
+                        {message?.pending ? (
                             <i className="fa-regular fa-clock text-sm"></i>
                         ) : (
                             moment(message.created_at).format('LT')
