@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { isEmpty, now } from 'lodash'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { sendMessage } from '../api/messages'
 import { getUserProfile } from '../api/users'
@@ -21,7 +21,9 @@ import ViewProfile from './Profile/ViewProfile'
 function Chat() {
 
   const { user } = useSelector(state => state.user)
-  
+  const { conversations } = useSelector(state => state.conversations)
+
+
   const { activeConversation } = useContext(AppContext)
 
   const [viewProfileVisibility, setViewProfileVisibility] = useState(false)
@@ -42,6 +44,13 @@ function Chat() {
 
   const [isReplying, setIsReplaying] = useState(false)
   const [replayMsg, setReplayMsg] = useState({})
+  const [disableChat, setDisableChat] = useState(false)
+
+  useEffect(() => {
+    if (conversations) {
+      setDisableChat(findDataById(activeConversation, conversations)?.with_user?.username === null)
+    }
+  }, [conversations])
 
   const handleReplay = (message) => {
     setReplayMsg(message)
@@ -84,7 +93,7 @@ function Chat() {
   })
 
   const handleSendMessage = (body) => {
-    
+
     let payload = {}
     payload.body = body;
     payload.user_id = user.id;
@@ -106,7 +115,7 @@ function Chat() {
 
     payload.writer = user;
     payload.pending = true;
-    
+
     // send message temporary
     sendNewMessage(payload)
 
@@ -129,7 +138,7 @@ function Chat() {
         handleReplay
       }}>
         <div className="fixed bg-[#edf2fb] z-40 top-0 right-0 bottom-0 left-0 lg:relative col-span-9 lg:h-screen lg:col-span-6 grid grid-rows-6">
-          <div className='row-span-5 h-full grid grid-rows-6'>
+          <div className={`${disableChat ? 'row-span-6' : 'row-span-5'} h-full grid grid-rows-6`}>
             <Head />
             {activeConversation ? (
               <Bubbles />
