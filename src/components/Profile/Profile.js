@@ -65,7 +65,7 @@ function Profile({ handleClose }) {
           profilePhotoInputRef.current.value = null;
           setAvatar({})
         }
-
+        setProgress(100)
       }
     })
 
@@ -88,6 +88,8 @@ function Profile({ handleClose }) {
       let validatedData = await imageValidationSchema.validate({ profile_photo: file }, { abortEarly: false })
       if (validatedData) {
         // upload here
+        setLoading(true)
+        setProgress(60)
         setIsImageLoaded(false)
         let formData = new FormData;
         formData.append('profile_photo', validatedData.profile_photo)
@@ -118,6 +120,8 @@ function Profile({ handleClose }) {
       {
         label: 'Yes, Delete it',
         onClick: () => {
+          setLoading(true)
+          setProgress(70)
           setIsImageLoaded(false)
           deleteAvatarMutate()
         }
@@ -143,6 +147,7 @@ function Profile({ handleClose }) {
       if (data.status == 200) {
         dispatch(setUser(data.data.user))
         notify("your profile photo deleted successfully", "success")
+        setProgress(100)
       }
     }
   })
@@ -183,6 +188,8 @@ function Profile({ handleClose }) {
       {
         label: 'Update',
         onClick: () => {
+          setLoading(true)
+          setProgress(70)
           handleUpdateBio();
         }
       },
@@ -215,6 +222,8 @@ function Profile({ handleClose }) {
         setIsEditingBio(false)
         notify("your bio updated successfully", "success")
       }
+      setProgress(100)
+
     } catch (error) {
 
     }
@@ -256,6 +265,8 @@ function Profile({ handleClose }) {
       {
         label: 'Update',
         onClick: () => {
+          setLoading(true)
+          setProgress(70)
           handleUpdateProfileInfo()
         }
       },
@@ -296,6 +307,7 @@ function Profile({ handleClose }) {
         setErrors(response.errors)
         notify("Couldn't update your profile information", "error")
       }
+      setProgress(100)
     } catch (error) {
       console.log(error);
     }
