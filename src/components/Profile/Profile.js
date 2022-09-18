@@ -17,6 +17,7 @@ import DeleteAccConfirmUI from './DeleteAccConfirmUI';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { BChatContext } from '../../Context/BChatContext';
+import { MoonLoader } from 'react-spinners';
 
 
 
@@ -64,8 +65,8 @@ function Profile({ handleClose }) {
       let res = await imageValidationSchema.validate(inputs, { abortEarly: false })
 
       if (res) {
-
         // upload here
+        setIsImageLoaded(false)
         let formData = new FormData;
         formData.append('profile_photo', res.profile_photo)
         formData.append('_method', "PUT")
@@ -74,6 +75,9 @@ function Profile({ handleClose }) {
 
         if (response.status) {
           dispatch(setUser(response.data.user))
+          setTimeout(() => {
+            setPhotoUploadProgress(0)
+          }, 3000)
           notify("your profile photo updated successfully", "success")
         }
 
@@ -393,23 +397,15 @@ function Profile({ handleClose }) {
   }
 
   const [photoUploadProgress, setPhotoUploadProgress] = useState(0);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
-  useEffect(() => {
-    if(photoUploadProgress == 100)
-    {
-      setTimeout(() => {
-        setPhotoUploadProgress(0)
-      }, 3000)
-    }
-
-  }, [photoUploadProgress])
   return (
     <div
       onClick={e => e.stopPropagation()}
       className="relative overflow-hidden w-full md:w-3/5 bg-white shadow-md rounded-corners p-3">
-      
-      <div style={{ width: `${photoUploadProgress}%`}} className={`absolute top-0 left-0 h-1 ${photoUploadProgress == 100 ? 'bg-emerald-400' : 'bg-[#4361EE]'} transition-all`}></div>
-      
+
+      <div style={{ width: `${photoUploadProgress}%` }} className={`absolute top-0 left-0 h-1 ${photoUploadProgress == 100 ? 'bg-emerald-400' : 'bg-[#4361EE]'} transition-all`}></div>
+
       <div className='flex justify-between items-center border-b border-gray-200 pb-1'>
         <span className="flex gap-x-2 items-center">
           <i className="fa-regular fa-circle-user text-base"></i>
@@ -422,7 +418,16 @@ function Profile({ handleClose }) {
 
       <div className='w-full py-2 flex flex-col gap-y-4'>
         <span className="self-center relative w-24">
-          <img ref={profilePhotoViewRef} className='border-2 border-gray-200 rounded-corners w-24 h-24 object-cover object-center'
+          {!isImageLoaded && (
+            <span className='absolute top-0 right-0 bottom-0 left-0 bg-white rounded-corners flex-center'>
+              <MoonLoader color={'#4361EE'} loading={!isImageLoaded} size={30} />
+            </span>
+          )}
+          <img onLoad={e => {
+            if (e.target.complete) {
+              setIsImageLoaded(true)
+            }
+          }} ref={profilePhotoViewRef} className='border-2 border-gray-200 rounded-corners w-24 h-24 object-cover object-center'
             src={isEmpty(user?.profile_photo) ? './assets/images/default-avatar.png' : process.env.REACT_APP_API_URL + '/storage/' + user?.profile_photo} />
           <div className="absolute -right-4 -bottom-2 flex flex-col gap-y-2">
             <span onClick={() => profilePhotoInputRef.current.click()} className="hover:bg-yellow-50 hover:text-yellow-600 text-gray-600 transition-all duration-300 cursor-pointer shadow-md bg-white flex-center text-xs w-7 h-7 rounded-corners">
