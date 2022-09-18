@@ -81,7 +81,6 @@ function Profile({ handleClose }) {
   })
 
   const handleProfilePhotoChange = async e => {
-
     let file = e.target.files[0];
     setAvatar(file)
     try {

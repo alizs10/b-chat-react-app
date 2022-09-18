@@ -1,6 +1,7 @@
 import { isEmpty } from 'lodash'
 import React, { useContext, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { MoonLoader } from 'react-spinners'
 import SidebarContext from '../../Context/SidebarContext'
 import Backdrop from '../Helpers/Backdrop'
 import CenterContainer from '../Helpers/CenterContainer'
@@ -22,6 +23,9 @@ function Head() {
 
     const { handleToggleSidebar } = useContext(SidebarContext)
 
+    const [photoUploadProgress, setPhotoUploadProgress] = useState(0);
+    const [isImageLoaded, setIsImageLoaded] = useState(false);
+
     return (
         <>
             <div className="z-20 row-span-1 border-b border-gray-200 bg-white grid grid-cols-9">
@@ -42,7 +46,18 @@ function Head() {
                         )}
                     </span>
                     <div onClick={() => setUserPopupVisibility(true)} className={`relative cursor-pointer transition-all duration-300 p-2 rounded-corners ${userPopupVisibility && "bg-gray-100"}`}>
-                        <img className='rounded-corners w-12 h-12 lg:w-14 lg:h-14 object-cover object-center' src={isEmpty(user?.profile_photo) ? './assets/images/default-avatar.png' : process.env.REACT_APP_API_URL + '/storage/' + user?.profile_photo } />
+                        {!isImageLoaded && (
+                            <span className='absolute top-0 right-0 bottom-0 left-0 bg-white rounded-corners flex-center'>
+                                <MoonLoader color={'#4361EE'} loading={!isImageLoaded} size={30} />
+                            </span>
+                        )}
+                        <img
+                            onLoad={e => {
+                                if (e.target.complete) {
+                                    setIsImageLoaded(true)
+                                }
+                            }}
+                            className='rounded-corners w-12 h-12 lg:w-14 lg:h-14 object-cover object-center' src={isEmpty(user?.profile_photo) ? './assets/images/default-avatar.png' : process.env.REACT_APP_API_URL + '/storage/' + user?.profile_photo} />
                         <span className='absolute bottom-1 right-1 bg-white p-[3px] flex-center rounded-full'>
                             <span className='w-2 h-2 lg:w-3 lg:h-3 rounded-full bg-emerald-500'></span>
                         </span>
