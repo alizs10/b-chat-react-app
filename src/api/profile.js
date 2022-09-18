@@ -1,11 +1,15 @@
 import request from "../utils/request";
 
-export const updateProfile = async data => {
+export const updateProfile = async (data, setProgress) => {
     return request.get('sanctum/csrf-cookie').then(() => {
         return request.post(`/api/profile/avatar/update`, data,
             {
                 headers: {
                     'Content-Type': 'multipart/form'
+                },
+                onUploadProgress: (ProgressEvent) => {
+                    let progress = (ProgressEvent.loaded/ProgressEvent.total)*100;
+                    setProgress(progress)
                 }
             })
     })

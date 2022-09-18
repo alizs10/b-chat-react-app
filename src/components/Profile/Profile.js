@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { mixed, object, ValidationError } from 'yup'
 
 import { confirmAlert } from 'react-confirm-alert';
@@ -66,12 +66,11 @@ function Profile({ handleClose }) {
       if (res) {
 
         // upload here
-
         let formData = new FormData;
         formData.append('profile_photo', res.profile_photo)
         formData.append('_method', "PUT")
 
-        let response = await updateProfile(formData)
+        let response = await updateProfile(formData, setPhotoUploadProgress)
 
         if (response.status) {
           dispatch(setUser(response.data.user))
@@ -393,11 +392,24 @@ function Profile({ handleClose }) {
 
   }
 
+  const [photoUploadProgress, setPhotoUploadProgress] = useState(0);
 
+  useEffect(() => {
+    if(photoUploadProgress == 100)
+    {
+      setTimeout(() => {
+        setPhotoUploadProgress(0)
+      }, 3000)
+    }
+
+  }, [photoUploadProgress])
   return (
     <div
       onClick={e => e.stopPropagation()}
-      className="w-full md:w-3/5 bg-white shadow-md rounded-corners p-3">
+      className="relative overflow-hidden w-full md:w-3/5 bg-white shadow-md rounded-corners p-3">
+      
+      <div style={{ width: `${photoUploadProgress}%`}} className={`absolute top-0 left-0 h-1 ${photoUploadProgress == 100 ? 'bg-emerald-400' : 'bg-[#4361EE]'} transition-all`}></div>
+      
       <div className='flex justify-between items-center border-b border-gray-200 pb-1'>
         <span className="flex gap-x-2 items-center">
           <i className="fa-regular fa-circle-user text-base"></i>
@@ -408,9 +420,7 @@ function Profile({ handleClose }) {
         </span>
       </div>
 
-
       <div className='w-full py-2 flex flex-col gap-y-4'>
-
         <span className="self-center relative w-24">
           <img ref={profilePhotoViewRef} className='border-2 border-gray-200 rounded-corners w-24 h-24 object-cover object-center'
             src={isEmpty(user?.profile_photo) ? './assets/images/default-avatar.png' : process.env.REACT_APP_API_URL + '/storage/' + user?.profile_photo} />
@@ -422,7 +432,6 @@ function Profile({ handleClose }) {
                 name='profile-photo' type="file" accept=".jpg,.jpeg,.png,.webp" className="hidden" />
             </span>
             {!isEmpty(user.profile_photo) && (
-
               <span
                 onClick={handleRemoveProfilePhoto}
                 className="hover:bg-red-50 hover:text-red-500 text-gray-600 transition-all duration-300 cursor-pointer shadow-md bg-white flex-center text-xs w-7 h-7 rounded-corners">
