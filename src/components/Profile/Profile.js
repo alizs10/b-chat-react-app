@@ -118,7 +118,8 @@ function Profile({ handleClose }) {
         {
           label: 'Yes, Delete it',
           onClick: () => {
-            handleDeleteAvatar()
+            setIsImageLoaded(false)
+            deleteAvatarMutate()
           }
         },
         {
@@ -141,24 +142,14 @@ function Profile({ handleClose }) {
     confirmAlert(options)
   }
 
-  const handleDeleteAvatar = async () => {
-
-    try {
-      let res = await deleteAvatar()
-
-      if (res.status) {
-        console.log(res);
-        dispatch(setUser(res.data.user))
+  const { mutate: deleteAvatarMutate} = useMutation(deleteAvatar, {
+    onSettled: (data, error) => {
+      if (data.status == 200) {
+        dispatch(setUser(data.data.user))
         notify("your profile photo deleted successfully", "success")
-
       }
-
-    } catch (error) {
-      console.log(error);
     }
-
-
-  }
+  })
 
   // bio
   const handleCancelEditBio = () => {
