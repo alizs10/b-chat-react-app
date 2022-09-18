@@ -42,6 +42,32 @@ function Profile({ handleClose }) {
   const profilePhotoInputRef = useRef(null)
   const profilePhotoViewRef = useRef(null)
 
+  const [photoUploadProgress, setPhotoUploadProgress] = useState(0);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+
+  // avatar
+  const { mutate: uploadProfileMutate} = useMutation(({formData, setPhotoUploadProgress}) => updateProfile(formData, setPhotoUploadProgress),
+    {
+      onSettled: (data, error) => {
+
+        if (data.status == 200) {
+          dispatch(setUser(data.data.user))
+          setTimeout(() => {
+            setPhotoUploadProgress(0)
+          }, 3000)
+          notify("your profile photo updated successfully", "success")
+        } 
+
+        if (data.data.errors) {
+          notify("couldn't update your profile photo", "error")
+          setErrors(data.data.errors)
+          profilePhotoInputRef.current.value = null;
+          setAvatar({})
+        }
+
+      }
+    })
+
   const imageValidationSchema = object().shape({
     profile_photo: mixed().test("fileSize", "The image should be less than 2mb", (file) => {
       return file.size <= 2000000
@@ -57,39 +83,15 @@ function Profile({ handleClose }) {
 
     let file = e.target.files[0];
     setAvatar(file)
-    let inputs = {
-      profile_photo: file
-    }
-
     try {
-      let res = await imageValidationSchema.validate(inputs, { abortEarly: false })
-
-      if (res) {
+      let validatedData = await imageValidationSchema.validate({ profile_photo: file }, { abortEarly: false })
+      if (validatedData) {
         // upload here
         setIsImageLoaded(false)
         let formData = new FormData;
-        formData.append('profile_photo', res.profile_photo)
+        formData.append('profile_photo', validatedData.profile_photo)
         formData.append('_method', "PUT")
-
-        let response = await updateProfile(formData, setPhotoUploadProgress)
-
-        if (response.status) {
-          dispatch(setUser(response.data.user))
-          setTimeout(() => {
-            setPhotoUploadProgress(0)
-          }, 3000)
-          notify("your profile photo updated successfully", "success")
-        }
-
-        if (response.errors) {
-          notify("couldn't update your profile photo", "error")
-          setErrors(response.errors)
-          profilePhotoInputRef.current.value = null;
-          setAvatar({})
-
-        }
-
-
+        uploadProfileMutate({formData, setPhotoUploadProgress})
       }
 
     } catch (error) {
@@ -158,9 +160,8 @@ function Profile({ handleClose }) {
 
   }
 
+  // bio
   const handleCancelEditBio = () => {
-
-
     let options = {
       title: 'Cancel Edit Bio',
       message: 'Discard changes?',
@@ -244,6 +245,7 @@ function Profile({ handleClose }) {
     }
   }
 
+  // profile information
   const handleCancelEditProfileInformation = () => {
 
     let options = {
@@ -340,6 +342,7 @@ function Profile({ handleClose }) {
     }
   }
 
+  // delete account
   const { mutate: deleteAccountMutate } = useMutation(deleteAccount, {
     onSettled: (data, error) => {
       // request success
@@ -395,9 +398,6 @@ function Profile({ handleClose }) {
     confirmAlert(options)
 
   }
-
-  const [photoUploadProgress, setPhotoUploadProgress] = useState(0);
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   return (
     <div
