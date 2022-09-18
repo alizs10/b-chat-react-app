@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { BChatContext } from '../../Context/BChatContext';
 import { MoonLoader } from 'react-spinners';
+import { confirmModalDefaultOptions } from '../../utils/confirm-modal';
 
 
 
@@ -46,7 +47,7 @@ function Profile({ handleClose }) {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   // avatar
-  const { mutate: uploadProfileMutate} = useMutation(({formData, setPhotoUploadProgress}) => updateProfile(formData, setPhotoUploadProgress),
+  const { mutate: uploadProfileMutate } = useMutation(({ formData, setPhotoUploadProgress }) => updateProfile(formData, setPhotoUploadProgress),
     {
       onSettled: (data, error) => {
 
@@ -56,7 +57,7 @@ function Profile({ handleClose }) {
             setPhotoUploadProgress(0)
           }, 3000)
           notify("your profile photo updated successfully", "success")
-        } 
+        }
 
         if (data.data.errors) {
           notify("couldn't update your profile photo", "error")
@@ -91,7 +92,7 @@ function Profile({ handleClose }) {
         let formData = new FormData;
         formData.append('profile_photo', validatedData.profile_photo)
         formData.append('_method', "PUT")
-        uploadProfileMutate({formData, setPhotoUploadProgress})
+        uploadProfileMutate({ formData, setPhotoUploadProgress })
       }
 
     } catch (error) {
@@ -110,39 +111,34 @@ function Profile({ handleClose }) {
   }
 
   const handleRemoveProfilePhoto = () => {
-
-    let options = {
-      title: 'Remove Profile Photo',
-      message: 'Are you sure you want to remove your profile photo?',
-      buttons: [
-        {
-          label: 'Yes, Delete it',
-          onClick: () => {
-            setIsImageLoaded(false)
-            deleteAvatarMutate()
-          }
-        },
-        {
-          label: 'No',
-          onClick: () => {
-            notify("canceled", "warning")
-          }
+    let options = confirmModalDefaultOptions;
+    options.title = 'Remove Profile Photo';
+    options.message = 'Are you sure you want to remove your profile photo?';
+    options.buttons = [
+      {
+        label: 'Yes, Delete it',
+        onClick: () => {
+          setIsImageLoaded(false)
+          deleteAvatarMutate()
         }
-      ],
-      closeOnEscape: true,
-      closeOnClickOutside: true,
-      keyCodeForClose: [8, 32],
-      overlayClassName: "overlay-custom-class-name",
-      customUI: ({ onClose, title, message, buttons }) => {
-        return <ConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
+      },
+      {
+        label: 'No',
+        onClick: () => {
+          notify("canceled", "warning")
+        }
       }
-    };
+    ];
+
+    options.customUI = ({ onClose, title, message, buttons }) => {
+      return <ConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
+    }
 
     // first user should confirm
     confirmAlert(options)
   }
 
-  const { mutate: deleteAvatarMutate} = useMutation(deleteAvatar, {
+  const { mutate: deleteAvatarMutate } = useMutation(deleteAvatar, {
     onSettled: (data, error) => {
       if (data.status == 200) {
         dispatch(setUser(data.data.user))
@@ -153,66 +149,54 @@ function Profile({ handleClose }) {
 
   // bio
   const handleCancelEditBio = () => {
-    let options = {
-      title: 'Cancel Edit Bio',
-      message: 'Discard changes?',
-      buttons: [
-        {
-          label: 'Yes, Cancel it',
-          onClick: () => {
-            setIsEditingBio(false)
-            notify("canceled", "success")
-          }
-        },
-        {
-          label: 'Edit bio',
-          onClick: () => {
-            notify("canceled", "warning")
-          }
+    let options = confirmModalDefaultOptions;
+    options.title = 'Cancel Edit Bio';
+    options.message = 'Discard changes?';
+    options.buttons = [
+      {
+        label: 'Yes, Cancel it',
+        onClick: () => {
+          setIsEditingBio(false)
+          notify("no changes applied", "success")
         }
-      ],
-      closeOnEscape: true,
-      closeOnClickOutside: true,
-      keyCodeForClose: [8, 32],
-      overlayClassName: "overlay-custom-class-name",
-      customUI: ({ onClose, title, message, buttons }) => {
-        return <ConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
+      },
+      {
+        label: 'Edit bio',
+        onClick: () => {
+          notify("canceled", "warning")
+        }
       }
-    };
+    ];
 
+    options.customUI = ({ onClose, title, message, buttons }) => {
+      return <ConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
+    }
     // first user should confirm
     confirmAlert(options)
 
   }
   const handleEditBio = () => {
-
-
-    let options = {
-      title: 'Update Bio',
-      message: 'Save changes and update bio?',
-      buttons: [
-        {
-          label: 'Update',
-          onClick: () => {
-            handleUpdateBio();
-          }
-        },
-        {
-          label: 'cancel',
-          onClick: () => {
-            notify("canceled", "warning")
-          }
+    let options = confirmModalDefaultOptions;
+    options.title = 'Update Bio';
+    options.message = 'Save changes and update bio?';
+    options.buttons = [
+      {
+        label: 'Update',
+        onClick: () => {
+          handleUpdateBio();
         }
-      ],
-      closeOnEscape: true,
-      closeOnClickOutside: true,
-      keyCodeForClose: [8, 32],
-      overlayClassName: "overlay-custom-class-name",
-      customUI: ({ onClose, title, message, buttons }) => {
-        return <ConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
+      },
+      {
+        label: 'cancel',
+        onClick: () => {
+          notify("canceled", "warning")
+        }
       }
-    };
+    ];
 
+    options.customUI = ({ onClose, title, message, buttons }) => {
+      return <ConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
+    }
     // first user should confirm
     confirmAlert(options)
 
@@ -238,77 +222,61 @@ function Profile({ handleClose }) {
 
   // profile information
   const handleCancelEditProfileInformation = () => {
-
-    let options = {
-      title: 'Discard changes',
-      message: 'Discard changes?',
-      buttons: [
-        {
-          label: 'Discard changes',
-          onClick: () => {
-            setIsEditingProfileInformation(false)
-            notify("Discard changes", "info")
-          }
-        },
-        {
-          label: 'continue editing',
-          onClick: () => {
-            notify("canceled", "warning")
-          }
+    let options = confirmModalDefaultOptions;
+    options.title = 'Discard changes';
+    options.message = 'Discard changes?';
+    options.buttons = [
+      {
+        label: 'Discard changes',
+        onClick: () => {
+          setIsEditingProfileInformation(false)
+          notify("Discard changes", "info")
         }
-      ],
-      closeOnEscape: true,
-      closeOnClickOutside: true,
-      keyCodeForClose: [8, 32],
-      overlayClassName: "overlay-custom-class-name",
-      customUI: ({ onClose, title, message, buttons }) => {
-        return <ConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
+      },
+      {
+        label: 'continue editing',
+        onClick: () => {
+          notify("canceled", "warning")
+        }
       }
-    };
+    ];
 
+    options.customUI = ({ onClose, title, message, buttons }) => {
+      return <ConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
+    }
     // first user should confirm
     confirmAlert(options)
-
   }
 
   const handleEditProfileInformation = () => {
-
-
-    let options = {
-      title: 'Update Profile Information',
-      message: 'Save changes and update information?',
-      buttons: [
-        {
-          label: 'Update',
-          onClick: () => {
-            handleUpdateProfileInfo()
-          }
-        },
-        {
-          label: 'continue editing',
-          onClick: () => {
-            notify("canceled", "warning")
-          }
+    let options = confirmModalDefaultOptions;
+    options.title = 'Update Profile Information';
+    options.message = 'Save changes and update information?';
+    options.buttons = [
+      {
+        label: 'Update',
+        onClick: () => {
+          handleUpdateProfileInfo()
         }
-      ],
-      closeOnEscape: true,
-      closeOnClickOutside: true,
-      keyCodeForClose: [8, 32],
-      overlayClassName: "overlay-custom-class-name",
-      customUI: ({ onClose, title, message, buttons }) => {
-        return <ConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
+      },
+      {
+        label: 'continue editing',
+        onClick: () => {
+          notify("canceled", "warning")
+        }
       }
-    };
+    ];
 
+    options.customUI = ({ onClose, title, message, buttons }) => {
+      return <ConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
+    }
     // first user should confirm
     confirmAlert(options)
-
   }
 
   const handleUpdateProfileInfo = async () => {
 
     try {
-
       let formData = new FormData;
       formData.append('name', name)
       formData.append('username', username)
@@ -354,40 +322,31 @@ function Profile({ handleClose }) {
       setProgress(100)
     }
   })
-
   const handleDeleteAcc = () => {
-
-    let options = {
-      title: 'Delete Account',
-      message: 'Are you sure you want to delete your account?',
-      buttons: [
-        {
-          label: 'Yes, Delete My Account',
-          onClick: async (pin) => {
-            setLoading(true)
-            setProgress(70)
-            deleteAccountMutate({ password: pin })
-          }
-        },
-        {
-          label: 'cancel',
-          onClick: () => {
-            notify("canceled", "warning")
-          }
+    let options = confirmModalDefaultOptions;
+    options.title = 'Delete Account';
+    options.message = 'Are you sure you want to delete your account?';
+    options.buttons = [
+      {
+        label: 'Yes, Delete My Account',
+        onClick: async (pin) => {
+          setLoading(true)
+          setProgress(70)
+          deleteAccountMutate({ password: pin })
         }
-      ],
-      closeOnEscape: true,
-      closeOnClickOutside: true,
-      keyCodeForClose: [32],
-      overlayClassName: "overlay-custom-class-name",
-      customUI: ({ onClose, title, message, buttons }) => {
-        return <DeleteAccConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
+      },
+      {
+        label: 'cancel',
+        onClick: () => {
+          notify("canceled", "warning")
+        }
       }
-    };
-
+    ];
+    options.customUI = ({ onClose, title, message, buttons }) => {
+      return <DeleteAccConfirmUI handleClose={onClose} buttons={buttons} title={title} message={message} />
+    }
     // first user should confirm
     confirmAlert(options)
-
   }
 
   return (
