@@ -209,24 +209,25 @@ function Profile({ handleClose }) {
 
   }
 
-  const handleUpdateBio = async () => {
-
-    try {
-
-      let formData = new FormData;
-      formData.append('bio', bio)
-      formData.append('_method', "put")
-      let response = await updateBio(formData)
-      if (response.status) {
-        dispatch(setUser(response.data.user))
+  const { mutate: updateBioMutate } = useMutation(updateBio, {
+    onSettled: (data, error) => {
+      if (data.status == 200) {
+        dispatch(setUser(data.data.user))
         setIsEditingBio(false)
         notify("your bio updated successfully", "success")
+      } else {
+        setErrors(data.errors)
+        notify("Couldn't update your bio", "error")
       }
       setProgress(100)
-
-    } catch (error) {
-
     }
+  });
+
+  const handleUpdateBio = () => {
+    let formData = new FormData;
+    formData.append('bio', bio)
+    formData.append('_method', "put")
+    updateBioMutate(formData)
   }
 
   // profile information
@@ -285,32 +286,31 @@ function Profile({ handleClose }) {
     confirmAlert(options)
   }
 
-  const handleUpdateProfileInfo = async () => {
-
-    try {
-      let formData = new FormData;
-      formData.append('name', name)
-      formData.append('username', username)
-      formData.append('email', email)
-      formData.append('_method', "PUT")
-      let response = await updateProfileInfo(formData)
-
-      if (response.status) {
-        dispatch(setUser(response.data.user))
-        setIsEditingProfileInformation(false)
-        setErrors({})
-        notify("your information updated successfully", "success")
-
-      }
-
-      if (response.errors) {
-        setErrors(response.errors)
+  const { mutate: updateProfileInfoMutate } = useMutation(updateProfileInfo, {
+    onSettled: (data, error) => {
+      if (data.status == 200) {
+        if (data.data.status) {
+          dispatch(setUser(data.data.user))
+          setIsEditingProfileInformation(false)
+          setErrors({})
+          notify("your information updated successfully", "success")
+        }
+      } else {
+        setErrors(data.errors)
         notify("Couldn't update your profile information", "error")
       }
+
       setProgress(100)
-    } catch (error) {
-      console.log(error);
     }
+  })
+
+  const handleUpdateProfileInfo = () => {
+    let formData = new FormData;
+    formData.append('name', name)
+    formData.append('username', username)
+    formData.append('email', email)
+    formData.append('_method', "PUT")
+    updateProfileInfoMutate(formData)
   }
 
   // delete account
