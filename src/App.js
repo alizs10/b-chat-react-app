@@ -13,22 +13,25 @@ import { initialData } from "./api/app";
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
+import { getUserSettings } from "./api/users";
+import { setSettings } from "./redux/slices/settingsSlice";
 
 function App() {
 
-  const onSuccess = (conversations) => {
-    dispatch(setConversations(conversations))
+  const onSuccess = (initData) => {
+    dispatch(setConversations(initData.conversations))
+    dispatch(setSettings(initData.settings))
   }
 
-  const { data, isError, isLoading } = useQuery(
+  useQuery(
     ['conversations'],
     initialData,
     {
       refetchOnWindowFocus: false,
       onSuccess,
       select: data => {
-        return data.data.conversations
+        return data.data
       }
     }
   )

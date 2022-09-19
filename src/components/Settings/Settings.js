@@ -1,7 +1,9 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import React, { useContext, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { getUserSettings, updateUserSettings } from '../../api/users'
 import { BChatContext } from '../../Context/BChatContext'
+import { setSettings } from '../../redux/slices/settingsSlice'
 import CheckBox from '../Helpers/CheckBox'
 import { notify } from '../Helpers/notify'
 
@@ -17,23 +19,17 @@ function Settings({ handleClose }) {
         })
         if (!canSaveChanges) setCanSaveChanges(true)
     }
-
-    const { isLoading } = useQuery(['settings'], getUserSettings, {
-        onSuccess: data => {
-            setUserSettings(data.data.settings)
-        }
-    })
-    const [userSettings, setUserSettings] = useState({
-        private_account: 0,
-        dark_theme: 0,
-        invite_to_groups: 1,
-        always_offline: 0,
-    })
-
+    
+    const {settings} = useSelector(state => state.settings)
+    const [userSettings, setUserSettings] = useState(settings)
+    
+    const dispatch = useDispatch()
     const { mutate: updateUserSettingsMutate } = useMutation(updateUserSettings, {
         onSettled: data => {
             if (data.status == 200) {
                 if (data.data.status) {
+                    dispatch(setSettings(data.data.settings))
+                    setUserSettings(data.data.settings)
                     notify("your account's settings updated successfully", "success")
                 } else {
                     console.log(data);
@@ -57,8 +53,6 @@ function Settings({ handleClose }) {
             updateUserSettingsMutate(formData)
         }
     }
-
-    if (isLoading) return
 
     return (
         <div

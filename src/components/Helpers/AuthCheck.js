@@ -61,7 +61,6 @@ function AuthCheck({ children }) {
         if (token) {
 
             const res = data;
-            console.log(res);
             if (res) {
                 if(res.status)
                 {
