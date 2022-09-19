@@ -7,6 +7,7 @@ function Settings({ handleClose }) {
     const [darkMode, setDarkMode] = useState(false)
     const [groupInvite, setGroupInvite] = useState(false)
     const [alwaysOffline, setAlwaysOffline] = useState(false)
+    const [canSaveChanges, setCanSaveChanges] = useState(false)
 
     const handleTogglePrivateAcc = () => {
         setPrivateAcc(!privateAcc)
@@ -73,6 +74,9 @@ function Settings({ handleClose }) {
                     </span>
                     <CheckBox handleToggle={handleToggleDarkMode} value={darkMode} />
                 </span>
+                <button disabled={!canSaveChanges} className={`${canSaveChanges ? 'bg-[#4361EE] btn-hover text-white' : 'bg-gray-200 text-gray-400'} mt-2 w-full py-2 flex-center rounded-corners flex justify-between text-sm`}>
+                    Save Changes
+                </button>
             </div>
 
 
