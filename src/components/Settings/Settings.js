@@ -1,10 +1,13 @@
-import { useQuery } from '@tanstack/react-query'
-import React, { useState } from 'react'
-import { getUserSettings } from '../../api/users'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import React, { useContext, useState } from 'react'
+import { getUserSettings, updateUserSettings } from '../../api/users'
+import { BChatContext } from '../../Context/BChatContext'
 import CheckBox from '../Helpers/CheckBox'
+import { notify } from '../Helpers/notify'
 
 function Settings({ handleClose }) {
-    
+
+    const { setLoading, setProgress } = useContext(BChatContext)
     const [canSaveChanges, setCanSaveChanges] = useState(false)
     const handleChangeSettings = (setting) => {
         let newValue = setting.value == 1 ? 0 : 1;
@@ -12,7 +15,7 @@ function Settings({ handleClose }) {
             ...userSettings,
             [setting.name]: newValue
         })
-        if(!canSaveChanges) setCanSaveChanges(true)
+        if (!canSaveChanges) setCanSaveChanges(true)
     }
 
     const { isLoading } = useQuery(['settings'], getUserSettings, {
@@ -26,6 +29,34 @@ function Settings({ handleClose }) {
         invite_to_groups: 1,
         always_offline: 0,
     })
+
+    const { mutate: updateUserSettingsMutate } = useMutation(updateUserSettings, {
+        onSettled: data => {
+            if (data.status == 200) {
+                if (data.data.status) {
+                    notify("your account's settings updated successfully", "success")
+                } else {
+                    console.log(data);
+                }
+            }
+            setProgress(100)
+        }
+    })
+
+    const handleUpdateSettings = () => {
+        if (canSaveChanges) {
+
+            let formData = new FormData;
+            setLoading(true)
+            setProgress(70)
+            formData.append('_method', "PUT")
+            formData.append('always_offline', userSettings.always_offline)
+            formData.append('invite_to_groups', userSettings.invite_to_groups)
+            formData.append('dark_theme', userSettings.dark_theme)
+            formData.append('private_account', userSettings.private_account)
+            updateUserSettingsMutate(formData)
+        }
+    }
 
     if (isLoading) return
 
@@ -78,7 +109,9 @@ function Settings({ handleClose }) {
                     </span>
                     <CheckBox handleToggle={handleChangeSettings} name='dark_theme' value={userSettings.dark_theme} />
                 </span>
-                <button disabled={!canSaveChanges} className={`${canSaveChanges ? 'bg-[#4361EE] btn-hover text-white' : 'bg-gray-200 text-gray-400'} mt-2 w-full py-2 flex-center rounded-corners flex justify-between text-sm`}>
+                <button
+                onClick={handleUpdateSettings}
+                disabled={!canSaveChanges} className={`${canSaveChanges ? 'bg-[#4361EE] btn-hover text-white' : 'bg-gray-200 text-gray-400'} mt-2 w-full py-2 flex-center rounded-corners flex justify-between text-sm`}>
                     Save Changes
                 </button>
             </div>
