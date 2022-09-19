@@ -7,6 +7,7 @@ import { checkAuthentication } from '../../api/auth';
 import { BChatContext } from '../../Context/BChatContext';
 
 import { deleteUser, setUser } from '../../redux/slices/userSlice';
+import { notify } from './notify';
 
 function AuthCheck({ children }) {
 
@@ -60,10 +61,18 @@ function AuthCheck({ children }) {
         if (token) {
 
             const res = data;
-
+            console.log(res);
             if (res) {
-                dispatch(setUser(res.data))
-                navigate('/')
+                if(res.status)
+                {
+                    dispatch(setUser(res.data))
+                    navigate('/')
+                } else {
+                    navigate('/auth/login')
+                    setTimeout(() => {
+                        notify(res.errors.message[0], "warning")
+                    },1000)                
+                }
             } else {
                 onError()
             }
