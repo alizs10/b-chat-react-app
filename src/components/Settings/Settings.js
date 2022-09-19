@@ -1,29 +1,33 @@
+import { useQuery } from '@tanstack/react-query'
 import React, { useState } from 'react'
+import { getUserSettings } from '../../api/users'
 import CheckBox from '../Helpers/CheckBox'
 
 function Settings({ handleClose }) {
-
-    const [privateAcc, setPrivateAcc] = useState(false)
-    const [darkMode, setDarkMode] = useState(false)
-    const [groupInvite, setGroupInvite] = useState(false)
-    const [alwaysOffline, setAlwaysOffline] = useState(false)
+    
     const [canSaveChanges, setCanSaveChanges] = useState(false)
-
-    const handleTogglePrivateAcc = () => {
-        setPrivateAcc(!privateAcc)
+    const handleChangeSettings = (setting) => {
+        let newValue = setting.value == 1 ? 0 : 1;
+        setUserSettings({
+            ...userSettings,
+            [setting.name]: newValue
+        })
+        if(!canSaveChanges) setCanSaveChanges(true)
     }
 
-    const handleToggleDarkMode = () => {
-        setDarkMode(!darkMode)
-    }
+    const { isLoading } = useQuery(['settings'], getUserSettings, {
+        onSuccess: data => {
+            setUserSettings(data.data.settings)
+        }
+    })
+    const [userSettings, setUserSettings] = useState({
+        private_account: 0,
+        dark_theme: 0,
+        invite_to_groups: 1,
+        always_offline: 0,
+    })
 
-    const handleToggleGroupInvite = () => {
-        setGroupInvite(!groupInvite)
-    }
-
-    const handleToggleAlwaysOffline = () => {
-        setAlwaysOffline(!alwaysOffline)
-    }
+    if (isLoading) return
 
     return (
         <div
@@ -48,7 +52,7 @@ function Settings({ handleClose }) {
                         <i className="fa-regular fa-lock"></i>
                         <span>Private Account</span>
                     </span>
-                    <CheckBox handleToggle={handleTogglePrivateAcc} value={privateAcc} />
+                    <CheckBox handleToggle={handleChangeSettings} name='private_account' value={userSettings.private_account} />
                 </span>
 
                 <span className="w-full flex justify-between text-xs">
@@ -56,7 +60,7 @@ function Settings({ handleClose }) {
                         <i className="fa-regular fa-people-group"></i>
                         <span>Let others invite you to groups</span>
                     </span>
-                    <CheckBox handleToggle={handleToggleGroupInvite} value={groupInvite} />
+                    <CheckBox handleToggle={handleChangeSettings} name='invite_to_groups' value={userSettings.invite_to_groups} />
                 </span>
 
                 <span className="w-full flex justify-between text-xs">
@@ -64,7 +68,7 @@ function Settings({ handleClose }) {
                         <i className="fa-regular fa-signal-slash"></i>
                         <span>Always offline</span>
                     </span>
-                    <CheckBox handleToggle={handleToggleAlwaysOffline} value={alwaysOffline} />
+                    <CheckBox handleToggle={handleChangeSettings} name='always_offline' value={userSettings.always_offline} />
                 </span>
 
                 <span className="w-full flex justify-between text-xs">
@@ -72,7 +76,7 @@ function Settings({ handleClose }) {
                         <i className="fa-regular fa-moon-stars"></i>
                         <span>Dark Mode</span>
                     </span>
-                    <CheckBox handleToggle={handleToggleDarkMode} value={darkMode} />
+                    <CheckBox handleToggle={handleChangeSettings} name='dark_theme' value={userSettings.dark_theme} />
                 </span>
                 <button disabled={!canSaveChanges} className={`${canSaveChanges ? 'bg-[#4361EE] btn-hover text-white' : 'bg-gray-200 text-gray-400'} mt-2 w-full py-2 flex-center rounded-corners flex justify-between text-sm`}>
                     Save Changes

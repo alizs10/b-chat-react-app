@@ -1,4 +1,5 @@
 import axios from "axios";
+import request from "../utils/request";
 
 export const getUserProfile = async (id) => {
 
@@ -9,4 +10,8 @@ export const getUserProfile = async (id) => {
     }).catch(err => {
         console.log(err);
     });
+}
+
+export const getUserSettings = async () => {
+    return await request.get('/api/user/settings');
 }
