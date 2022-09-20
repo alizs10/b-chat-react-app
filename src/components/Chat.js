@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import { sendMessage } from '../api/messages'
 import { getUserProfile } from '../api/users'
 import { AppContext } from '../Context/AppContext'
+import { BChatContext } from '../Context/BChatContext'
 import { ChatContext } from '../Context/ChatContext'
 import ReplayContext from '../Context/ReplayContext'
 import Bubbles from './Chat/Bubbles'
@@ -15,6 +16,7 @@ import ReplayTo from './Chat/ReplayTo'
 import Backdrop from './Helpers/Backdrop'
 import CenterContainer from './Helpers/CenterContainer'
 import { findDataById } from './Helpers/helpers'
+import { notify } from './Helpers/notify'
 import ViewProfile from './Profile/ViewProfile'
 
 
@@ -25,20 +27,30 @@ function Chat() {
 
 
   const { activeConversation } = useContext(AppContext)
+  const { setLoading, setProgress } = useContext(BChatContext)
 
   const [viewProfileVisibility, setViewProfileVisibility] = useState(false)
   const [viewProfileUser, setViewProfileUser] = useState({})
 
-  const handleViewProfile = async id => {
-    try {
-      let response = await getUserProfile(id)
-      if (response.status) {
-        setViewProfileUser(response.user)
-        setViewProfileVisibility(true)
+  const { mutate: getUserProfileMutate } = useMutation(getUserProfile, {
+    onSettled: (data, error) => {
+      //success
+      if (data.status == 200) {
+        if (data.data.status) {
+          setViewProfileUser(data.data.user)
+          setViewProfileVisibility(true)
+        }
+      } else {
+        notify("something went wrong", "error")
       }
-    } catch (error) {
-      console.log(error);
+      setProgress(100)
     }
+  })
+
+  const handleViewProfile = async id => {
+    setLoading(true)
+    setProgress(70)
+    getUserProfileMutate(id)
   }
 
 

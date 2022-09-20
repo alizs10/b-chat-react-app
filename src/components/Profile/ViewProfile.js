@@ -1,12 +1,18 @@
-import { isEmpty } from 'lodash'
+import { isEmpty, isNull } from 'lodash'
 import React from 'react'
 
 function ViewProfile({ handleClose, user }) {
 
+    if(isEmpty(user)) return
+
     return (
         <div className="relative overflow-hidden w-full h-screen md:h-fit md:w-2/5 shadow-md rounded-corners">
             <div className="absolute top-0 right-0 bottom-0 left-0 -z-10">
-                <img className="w-full h-full object-cover object-center" src={isEmpty(user.profile_photo) ? './assets/images/default-avatar.png' : process.env.REACT_APP_API_URL + '/storage/' + user.profile_photo} />
+            {console.log(user)}
+
+                <img
+                    className="w-full h-full object-cover object-center"
+                    src={isEmpty(user.profile_photo) ? './assets/images/default-avatar.png' : process.env.REACT_APP_API_URL + '/storage/' + user.profile_photo} />
 
             </div>
             <div
@@ -24,9 +30,10 @@ function ViewProfile({ handleClose, user }) {
 
 
                 <div className='w-full py-2 flex flex-col gap-y-4'>
-
                     <span className="self-center relative w-24 h-24">
-                        <img className='rounded-corners w-24 h-24 object-cover object-center' src={isEmpty(user.profile_photo) ? './assets/images/default-avatar.png' : process.env.REACT_APP_API_URL + '/storage/' + user.profile_photo} />
+                        <img
+                            className='rounded-corners w-24 h-24 object-cover object-center'
+                            src={isEmpty(user.profile_photo) ? './assets/images/default-avatar.png' : process.env.REACT_APP_API_URL + '/storage/' + user.profile_photo} />
                     </span>
 
                     {!isEmpty(user.bio) && (
