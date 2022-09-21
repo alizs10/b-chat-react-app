@@ -19,11 +19,25 @@ import { findDataById } from './Helpers/helpers'
 import { notify } from './Helpers/notify'
 import ViewProfile from './Profile/ViewProfile'
 
+// import Pusher from 'pusher-js';
 
 function Chat() {
 
   const { user } = useSelector(state => state.user)
   const { conversations } = useSelector(state => state.conversations)
+
+  // useEffect(() => {
+
+  //   const pusher = new Pusher(process.env.REACT_APP_PUSHER_APP_KEY, {
+  //     cluster: 'ap1'
+  //   });
+
+  //   var channel = pusher.subscribe('chat.'+ user.id);
+  //   channel.bind('message', function (data) {
+  //     alert(JSON.stringify(data));
+  //   });
+
+  // }, [])
 
 
   const { activeConversation } = useContext(AppContext)

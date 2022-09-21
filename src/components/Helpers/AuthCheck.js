@@ -16,10 +16,11 @@ function AuthCheck({ children }) {
 
     const navigate = useNavigate();
 
-    const {setProgress, setLoading} = useContext(BChatContext)
+    const { setProgress, setLoading } = useContext(BChatContext)
 
     useEffect(() => {
         setLoading(true)
+        setProgress(70)
     }, [])
 
     const onError = () => {
@@ -41,60 +42,38 @@ function AuthCheck({ children }) {
         setProgress(100)
     }
 
-    const { isLoading, isError, data, error } = useQuery(
+    const { isLoading } = useQuery(
         ['check-auth'],
         checkAuthentication,
         {
             refetchOnWindowFocus: false,
-            onSuccess: data => {
-                check(data)
-            },
-            onError
-        }
-    )
+            onSettled: (data, error) => {
 
-    async function check(data) {
-
-        //check for authentication
-        let token = localStorage.getItem('token');
-
-        if (token) {
-
-            const res = data;
-            if (res) {
-                if(res.status)
-                {
-                    dispatch(setUser(res.data))
+                //success
+                if (data.status == 200) {
+                    let user = data.data
+                    dispatch(setUser(user))
                     navigate('/')
                 } else {
                     navigate('/auth/login')
                     setTimeout(() => {
-                        notify(res.errors.message[0], "warning")
-                    },1000)                
+                        notify(data.errors.message[0], "warning")
+                    }, 1000)
+
                 }
-            } else {
-                onError()
-            }
 
-        } else {
-            dispatch(deleteUser())
-            if (location.pathname.includes('/auth')) {
-                navigate(location.pathname)
-            } else {
-                navigate('/auth')
-
+                setProgress(100)
             }
         }
+    )
 
-        setProgress(100)
+    if (isLoading) return;
 
-    }
-
-    return !isLoading ? (
+    return (
         <>
             {children}
         </>
-    ) : null;
+    );
 }
 
 export default AuthCheck

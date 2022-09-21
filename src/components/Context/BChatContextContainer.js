@@ -3,12 +3,11 @@ import { ToastContainer } from 'react-toastify'
 import LoadingBar from 'react-top-loading-bar'
 import { BChatContext } from '../../Context/BChatContext'
 
-
 function BChatContextContainer({ children }) {
 
   const [loading, setLoading] = useState(false)
   const [progress, setProgress] = useState(70)
-
+ 
   return (
     <BChatContext.Provider value={{
       loading, setLoading,
