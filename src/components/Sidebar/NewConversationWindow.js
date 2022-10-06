@@ -9,6 +9,8 @@ import { addConversation } from '../../redux/slices/conversationsSlice';
 import { findDataById } from '../Helpers/helpers';
 import { AppContext } from '../../Context/AppContext';
 
+import { motion } from 'framer-motion'
+
 function NewConversationWindow({ handleClose }) {
 
   const { loading, setLoading, setProgress } = useContext(BChatContext)
@@ -97,7 +99,10 @@ function NewConversationWindow({ handleClose }) {
   }
 
   return (
-    <div
+    <motion.div
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      exit={{ scale: 0 }}
       onClick={e => e.stopPropagation()}
       className='z-50  w-4/5 md:w-2/5 lg:w-1/5 px-5 py-3 rounded-corners flex-col gap-y-4 bg-white shadow-lg'>
       <div className='flex justify-between items-center border-b border-gray-200 pb-1'>
@@ -132,7 +137,7 @@ function NewConversationWindow({ handleClose }) {
         </button>
 
       </div>
-    </div >
+    </motion.div>
   )
 }
 

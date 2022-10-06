@@ -5,6 +5,7 @@ import Backdrop from '../components/Helpers/Backdrop'
 import CenterContainer from './Helpers/CenterContainer'
 import SidebarContext from '../Context/SidebarContext'
 import { AppContext } from '../Context/AppContext'
+import { AnimatePresence } from 'framer-motion'
 
 
 function Sidebar() {
@@ -43,9 +44,13 @@ function Sidebar() {
                 </div>
 
             </div>
-            <Backdrop toggler={newConversationWindowVisibility}>
-                <CenterContainer handleClick={setNewConversationWindowVisibility} element={<NewConversationWindow handleClose={setNewConversationWindowVisibility} />} />
-            </Backdrop>
+            <AnimatePresence>
+                {newConversationWindowVisibility && (
+                    <Backdrop toggler={newConversationWindowVisibility}>
+                        <CenterContainer handleClick={setNewConversationWindowVisibility} element={<NewConversationWindow handleClose={setNewConversationWindowVisibility} />} />
+                    </Backdrop>
+                )}
+            </AnimatePresence>
 
         </>
     )
