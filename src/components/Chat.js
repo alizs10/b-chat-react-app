@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { AnimatePresence } from 'framer-motion'
 import { isEmpty, now } from 'lodash'
 import React, { useContext, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -172,9 +173,11 @@ function Chat() {
               <Preview />
             )}
 
-            {isReplying && (
-              <ReplayTo message={replayMsg} />
-            )}
+            <AnimatePresence>
+              {isReplying && (
+                <ReplayTo message={replayMsg} />
+              )}
+            </AnimatePresence>
           </div>
           {activeConversation && (
             <ChatInput />

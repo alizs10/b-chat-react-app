@@ -1,3 +1,4 @@
+import { AnimatePresence } from 'framer-motion'
 import { isEmpty } from 'lodash'
 import React, { useContext, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -39,11 +40,13 @@ function Head() {
                     <span onClick={() => setAlertsPopupVisibility(true)} className={`cursor-pointer text-gray-600 text-lg lg:text-2xl relative p-2 rounded-corners transition-all duration-300 ${alertsPopupVisibility && "bg-gray-100"}`}>
                         <i className='fa-regular fa-bell'></i>
                         <span className='absolute bottom-2 right-0 w-2 h-2 rounded-full bg-yellow-500'></span>
-                        {alertsPopupVisibility && (
-                            <Backdrop handleClick={setAlertsPopupVisibility} toggler={alertsPopupVisibility}>
-                                <AlertsPopup />
-                            </Backdrop>
-                        )}
+                        <AnimatePresence>
+                            {alertsPopupVisibility && (
+                                <Backdrop handleClick={setAlertsPopupVisibility} toggler={alertsPopupVisibility}>
+                                    <AlertsPopup />
+                                </Backdrop>
+                            )}
+                        </AnimatePresence>
                     </span>
                     <div onClick={() => setUserPopupVisibility(true)} className={`relative cursor-pointer transition-all duration-300 p-2 rounded-corners ${userPopupVisibility && "bg-gray-100"}`}>
                         {!isImageLoaded && (
@@ -61,22 +64,32 @@ function Head() {
                         <span className='absolute bottom-1 right-1 bg-white p-[3px] flex-center rounded-full'>
                             <span className='w-2 h-2 lg:w-3 lg:h-3 rounded-full bg-emerald-500'></span>
                         </span>
-                        {userPopupVisibility && (
-                            <Backdrop handleClick={setUserPopupVisibility} toggler={userPopupVisibility}>
-                                <UserPopup settingsToggler={setSettingsVisibility} profileToggler={setProfileVisibility} />
-                            </Backdrop>
-                        )}
+                        <AnimatePresence>
+                            {userPopupVisibility && (
+                                <Backdrop handleClick={setUserPopupVisibility} toggler={userPopupVisibility}>
+                                    <UserPopup settingsToggler={setSettingsVisibility} profileToggler={setProfileVisibility} />
+                                </Backdrop>
+                            )}
+                        </AnimatePresence>
                     </div>
                 </div>
             </div>
 
-            <Backdrop toggler={profileVisibility} handleClick={setProfileVisibility}>
-                <CenterContainer element={<Profile handleClose={setProfileVisibility} />} handleClick={setProfileVisibility} />
-            </Backdrop>
+            <AnimatePresence>
+                {profileVisibility && (
+                    <Backdrop toggler={profileVisibility} handleClick={setProfileVisibility}>
+                        <CenterContainer element={<Profile handleClose={setProfileVisibility} />} handleClick={setProfileVisibility} />
+                    </Backdrop>
+                )}
+            </AnimatePresence>
 
-            <Backdrop toggler={settingsVisibility} handleClick={setSettingsVisibility}>
-                <CenterContainer element={<Settings handleClose={setSettingsVisibility} />} handleClick={setSettingsVisibility} />
-            </Backdrop>
+            <AnimatePresence>
+                {settingsVisibility && (
+                    <Backdrop toggler={settingsVisibility} handleClick={setSettingsVisibility}>
+                        <CenterContainer element={<Settings handleClose={setSettingsVisibility} />} handleClick={setSettingsVisibility} />
+                    </Backdrop>
+                )}
+            </AnimatePresence>
         </>
     )
 }

@@ -7,6 +7,8 @@ import { setSettings } from '../../redux/slices/settingsSlice'
 import CheckBox from '../Helpers/CheckBox'
 import { notify } from '../Helpers/notify'
 
+import { motion } from 'framer-motion'
+
 function Settings({ handleClose }) {
 
     const { setLoading, setProgress } = useContext(BChatContext)
@@ -19,10 +21,10 @@ function Settings({ handleClose }) {
         })
         if (!canSaveChanges) setCanSaveChanges(true)
     }
-    
-    const {settings} = useSelector(state => state.settings)
+
+    const { settings } = useSelector(state => state.settings)
     const [userSettings, setUserSettings] = useState(settings)
-    
+
     const dispatch = useDispatch()
     const { mutate: updateUserSettingsMutate } = useMutation(updateUserSettings, {
         onSettled: data => {
@@ -55,7 +57,10 @@ function Settings({ handleClose }) {
     }
 
     return (
-        <div
+        <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0 }}
             onClick={e => e.stopPropagation()}
             className='w-full md:w-2/5 bg-white shadow-md rounded-corners p-3'>
             <div className='flex justify-between items-center border-b border-gray-200 pb-1'>
@@ -104,14 +109,14 @@ function Settings({ handleClose }) {
                     <CheckBox handleToggle={handleChangeSettings} name='dark_theme' value={userSettings.dark_theme} />
                 </span>
                 <button
-                onClick={handleUpdateSettings}
-                disabled={!canSaveChanges} className={`${canSaveChanges ? 'bg-[#4361EE] btn-hover text-white' : 'bg-gray-200 text-gray-400'} mt-2 w-full py-2 flex-center rounded-corners flex justify-between text-sm`}>
+                    onClick={handleUpdateSettings}
+                    disabled={!canSaveChanges} className={`${canSaveChanges ? 'bg-[#4361EE] btn-hover text-white' : 'bg-gray-200 text-gray-400'} mt-2 w-full py-2 flex-center rounded-corners flex justify-between text-sm`}>
                     Save Changes
                 </button>
             </div>
 
 
-        </div>
+        </motion.div>
     )
 }
 

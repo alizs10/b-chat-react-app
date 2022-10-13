@@ -20,7 +20,7 @@ import { BChatContext } from '../../Context/BChatContext';
 import { MoonLoader } from 'react-spinners';
 import { confirmModalDefaultOptions } from '../../utils/confirm-modal';
 
-
+import { motion } from 'framer-motion'
 
 function Profile({ handleClose }) {
 
@@ -361,7 +361,10 @@ function Profile({ handleClose }) {
   }
 
   return (
-    <div
+    <motion.div
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      exit={{ scale: 0 }}
       onClick={e => e.stopPropagation()}
       className="relative overflow-hidden w-full md:w-3/5 bg-white shadow-md rounded-corners p-3">
 
@@ -433,7 +436,7 @@ function Profile({ handleClose }) {
 
       </div>
 
-    </div>
+    </motion.div>
   )
 }
 

@@ -6,6 +6,8 @@ import { logout } from '../../../api/auth'
 import { deleteUser } from '../../../redux/slices/userSlice'
 import { notify } from '../../Helpers/notify'
 
+import { motion } from 'framer-motion'
+
 function UserPopup({ profileToggler, settingsToggler }) {
 
     const dispatch = useDispatch()
@@ -33,7 +35,11 @@ function UserPopup({ profileToggler, settingsToggler }) {
     }
 
     return (
-        <div className="w-48 overflow-hidden flex flex-col absolute right-0 top-20 z-30 shadow-md bg-white rounded-corners">
+        <motion.div
+            initial={{ top: "-10rem" }}
+            animate={{ top: "5rem" }}
+            exit={{ top: "-10rem" }}
+            className="w-48 overflow-hidden flex flex-col absolute right-0 top-20 z-30 shadow-md bg-white rounded-corners">
             <button
                 onClick={() => profileToggler(true)}
                 className="text-right hover:bg-gray-100 transition-all duration-300 flex-center gap-x-2 py-3 text-xs text-gray-800">
@@ -50,7 +56,7 @@ function UserPopup({ profileToggler, settingsToggler }) {
                 <i className="fa-regular fa-arrow-right-from-bracket"></i>
                 <span>Logout</span>
             </button>
-        </div>
+        </motion.div>
     )
 }
 
