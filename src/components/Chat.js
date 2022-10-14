@@ -33,9 +33,10 @@ function Chat() {
   //     cluster: 'ap1'
   //   });
 
-  //   var channel = pusher.subscribe('chat.'+ user.id);
+  //   var channel = pusher.subscribe('chat.'+ user.username);
   //   channel.bind('message', function (data) {
-  //     alert(JSON.stringify(data));
+      
+  //     console.log(JSON.stringify(data));
   //   });
 
   // }, [])
