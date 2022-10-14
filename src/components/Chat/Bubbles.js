@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getMessages } from '../../api/messages'
 import { AppContext } from '../../Context/AppContext'
@@ -19,9 +19,21 @@ function Bubbles() {
       }
     }
   )
+  const messagesRef = useRef(null)
 
+  useEffect(() => {
+    let scrollHeight = messagesRef?.current.scrollHeight;
+    if(messagesRef?.current)
+    {
+      messagesRef.current.style.scrollBehavior = "smooth";
+      messagesRef.current.scrollTop = scrollHeight;
+    }
+    
+  }, [messages])
+
+  
   return (
-    <div className='relative row-span-5 pt-12 pb-4 overflow-y-scroll flex flex-col-reverse styled-scrollbar gap-y-14'>
+    <div ref={messagesRef} className='relative row-span-5 pt-12 pb-4 overflow-y-scroll flex flex-col-reverse styled-scrollbar gap-y-14'>
       {messages && (
         messages.map(message => (
           <Message key={message.id} message={message} />
