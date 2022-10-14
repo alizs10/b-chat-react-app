@@ -15,13 +15,13 @@ function Sidebar() {
 
     return (
         <>
-            <div className="lg:shadow-md fixed top-0 bottom-0 left-0 w-full z-30 md:z-40 lg:relative grid grid-rows-6 gap-y-2 lg:h-screen bg-white col-span-3">
+            <div className="lg:shadow-md fixed top-0 bottom-0 left-0 w-full z-30 md:z-40 lg:relative grid grid-rows-6 gap-y-2 lg:h-screen bg-white dark:bg-gray-800 col-span-3">
 
-                <div className='row-span-5 flex flex-col gap-y-2'>
+                <div className='row-span-5 flex flex-col'>
 
-                    <div className="flex flex-col gap-y-2 p-3">
+                    <div className="flex flex-col gap-y-2 p-3 dark:bg-gray-700">
                         <span className='flex justify-between items-center'>
-                            <span className='font-bold text-2xl py-2 block'><span className="text-[#4361ee]">B</span>CHAT</span>
+                            <span className='font-bold text-2xl py-2 block dark:text-white'><span className="text-[#4361ee]">B</span>CHAT</span>
                             <div className="lg:hidden flex-center">
                                 <span onClick={handleToggleSidebar} className="cursor-pointer text-lg md:text-2xl text-gray-800 p-3 h-fit rounded-corners hover:bg-gray-100 transition-all duration-300">
                                     <i className="fa-regular fa-angle-left"></i>

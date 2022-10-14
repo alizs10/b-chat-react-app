@@ -165,7 +165,7 @@ function Chat() {
         replayMsg, setReplayMsg,
         handleReplay
       }}>
-        <div className="fixed bg-[#edf2fb] z-40 top-0 right-0 bottom-0 left-0 lg:relative col-span-9 lg:h-screen lg:col-span-6 grid grid-rows-6">
+        <div className="fixed bg-[#edf2fb] dark:bg-gray-800 z-40 top-0 right-0 bottom-0 left-0 lg:relative col-span-9 lg:h-screen lg:col-span-6 grid grid-rows-6">
           <div className={`${disableChat ? 'row-span-6' : 'row-span-5'} h-full grid grid-rows-6`}>
             <Head />
             {activeConversation ? (

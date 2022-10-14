@@ -15,9 +15,9 @@ function AppRoutes() {
         <BrowserRouter>
             <Routes>
                 <Route path='/' element={
-                    <AuthCheck>
+                    // <AuthCheck>
                         <App />
-                    </AuthCheck>
+                    // </AuthCheck>
 
                 } />
                 <Route path='/auth' element={

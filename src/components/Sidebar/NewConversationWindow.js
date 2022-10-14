@@ -104,10 +104,10 @@ function NewConversationWindow({ handleClose }) {
       animate={{ scale: 1 }}
       exit={{ scale: 0 }}
       onClick={e => e.stopPropagation()}
-      className='z-50  w-4/5 md:w-2/5 lg:w-1/5 px-5 py-3 rounded-corners flex-col gap-y-4 bg-white shadow-lg'>
-      <div className='flex justify-between items-center border-b border-gray-200 pb-1'>
-        <span className="text-sm text-gray-800">Start A New Conversation</span>
-        <span onClick={() => handleClose(false)} className='cursor-pointer flex-center w-8 h-8 text-xs rounded-full hover:bg-gray-200 transition-all duration-300'>
+      className='z-50 w-4/5 md:w-2/5 lg:w-1/5 px-5 py-3 rounded-corners flex-col gap-y-4 bg-white dark:bg-gray-800 shadow-lg'>
+      <div className='flex justify-between items-center border-b border-gray-200 dark:border-gray-500 pb-1'>
+        <span className="text-sm text-gray-800 dark:text-white">Start A New Conversation</span>
+        <span onClick={() => handleClose(false)} className='cursor-pointer flex-center w-8 h-8 text-xs rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-black dark:text-white transition-all duration-300'>
           <i className="fa-regular fa-xmark"></i>
         </span>
       </div>
@@ -116,12 +116,12 @@ function NewConversationWindow({ handleClose }) {
         {message && (
           <span className='text-center text-xs text-red-500'>{message}</span>
         )}
-        <div className="col-span-9 text-sm text-gray-600">
+        <div className="col-span-9 text-sm text-gray-600 dark:text-gray-200">
           Insert Username:
         </div>
-        <div className="text-gray-600 col-span-10 md:col-span-5 flex gap-x-2 items-center">
+        <div className="text-gray-600 dark:text-gray-200 col-span-10 md:col-span-5 flex gap-x-2 items-center">
           <span>@</span>
-          <input type="text" className='w-full border border-gray-200 p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-600'
+          <input type="text" className='w-full border border-gray-200 dark:border-gray-500 p-3 focus:outline-none input-focus bg-transparent rounded-corners text-gray-600 dark:text-white'
             value={username}
             onChange={e => setUsername(e.target.value)}
             name="username"

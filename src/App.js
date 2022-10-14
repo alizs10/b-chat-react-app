@@ -22,6 +22,13 @@ function App() {
   const onSuccess = (initData) => {
     dispatch(setConversations(initData.conversations))
     dispatch(setSettings(initData.settings))
+    
+    if(initData.settings.dark_theme == 1)
+    {
+      localStorage.setItem("theme", "dark")
+    } else {
+      localStorage.setItem("theme", "light")
+    }
   }
 
   useQuery(
