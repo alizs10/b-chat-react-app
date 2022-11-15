@@ -1,7 +1,7 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import React, { useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserSettings, updateUserSettings } from '../../api/users'
+import { updateUserSettings } from '../../api/users'
 import { BChatContext } from '../../Context/BChatContext'
 import { setSettings } from '../../redux/slices/settingsSlice'
 import CheckBox from '../Helpers/CheckBox'
@@ -22,8 +22,9 @@ function Settings({ handleClose }) {
         if (!canSaveChanges) setCanSaveChanges(true)
     }
 
-    const { settings } = useSelector(state => state.settings)
-    const [userSettings, setUserSettings] = useState(settings)
+    const { private_account, dark_theme, invite_to_groups, always_offline } = useSelector(state => state.settings)
+    const [userSettings, setUserSettings] = useState({ private_account, dark_theme, invite_to_groups, always_offline })
+    
 
     const dispatch = useDispatch()
     const { mutate: updateUserSettingsMutate } = useMutation(updateUserSettings, {

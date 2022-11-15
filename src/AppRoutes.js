@@ -15,17 +15,17 @@ function AppRoutes() {
         <BrowserRouter>
             <Routes>
                 <Route path='/' element={
-                    // <AuthCheck>
+                     <AuthCheck>
                         <App />
-                    // </AuthCheck>
+                     </AuthCheck>
 
                 } />
                 <Route path='/auth' element={
-                    // <AuthCheck>
+                     <AuthCheck>
                         <AuthContextContainer>
                             <Auth />
                         </AuthContextContainer>
-                    // </AuthCheck> 
+                     </AuthCheck> 
                 }>
                     <Route path='login' element={<LoginForm />} />
                     <Route path='register' element={<SignupForm />} />

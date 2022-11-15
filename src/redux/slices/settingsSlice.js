@@ -12,7 +12,10 @@ export const settingsSlice = createSlice({
   initialState,
   reducers: {
     setSettings: (state, action) => {
-      state.settings = action.payload
+      state.private_account = action.payload.private_account
+      state.dark_theme = action.payload.dark_theme
+      state.invite_to_groups = action.payload.invite_to_groups
+      state.always_offline = action.payload.always_offline
     }
   },
 })
