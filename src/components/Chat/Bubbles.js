@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getMessages } from '../../api/messages'
 import { AppContext } from '../../Context/AppContext'
+import { setLastMessage } from '../../redux/slices/conversationsSlice'
 import Message from './Message'
 
 function Bubbles() {
@@ -21,6 +22,8 @@ function Bubbles() {
   )
   const messagesRef = useRef(null)
 
+  const dispatch = useDispatch()
+
   useEffect(() => {
     let scrollHeight = messagesRef?.current.scrollHeight;
     if(messagesRef?.current)
@@ -28,6 +31,11 @@ function Bubbles() {
       messagesRef.current.style.scrollBehavior = "smooth";
       messagesRef.current.scrollTop = scrollHeight;
     }
+
+    if(!messages || messages.length == 0) return
+    let lastMessage = messages[0]
+    dispatch(setLastMessage(lastMessage))
+      
     
   }, [messages])
 

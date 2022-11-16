@@ -13,6 +13,7 @@ function Conversation({ conversation, setSidebarVisibility }) {
             setSidebarVisibility(false)
         }
     }
+    
     return (
         <li onClick={handleSelectConversation} className={`cursor-pointer transition-all duration-300 ${activeConversation == conversation.id ? 'bg-[#abc4ff] ' : 'hover:bg-gray-100 text-gray-700'} border-b border-gray-100 flex gap-2 w-full p-3 rounded-corners `}>
             <div className='relative cursor-pointer w-16 h-16'>
