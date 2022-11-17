@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AnimatePresence } from 'framer-motion'
 import { isEmpty, now } from 'lodash'
 import React, { useContext, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { sendMessage } from '../api/messages'
 import { getUserProfile } from '../api/users'
 import { AppContext } from '../Context/AppContext'
@@ -20,26 +20,33 @@ import { findDataById } from './Helpers/helpers'
 import { notify } from './Helpers/notify'
 import ViewProfile from './Profile/ViewProfile'
 
-// import Pusher from 'pusher-js';
+import pusherJs from 'pusher-js'
 
 function Chat() {
 
   const { user } = useSelector(state => state.user)
   const { conversations } = useSelector(state => state.conversations)
 
-  // useEffect(() => {
+  const dispatch = useDispatch()
+  useEffect(() => {
 
-  //   const pusher = new Pusher(process.env.REACT_APP_PUSHER_APP_KEY, {
-  //     cluster: 'ap1'
-  //   });
+    if(!user) return
 
-  //   var channel = pusher.subscribe('chat.'+ user.username);
-  //   channel.bind('message', function (data) {
-      
-  //     console.log(JSON.stringify(data));
-  //   });
+     // Enable pusher logging - don't include this in production
+     pusherJs.logToConsole = true;
 
-  // }, [])
+     var pusher = new pusherJs(process.env.REACT_APP_PUSHER_APP_KEY, {
+       cluster: 'ap1',
+       forceTLS: true,
+
+     });
+ 
+     var channel = pusher.subscribe('chat.'+ user.username);
+     channel.bind('message', function(data) {
+      let newMessage = data.message;
+      // dispatch(receiveNewMessage())
+     });
+  }, [])
 
 
   const { activeConversation } = useContext(AppContext)
@@ -102,7 +109,7 @@ function Chat() {
 
     },
     onSuccess: (data, newMessage) => {
-      console.log(data, newMessage);
+      
       let res = data;
       queryClient.setQueryData(['messages', activeConversation], (oldQueryData) => {
 
@@ -143,7 +150,7 @@ function Chat() {
 
     payload.writer = user;
     payload.pending = true;
-
+    
     // send message temporary
     sendNewMessage(payload)
 

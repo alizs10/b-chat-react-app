@@ -13,7 +13,9 @@ function Conversation({ conversation, setSidebarVisibility }) {
             setSidebarVisibility(false)
         }
     }
-    
+
+    console.log(conversation.last_message);
+
     return (
         <li onClick={handleSelectConversation} className={`cursor-pointer transition-all duration-300 ${activeConversation == conversation.id ? 'bg-[#abc4ff] ' : 'hover:bg-gray-100 text-gray-700'} border-b border-gray-100 flex gap-2 w-full p-3 rounded-corners `}>
             <div className='relative cursor-pointer w-16 h-16'>
@@ -34,7 +36,13 @@ function Conversation({ conversation, setSidebarVisibility }) {
                             )
                     }</span>
                 </div>
-                <span className='text-sm'>{conversation.last_message ? truncate(conversation.last_message.body) : 'send first message'}</span>
+                <div className='w-full flex justify-between items-center'>
+                    <span className='text-sm'>{conversation.last_message ? truncate(conversation.last_message.body) : 'send first message'}</span>
+                    {conversation.unseen_messages > 0 && (
+                        <span className='flex-center p-3 font-bold text-[13px] w-7 h-7 rounded-full text-white bg-[#5F7AF0]'>{conversation.unseen_messages}</span>
+                    )}
+
+                </div>
             </div>
         </li>
     )

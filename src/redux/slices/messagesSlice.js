@@ -15,6 +15,9 @@ export const messagesSlice = createSlice({
     },
     removeMessage: (state) => {
       state.messages = []
+    },
+    receiveNewMessage: (state,action) => {
+      
     }
   },
 })
