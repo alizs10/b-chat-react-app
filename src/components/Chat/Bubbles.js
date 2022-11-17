@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 import React, { useContext, useEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { getMessages } from '../../api/messages'
 import { AppContext } from '../../Context/AppContext'
-import { setLastMessage } from '../../redux/slices/conversationsSlice'
+import { seenAllMessages, setLastMessage } from '../../redux/slices/conversationsSlice'
 import Message from './Message'
 
 function Bubbles() {
@@ -17,6 +17,9 @@ function Bubbles() {
       refetchOnWindowFocus: false,
       select: data => {
         return data.data.messages
+      },
+      onSuccess: () => {
+        dispatch(seenAllMessages({conversation_id: activeConversation}))
       }
     }
   )

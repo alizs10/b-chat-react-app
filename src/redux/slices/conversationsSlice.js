@@ -25,11 +25,18 @@ export const conversationsSlice = createSlice({
       if (lastMessage.pending || lastMessage.id == conversation.last_message.id) return
       conversation.last_message = lastMessage
       state.conversations = [...conversationsInstance]
+    },
+    seenAllMessages: (state, action) => {
+      let conversationInstance = [...state.conversations]
+      let convIndex = conversationInstance.findIndex(conv => conv.id == action.payload.conversation_id)
+      let conv = conversationInstance[convIndex]
+      conv.unseen_messages = 0;
+      state.conversations = [...conversationInstance]
     }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { setConversations, addConversation, removeConversation, setLastMessage } = conversationsSlice.actions
+export const { setConversations, addConversation, removeConversation, setLastMessage,seenAllMessages } = conversationsSlice.actions
 
 export default conversationsSlice.reducer
